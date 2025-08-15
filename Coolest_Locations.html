@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_56436cc64af9a6c202620cd0541cfbb4 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_56436cc64af9a6c202620cd0541cfbb4" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_56436cc64af9a6c202620cd0541cfbb4 = L.map(
+                "map_56436cc64af9a6c202620cd0541cfbb4",
+                {
+                    center: [44.249052, -79.41596399999999],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 6,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_9563abeb5266557edab9b6e6d8bb9aae = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_9563abeb5266557edab9b6e6d8bb9aae.addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+            var marker_66b77045405fa2bcb2625fdfc98ae979 = L.marker(
+                [43.0896, -79.0849],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_c0e6d8312073e127c6ca1036efbb75f7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_445534fa7c4eac091fe1fa59183c2255 = $(`<div id="html_445534fa7c4eac091fe1fa59183c2255" style="width: 100.0%; height: 100.0%;"><b>Niagara Falls</b><br>Niagara Falls, ON L2E 6T2</div>`)[0];
+                popup_c0e6d8312073e127c6ca1036efbb75f7.setContent(html_445534fa7c4eac091fe1fa59183c2255);
+            
+        
+
+        marker_66b77045405fa2bcb2625fdfc98ae979.bindPopup(popup_c0e6d8312073e127c6ca1036efbb75f7)
+        ;
+
+        
+    
+    
+            marker_66b77045405fa2bcb2625fdfc98ae979.bindTooltip(
+                `<div>
+                     Niagara Falls
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_24877e73acf663e12f58a8c8dfa15eb0 = L.marker(
+                [43.6426, -79.3871],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_7fcff31249478f8963ba8936f1104d4c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b9138ffc45be35fab4cda1b6b4d2178d = $(`<div id="html_b9138ffc45be35fab4cda1b6b4d2178d" style="width: 100.0%; height: 100.0%;"><b>CN Tower</b><br>290 Bremner Blvd, Toronto, ON M5V 3L9</div>`)[0];
+                popup_7fcff31249478f8963ba8936f1104d4c.setContent(html_b9138ffc45be35fab4cda1b6b4d2178d);
+            
+        
+
+        marker_24877e73acf663e12f58a8c8dfa15eb0.bindPopup(popup_7fcff31249478f8963ba8936f1104d4c)
+        ;
+
+        
+    
+    
+            marker_24877e73acf663e12f58a8c8dfa15eb0.bindTooltip(
+                `<div>
+                     CN Tower
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_4fc1a24c14e8213ee5e1d1a2cb262bef = L.marker(
+                [43.6677, -79.3948],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_e892913f74a79c6bb8d08fe7457ec0c3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0876f5f52fbed9fd5850905306b58d1b = $(`<div id="html_0876f5f52fbed9fd5850905306b58d1b" style="width: 100.0%; height: 100.0%;"><b>Royal Ontario Museum (ROM)</b><br>100 Queens Park, Toronto, ON M5S 2C6</div>`)[0];
+                popup_e892913f74a79c6bb8d08fe7457ec0c3.setContent(html_0876f5f52fbed9fd5850905306b58d1b);
+            
+        
+
+        marker_4fc1a24c14e8213ee5e1d1a2cb262bef.bindPopup(popup_e892913f74a79c6bb8d08fe7457ec0c3)
+        ;
+
+        
+    
+    
+            marker_4fc1a24c14e8213ee5e1d1a2cb262bef.bindTooltip(
+                `<div>
+                     Royal Ontario Museum (ROM)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_43fc45d2373a91a1abb9edd167730e49 = L.marker(
+                [43.6764, -79.4094],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_697e65143d3dc2045a90df3b24956cab = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_72defee2b7a7b5bdd62d07284dd7d8a9 = $(`<div id="html_72defee2b7a7b5bdd62d07284dd7d8a9" style="width: 100.0%; height: 100.0%;"><b>Casa Loma</b><br>1 Austin Terrace, Toronto, ON M5R 1X8</div>`)[0];
+                popup_697e65143d3dc2045a90df3b24956cab.setContent(html_72defee2b7a7b5bdd62d07284dd7d8a9);
+            
+        
+
+        marker_43fc45d2373a91a1abb9edd167730e49.bindPopup(popup_697e65143d3dc2045a90df3b24956cab)
+        ;
+
+        
+    
+    
+            marker_43fc45d2373a91a1abb9edd167730e49.bindTooltip(
+                `<div>
+                     Casa Loma
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_16dc49d2ddc5ad9e5b1fedbabcfec68e = L.marker(
+                [43.627, -79.396],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_609dece67915db89da38d54619240537 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_232191e13d3b56542c75e88c547dcb1c = $(`<div id="html_232191e13d3b56542c75e88c547dcb1c" style="width: 100.0%; height: 100.0%;"><b>Toronto Islands</b><br>Toronto, ON M5J 2E6</div>`)[0];
+                popup_609dece67915db89da38d54619240537.setContent(html_232191e13d3b56542c75e88c547dcb1c);
+            
+        
+
+        marker_16dc49d2ddc5ad9e5b1fedbabcfec68e.bindPopup(popup_609dece67915db89da38d54619240537)
+        ;
+
+        
+    
+    
+            marker_16dc49d2ddc5ad9e5b1fedbabcfec68e.bindTooltip(
+                `<div>
+                     Toronto Islands
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_12963a82ff6f94fc101bca2f74b426d6 = L.marker(
+                [45.9991, -78.3833],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_5ec0d478470ef6d632d1372c4cba343c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_10265b7641b0a410397b1aea568ae986 = $(`<div id="html_10265b7641b0a410397b1aea568ae986" style="width: 100.0%; height: 100.0%;"><b>Algonquin Provincial Park</b><br>1-800-667-1940, Ontario</div>`)[0];
+                popup_5ec0d478470ef6d632d1372c4cba343c.setContent(html_10265b7641b0a410397b1aea568ae986);
+            
+        
+
+        marker_12963a82ff6f94fc101bca2f74b426d6.bindPopup(popup_5ec0d478470ef6d632d1372c4cba343c)
+        ;
+
+        
+    
+    
+            marker_12963a82ff6f94fc101bca2f74b426d6.bindTooltip(
+                `<div>
+                     Algonquin Provincial Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_977d2aeb26b86742fe8ea1ef9649e26c = L.marker(
+                [44.35, -75.8833],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_eb6785c29368c965ea2bd424c4e5954c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1ed7f53d19da56d2bfd27a38f6c23eb8 = $(`<div id="html_1ed7f53d19da56d2bfd27a38f6c23eb8" style="width: 100.0%; height: 100.0%;"><b>Thousand Islands</b><br>Thousand Islands Parkway, Ontario</div>`)[0];
+                popup_eb6785c29368c965ea2bd424c4e5954c.setContent(html_1ed7f53d19da56d2bfd27a38f6c23eb8);
+            
+        
+
+        marker_977d2aeb26b86742fe8ea1ef9649e26c.bindPopup(popup_eb6785c29368c965ea2bd424c4e5954c)
+        ;
+
+        
+    
+    
+            marker_977d2aeb26b86742fe8ea1ef9649e26c.bindTooltip(
+                `<div>
+                     Thousand Islands
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_30768ab94394cecb8b41f5cd8cfeae7b = L.marker(
+                [45.4235, -75.7003],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_cb633b307bc7301281d21856914be94d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_63aeeb3390518d9e24761edd7c6dc589 = $(`<div id="html_63aeeb3390518d9e24761edd7c6dc589" style="width: 100.0%; height: 100.0%;"><b>Parliament Hill</b><br>Wellington St, Ottawa, ON K1A 0A9</div>`)[0];
+                popup_cb633b307bc7301281d21856914be94d.setContent(html_63aeeb3390518d9e24761edd7c6dc589);
+            
+        
+
+        marker_30768ab94394cecb8b41f5cd8cfeae7b.bindPopup(popup_cb633b307bc7301281d21856914be94d)
+        ;
+
+        
+    
+    
+            marker_30768ab94394cecb8b41f5cd8cfeae7b.bindTooltip(
+                `<div>
+                     Parliament Hill
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_7bfa047d170113cd0168714f01811178 = L.marker(
+                [43.8345, -79.5402],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_34698bfad8bb6b2f52ac91fdefc32880 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7ee3bfa04e9e9be4f0f5ad2916411a4a = $(`<div id="html_7ee3bfa04e9e9be4f0f5ad2916411a4a" style="width: 100.0%; height: 100.0%;"><b>Canada’s Wonderland</b><br>1 Canada's Wonderland Dr, Vaughan, ON L6A 1S6</div>`)[0];
+                popup_34698bfad8bb6b2f52ac91fdefc32880.setContent(html_7ee3bfa04e9e9be4f0f5ad2916411a4a);
+            
+        
+
+        marker_7bfa047d170113cd0168714f01811178.bindPopup(popup_34698bfad8bb6b2f52ac91fdefc32880)
+        ;
+
+        
+    
+    
+            marker_7bfa047d170113cd0168714f01811178.bindTooltip(
+                `<div>
+                     Canada’s Wonderland
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_13722d9fd7ba30b2684f0ea6c20ed4d8 = L.marker(
+                [44.5022, -80.3122],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_891c96346af4088853fb328f8076d63a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e3bde4d5dac70bcc194891118e087c59 = $(`<div id="html_e3bde4d5dac70bcc194891118e087c59" style="width: 100.0%; height: 100.0%;"><b>Blue Mountain Resort</b><br>108 Jozo Weider Blvd, Blue Mountains, ON L9Y 0V2</div>`)[0];
+                popup_891c96346af4088853fb328f8076d63a.setContent(html_e3bde4d5dac70bcc194891118e087c59);
+            
+        
+
+        marker_13722d9fd7ba30b2684f0ea6c20ed4d8.bindPopup(popup_891c96346af4088853fb328f8076d63a)
+        ;
+
+        
+    
+    
+            marker_13722d9fd7ba30b2684f0ea6c20ed4d8.bindTooltip(
+                `<div>
+                     Blue Mountain Resort
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_0b12f18529e1dd7180880859964b5100 = L.marker(
+                [43.255, -79.876],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_e99d37c12291451328e3cbff21e28be8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ea5b078e9c9218b31cc84ec7f073ef5a = $(`<div id="html_ea5b078e9c9218b31cc84ec7f073ef5a" style="width: 100.0%; height: 100.0%;"><b>Royal Botanical Gardens</b><br>680 Plains Rd W, Burlington, ON L7T 4H4</div>`)[0];
+                popup_e99d37c12291451328e3cbff21e28be8.setContent(html_ea5b078e9c9218b31cc84ec7f073ef5a);
+            
+        
+
+        marker_0b12f18529e1dd7180880859964b5100.bindPopup(popup_e99d37c12291451328e3cbff21e28be8)
+        ;
+
+        
+    
+    
+            marker_0b12f18529e1dd7180880859964b5100.bindTooltip(
+                `<div>
+                     Royal Botanical Gardens
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_95f4e21f1a2d9f20cd2e6f0b01462db6 = L.marker(
+                [43.7216, -79.3155],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_0f6a00a19624578ef4bc7e9594d9cee4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_17f80fc213f9e82eec866f51220be0fa = $(`<div id="html_17f80fc213f9e82eec866f51220be0fa" style="width: 100.0%; height: 100.0%;"><b>Ontario Science Centre</b><br>770 Don Mills Rd, North York, ON M3C 1T3</div>`)[0];
+                popup_0f6a00a19624578ef4bc7e9594d9cee4.setContent(html_17f80fc213f9e82eec866f51220be0fa);
+            
+        
+
+        marker_95f4e21f1a2d9f20cd2e6f0b01462db6.bindPopup(popup_0f6a00a19624578ef4bc7e9594d9cee4)
+        ;
+
+        
+    
+    
+            marker_95f4e21f1a2d9f20cd2e6f0b01462db6.bindTooltip(
+                `<div>
+                     Ontario Science Centre
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_07af9f962a838a38af87a7ea8e385392 = L.marker(
+                [43.6536, -79.3928],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_d842c93bf377f8b14ed58c7933900d5d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c6c5db7c8aba233645584df32e6ab337 = $(`<div id="html_c6c5db7c8aba233645584df32e6ab337" style="width: 100.0%; height: 100.0%;"><b>Art Gallery of Ontario (AGO)</b><br>317 Dundas St W, Toronto, ON M5T 1G4</div>`)[0];
+                popup_d842c93bf377f8b14ed58c7933900d5d.setContent(html_c6c5db7c8aba233645584df32e6ab337);
+            
+        
+
+        marker_07af9f962a838a38af87a7ea8e385392.bindPopup(popup_d842c93bf377f8b14ed58c7933900d5d)
+        ;
+
+        
+    
+    
+            marker_07af9f962a838a38af87a7ea8e385392.bindTooltip(
+                `<div>
+                     Art Gallery of Ontario (AGO)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_c43f6790bdc3bd3f207419a9af8ad6d7 = L.marker(
+                [43.37, -80.982],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_dd635f106beaa145d95e3322ae7e7783 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_153059874eec46d2027bf115cbf568d6 = $(`<div id="html_153059874eec46d2027bf115cbf568d6" style="width: 100.0%; height: 100.0%;"><b>Stratford Festival Theatre</b><br>55 Queen St, Stratford, ON N5A 6V2</div>`)[0];
+                popup_dd635f106beaa145d95e3322ae7e7783.setContent(html_153059874eec46d2027bf115cbf568d6);
+            
+        
+
+        marker_c43f6790bdc3bd3f207419a9af8ad6d7.bindPopup(popup_dd635f106beaa145d95e3322ae7e7783)
+        ;
+
+        
+    
+    
+            marker_c43f6790bdc3bd3f207419a9af8ad6d7.bindTooltip(
+                `<div>
+                     Stratford Festival Theatre
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a1b5b03a9d51bedf92b888fc91ef9fc7 = L.marker(
+                [41.949, -82.682],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_d7ab1d6a87807168161d70b8d9691732 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a74faf7919d155695d0eae63aff16a95 = $(`<div id="html_a74faf7919d155695d0eae63aff16a95" style="width: 100.0%; height: 100.0%;"><b>Point Pelee National Park</b><br>1118 Point Pelee Dr, Leamington, ON N8H 3V4</div>`)[0];
+                popup_d7ab1d6a87807168161d70b8d9691732.setContent(html_a74faf7919d155695d0eae63aff16a95);
+            
+        
+
+        marker_a1b5b03a9d51bedf92b888fc91ef9fc7.bindPopup(popup_d7ab1d6a87807168161d70b8d9691732)
+        ;
+
+        
+    
+    
+            marker_a1b5b03a9d51bedf92b888fc91ef9fc7.bindTooltip(
+                `<div>
+                     Point Pelee National Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_ace45c640dc3a15ec94e4519d2df41ab = L.marker(
+                [43.6833, -80.4333],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_51422e62940b3b79a9d90e50d8c9a2c8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e106d6a74c080c0e6e96e4ccb1ceeb90 = $(`<div id="html_e106d6a74c080c0e6e96e4ccb1ceeb90" style="width: 100.0%; height: 100.0%;"><b>Elora Gorge Conservation Area</b><br>319-321 Church St, Elora, ON N0B 1S0</div>`)[0];
+                popup_51422e62940b3b79a9d90e50d8c9a2c8.setContent(html_e106d6a74c080c0e6e96e4ccb1ceeb90);
+            
+        
+
+        marker_ace45c640dc3a15ec94e4519d2df41ab.bindPopup(popup_51422e62940b3b79a9d90e50d8c9a2c8)
+        ;
+
+        
+    
+    
+            marker_ace45c640dc3a15ec94e4519d2df41ab.bindTooltip(
+                `<div>
+                     Elora Gorge Conservation Area
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_7b99440baf5739cf579be289f31b1789 = L.marker(
+                [44.2, -79.0],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_41fde7ca6a8556fc9497fb2e0dc3b2be = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cb7d745fd57518ecd513e50ad9954014 = $(`<div id="html_cb7d745fd57518ecd513e50ad9954014" style="width: 100.0%; height: 100.0%;"><b>Sibbald Point Provincial Park</b><br>26071 Park Rd, Sutton West, ON L0E 1R0</div>`)[0];
+                popup_41fde7ca6a8556fc9497fb2e0dc3b2be.setContent(html_cb7d745fd57518ecd513e50ad9954014);
+            
+        
+
+        marker_7b99440baf5739cf579be289f31b1789.bindPopup(popup_41fde7ca6a8556fc9497fb2e0dc3b2be)
+        ;
+
+        
+    
+    
+            marker_7b99440baf5739cf579be289f31b1789.bindTooltip(
+                `<div>
+                     Sibbald Point Provincial Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_362a91b0cb5eef4b89b5e7024382f134 = L.marker(
+                [43.7769, -79.9244],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_d783be74bc92b4cad6be6acabd914ba1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d9b5f9be6f4692f8c129360a44202f94 = $(`<div id="html_d9b5f9be6f4692f8c129360a44202f94" style="width: 100.0%; height: 100.0%;"><b>Cheltenham Badlands</b><br>1736 Olde Base Line Rd, Caledon, ON L7K 2M6</div>`)[0];
+                popup_d783be74bc92b4cad6be6acabd914ba1.setContent(html_d9b5f9be6f4692f8c129360a44202f94);
+            
+        
+
+        marker_362a91b0cb5eef4b89b5e7024382f134.bindPopup(popup_d783be74bc92b4cad6be6acabd914ba1)
+        ;
+
+        
+    
+    
+            marker_362a91b0cb5eef4b89b5e7024382f134.bindTooltip(
+                `<div>
+                     Cheltenham Badlands
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_ead5410fb0774bbe9e5a8dda1daffa08 = L.marker(
+                [45.975, -79.204],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_4856f0981a372dbe1e95ec8ad33d8591 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fc95b5b8573e487b596c922a32a817a1 = $(`<div id="html_fc95b5b8573e487b596c922a32a817a1" style="width: 100.0%; height: 100.0%;"><b>Arrowhead Provincial Park</b><br>451 Arrowhead Park Rd, Huntsville, ON P1H 2J4</div>`)[0];
+                popup_4856f0981a372dbe1e95ec8ad33d8591.setContent(html_fc95b5b8573e487b596c922a32a817a1);
+            
+        
+
+        marker_ead5410fb0774bbe9e5a8dda1daffa08.bindPopup(popup_4856f0981a372dbe1e95ec8ad33d8591)
+        ;
+
+        
+    
+    
+            marker_ead5410fb0774bbe9e5a8dda1daffa08.bindTooltip(
+                `<div>
+                     Arrowhead Provincial Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_b0faa734b853001fa296666187420597 = L.marker(
+                [45.947, -81.593],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_4ae602bb66d2c93980896fb092c78fc2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f2c74798c00640c2a2ef9a670af3b6a7 = $(`<div id="html_f2c74798c00640c2a2ef9a670af3b6a7" style="width: 100.0%; height: 100.0%;"><b>Killarney Provincial Park</b><br>1 Killarney Bay Rd, Killarney, ON P0G 1G0</div>`)[0];
+                popup_4ae602bb66d2c93980896fb092c78fc2.setContent(html_f2c74798c00640c2a2ef9a670af3b6a7);
+            
+        
+
+        marker_b0faa734b853001fa296666187420597.bindPopup(popup_4ae602bb66d2c93980896fb092c78fc2)
+        ;
+
+        
+    
+    
+            marker_b0faa734b853001fa296666187420597.bindTooltip(
+                `<div>
+                     Killarney Provincial Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_4b86ec2695c123e173266ed9b10cc3ea = L.marker(
+                [45.237, -81.536],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_afba9694c4f7a531392874325e16235b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f5c67025b450a340865dcdd1f03635dc = $(`<div id="html_f5c67025b450a340865dcdd1f03635dc" style="width: 100.0%; height: 100.0%;"><b>Bruce Peninsula National Park</b><br>28 Cyprus Lake Rd, Tobermory, ON N0H 2R0</div>`)[0];
+                popup_afba9694c4f7a531392874325e16235b.setContent(html_f5c67025b450a340865dcdd1f03635dc);
+            
+        
+
+        marker_4b86ec2695c123e173266ed9b10cc3ea.bindPopup(popup_afba9694c4f7a531392874325e16235b)
+        ;
+
+        
+    
+    
+            marker_4b86ec2695c123e173266ed9b10cc3ea.bindTooltip(
+                `<div>
+                     Bruce Peninsula National Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_4894b3bb789366753b16725a3c22ad1e = L.marker(
+                [48.736, -81.866],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_0976a2b7a4851db28d6227e838c45789 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_41e1a9d0d59d1a7935a762463362ca49 = $(`<div id="html_41e1a9d0d59d1a7935a762463362ca49" style="width: 100.0%; height: 100.0%;"><b>Pukaskwa National Park</b><br>1 Hattie Cove Rd, Marathon, ON P0T 2E0</div>`)[0];
+                popup_0976a2b7a4851db28d6227e838c45789.setContent(html_41e1a9d0d59d1a7935a762463362ca49);
+            
+        
+
+        marker_4894b3bb789366753b16725a3c22ad1e.bindPopup(popup_0976a2b7a4851db28d6227e838c45789)
+        ;
+
+        
+    
+    
+            marker_4894b3bb789366753b16725a3c22ad1e.bindTooltip(
+                `<div>
+                     Pukaskwa National Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_c04dc9e81fc8ff55d42fd3ad47d613c0 = L.marker(
+                [47.97, -81.7],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_265680dad37eab8ec78394841822c828 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_27f148c9385fcb567f57f306275b3c29 = $(`<div id="html_27f148c9385fcb567f57f306275b3c29" style="width: 100.0%; height: 100.0%;"><b>Lake Superior Provincial Park</b><br>1 Highway 17, Wawa, ON P0S 1K0</div>`)[0];
+                popup_265680dad37eab8ec78394841822c828.setContent(html_27f148c9385fcb567f57f306275b3c29);
+            
+        
+
+        marker_c04dc9e81fc8ff55d42fd3ad47d613c0.bindPopup(popup_265680dad37eab8ec78394841822c828)
+        ;
+
+        
+    
+    
+            marker_c04dc9e81fc8ff55d42fd3ad47d613c0.bindTooltip(
+                `<div>
+                     Lake Superior Provincial Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_c0e2ea3018d10cea2d828df0e45f8b69 = L.marker(
+                [45.877, -81.907],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_a47878a47b10e88d853d8d81414453b2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_82f1a90981748e65ff22a5e012fb8a75 = $(`<div id="html_82f1a90981748e65ff22a5e012fb8a75" style="width: 100.0%; height: 100.0%;"><b>Manitoulin Island</b><br>Manitoulin Island, ON</div>`)[0];
+                popup_a47878a47b10e88d853d8d81414453b2.setContent(html_82f1a90981748e65ff22a5e012fb8a75);
+            
+        
+
+        marker_c0e2ea3018d10cea2d828df0e45f8b69.bindPopup(popup_a47878a47b10e88d853d8d81414453b2)
+        ;
+
+        
+    
+    
+            marker_c0e2ea3018d10cea2d828df0e45f8b69.bindTooltip(
+                `<div>
+                     Manitoulin Island
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_8a79f51e07e7e19355221cdfb7600cc2 = L.marker(
+                [43.95, -77.2],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_c99ec885ea538d4e37d3b9a19efa9f1f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_06dcf1eca01f3c41178d242205e3444b = $(`<div id="html_06dcf1eca01f3c41178d242205e3444b" style="width: 100.0%; height: 100.0%;"><b>Sandbanks Provincial Park</b><br>3004 County Rd 12, Picton, ON K0K 2T0</div>`)[0];
+                popup_c99ec885ea538d4e37d3b9a19efa9f1f.setContent(html_06dcf1eca01f3c41178d242205e3444b);
+            
+        
+
+        marker_8a79f51e07e7e19355221cdfb7600cc2.bindPopup(popup_c99ec885ea538d4e37d3b9a19efa9f1f)
+        ;
+
+        
+    
+    
+            marker_8a79f51e07e7e19355221cdfb7600cc2.bindTooltip(
+                `<div>
+                     Sandbanks Provincial Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_51ca7de0983d3082e6edc0b9089c86aa = L.marker(
+                [43.9333, -77.7],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_bdb115e4c6f17967f2553d8e06f26963 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_41a42fe553a5ef7821b5267ac78928f2 = $(`<div id="html_41a42fe553a5ef7821b5267ac78928f2" style="width: 100.0%; height: 100.0%;"><b>Presqu'ile Provincial Park</b><br>328 Presqu'ile Pkwy, Brighton, ON K0K 1H0</div>`)[0];
+                popup_bdb115e4c6f17967f2553d8e06f26963.setContent(html_41a42fe553a5ef7821b5267ac78928f2);
+            
+        
+
+        marker_51ca7de0983d3082e6edc0b9089c86aa.bindPopup(popup_bdb115e4c6f17967f2553d8e06f26963)
+        ;
+
+        
+    
+    
+            marker_51ca7de0983d3082e6edc0b9089c86aa.bindTooltip(
+                `<div>
+                     Presqu'ile Provincial Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_b2914033ca1958e0b1049409d49ab6df = L.marker(
+                [44.5, -80.0],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_6de9126928d6037438924e61031fa04a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d827af293cf0c0d3a97e2dc20b2e6ad1 = $(`<div id="html_d827af293cf0c0d3a97e2dc20b2e6ad1" style="width: 100.0%; height: 100.0%;"><b>Wasaga Beach Provincial Park</b><br>170 Beach Dr, Wasaga Beach, ON L9Z 2L3</div>`)[0];
+                popup_6de9126928d6037438924e61031fa04a.setContent(html_d827af293cf0c0d3a97e2dc20b2e6ad1);
+            
+        
+
+        marker_b2914033ca1958e0b1049409d49ab6df.bindPopup(popup_6de9126928d6037438924e61031fa04a)
+        ;
+
+        
+    
+    
+            marker_b2914033ca1958e0b1049409d49ab6df.bindTooltip(
+                `<div>
+                     Wasaga Beach Provincial Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_b4e5c111df357018b9b83d47fc11f84a = L.marker(
+                [43.6465, -79.4637],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_19913c34ab0d1e025440b35c2aa195ef = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a70950f2315b9b8ec99559326d52bf16 = $(`<div id="html_a70950f2315b9b8ec99559326d52bf16" style="width: 100.0%; height: 100.0%;"><b>High Park</b><br>1873 Bloor St W, Toronto, ON M6R 2Z3</div>`)[0];
+                popup_19913c34ab0d1e025440b35c2aa195ef.setContent(html_a70950f2315b9b8ec99559326d52bf16);
+            
+        
+
+        marker_b4e5c111df357018b9b83d47fc11f84a.bindPopup(popup_19913c34ab0d1e025440b35c2aa195ef)
+        ;
+
+        
+    
+    
+            marker_b4e5c111df357018b9b83d47fc11f84a.bindTooltip(
+                `<div>
+                     High Park
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_17db0565da3a83bd65b25c23a218be34 = L.marker(
+                [43.6425, -79.386],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_50d9beb625561c819e1207592b17468f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_239b82c6b32ecff10ca700719427a31b = $(`<div id="html_239b82c6b32ecff10ca700719427a31b" style="width: 100.0%; height: 100.0%;"><b>Ripley's Aquarium of Canada</b><br>288 Bremner Blvd, Toronto, ON M5V 3L9</div>`)[0];
+                popup_50d9beb625561c819e1207592b17468f.setContent(html_239b82c6b32ecff10ca700719427a31b);
+            
+        
+
+        marker_17db0565da3a83bd65b25c23a218be34.bindPopup(popup_50d9beb625561c819e1207592b17468f)
+        ;
+
+        
+    
+    
+            marker_17db0565da3a83bd65b25c23a218be34.bindTooltip(
+                `<div>
+                     Ripley's Aquarium of Canada
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9601530435026737c5dbc05c4c4a2612 = L.marker(
+                [43.817, -79.185],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_d499da848aa2c78e55f278f99a5f357e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_82453e7798c2004beb1a185b668c18f3 = $(`<div id="html_82453e7798c2004beb1a185b668c18f3" style="width: 100.0%; height: 100.0%;"><b>Toronto Zoo</b><br>2000 Meadowvale Rd, Toronto, ON M1B 5K7</div>`)[0];
+                popup_d499da848aa2c78e55f278f99a5f357e.setContent(html_82453e7798c2004beb1a185b668c18f3);
+            
+        
+
+        marker_9601530435026737c5dbc05c4c4a2612.bindPopup(popup_d499da848aa2c78e55f278f99a5f357e)
+        ;
+
+        
+    
+    
+            marker_9601530435026737c5dbc05c4c4a2612.bindTooltip(
+                `<div>
+                     Toronto Zoo
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_d2e439185698f7f8e63140c8441093fa = L.marker(
+                [43.71, -79.25],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_7795dfbb621a99cbfad480ef816c678c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a1aa95e08f3d777d203df4239008d07d = $(`<div id="html_a1aa95e08f3d777d203df4239008d07d" style="width: 100.0%; height: 100.0%;"><b>Scarborough Bluffs</b><br>1 Brimley Rd S, Scarborough, ON M1M 3W3</div>`)[0];
+                popup_7795dfbb621a99cbfad480ef816c678c.setContent(html_a1aa95e08f3d777d203df4239008d07d);
+            
+        
+
+        marker_d2e439185698f7f8e63140c8441093fa.bindPopup(popup_7795dfbb621a99cbfad480ef816c678c)
+        ;
+
+        
+    
+    
+            marker_d2e439185698f7f8e63140c8441093fa.bindTooltip(
+                `<div>
+                     Scarborough Bluffs
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_6f57a5d5cd9ecf217a0cc5b7dbb12839 = L.marker(
+                [43.255, -79.074],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_6062fd8aa7877d0dcb63827f3ca33e4a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_270c962a2d9db01bd8f070d2137bd8c8 = $(`<div id="html_270c962a2d9db01bd8f070d2137bd8c8" style="width: 100.0%; height: 100.0%;"><b>Niagara-on-the-Lake</b><br>Niagara-on-the-Lake, ON</div>`)[0];
+                popup_6062fd8aa7877d0dcb63827f3ca33e4a.setContent(html_270c962a2d9db01bd8f070d2137bd8c8);
+            
+        
+
+        marker_6f57a5d5cd9ecf217a0cc5b7dbb12839.bindPopup(popup_6062fd8aa7877d0dcb63827f3ca33e4a)
+        ;
+
+        
+    
+    
+            marker_6f57a5d5cd9ecf217a0cc5b7dbb12839.bindTooltip(
+                `<div>
+                     Niagara-on-the-Lake
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_686a79977ce4ae7506bf049060149fc6 = L.marker(
+                [43.26, -79.085],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_8df304e4cbdbfc3ae53cf8363469df50 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_755d64bad7f3433255c0abd877410e1a = $(`<div id="html_755d64bad7f3433255c0abd877410e1a" style="width: 100.0%; height: 100.0%;"><b>Jackson Triggs Winery</b><br>2145 Niagara Stone Rd, Niagara-on-the-Lake, ON L0S 1J0</div>`)[0];
+                popup_8df304e4cbdbfc3ae53cf8363469df50.setContent(html_755d64bad7f3433255c0abd877410e1a);
+            
+        
+
+        marker_686a79977ce4ae7506bf049060149fc6.bindPopup(popup_8df304e4cbdbfc3ae53cf8363469df50)
+        ;
+
+        
+    
+    
+            marker_686a79977ce4ae7506bf049060149fc6.bindTooltip(
+                `<div>
+                     Jackson Triggs Winery
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_6aa81d0afbe5c018c52999ea44c8519a = L.marker(
+                [43.4, -80.33],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_ed6d9c937c68cc96a9969eb374c61588 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_abc78ddb26ad664b0f5149c90b0b347d = $(`<div id="html_abc78ddb26ad664b0f5149c90b0b347d" style="width: 100.0%; height: 100.0%;"><b>African Lion Safari</b><br>1386 Wilton Grove Rd, Cambridge, ON N3C 4E5</div>`)[0];
+                popup_ed6d9c937c68cc96a9969eb374c61588.setContent(html_abc78ddb26ad664b0f5149c90b0b347d);
+            
+        
+
+        marker_6aa81d0afbe5c018c52999ea44c8519a.bindPopup(popup_ed6d9c937c68cc96a9969eb374c61588)
+        ;
+
+        
+    
+    
+            marker_6aa81d0afbe5c018c52999ea44c8519a.bindTooltip(
+                `<div>
+                     African Lion Safari
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_0e670cfa72e0c0e7ba31d4a432f6f832 = L.marker(
+                [44.889, -75.519],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_322269ea857654e3f469ed65cca81aab = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f2f899cd8e1faa35b67c01e6608a8775 = $(`<div id="html_f2f899cd8e1faa35b67c01e6608a8775" style="width: 100.0%; height: 100.0%;"><b>Upper Canada Village</b><br>13750 County Rd 2, Morrisburg, ON K0C 1X0</div>`)[0];
+                popup_322269ea857654e3f469ed65cca81aab.setContent(html_f2f899cd8e1faa35b67c01e6608a8775);
+            
+        
+
+        marker_0e670cfa72e0c0e7ba31d4a432f6f832.bindPopup(popup_322269ea857654e3f469ed65cca81aab)
+        ;
+
+        
+    
+    
+            marker_0e670cfa72e0c0e7ba31d4a432f6f832.bindTooltip(
+                `<div>
+                     Upper Canada Village
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_19fc0478b3f4dcf07c9049ca2d82385d = L.marker(
+                [44.2411, -76.4821],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_9899e0c01896c19b9d7e6bccd58c39f4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ce7c77d26b04150b7a058d85120296e1 = $(`<div id="html_ce7c77d26b04150b7a058d85120296e1" style="width: 100.0%; height: 100.0%;"><b>Fort Henry National Historic Site</b><br>1 Fort Henry Dr, Kingston, ON K7K 5A7</div>`)[0];
+                popup_9899e0c01896c19b9d7e6bccd58c39f4.setContent(html_ce7c77d26b04150b7a058d85120296e1);
+            
+        
+
+        marker_19fc0478b3f4dcf07c9049ca2d82385d.bindPopup(popup_9899e0c01896c19b9d7e6bccd58c39f4)
+        ;
+
+        
+    
+    
+            marker_19fc0478b3f4dcf07c9049ca2d82385d.bindTooltip(
+                `<div>
+                     Fort Henry National Historic Site
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9bdb436d9ecc32c30a3adc07bc50d1b3 = L.marker(
+                [43.2565, -79.8711],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_020462f201189ec8cf91953eb0e6d3e3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d46e35ebca520118ad1b1013465baf20 = $(`<div id="html_d46e35ebca520118ad1b1013465baf20" style="width: 100.0%; height: 100.0%;"><b>Dundurn Castle</b><br>610 York Blvd, Hamilton, ON L8R 3H1</div>`)[0];
+                popup_020462f201189ec8cf91953eb0e6d3e3.setContent(html_d46e35ebca520118ad1b1013465baf20);
+            
+        
+
+        marker_9bdb436d9ecc32c30a3adc07bc50d1b3.bindPopup(popup_020462f201189ec8cf91953eb0e6d3e3)
+        ;
+
+        
+    
+    
+            marker_9bdb436d9ecc32c30a3adc07bc50d1b3.bindTooltip(
+                `<div>
+                     Dundurn Castle
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_ac03f97e2c30f36d1e4d95a425e1db7e = L.marker(
+                [43.159, -79.247],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_a419d314da5e0e33b9046ecf40ef2291 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_32e5552bc027cc13f766796d47a14331 = $(`<div id="html_32e5552bc027cc13f766796d47a14331" style="width: 100.0%; height: 100.0%;"><b>Royal Canadian Henley Rowing Course</b><br>400 Martindale Rd, St. Catharines, ON L2N 2N4</div>`)[0];
+                popup_a419d314da5e0e33b9046ecf40ef2291.setContent(html_32e5552bc027cc13f766796d47a14331);
+            
+        
+
+        marker_ac03f97e2c30f36d1e4d95a425e1db7e.bindPopup(popup_a419d314da5e0e33b9046ecf40ef2291)
+        ;
+
+        
+    
+    
+            marker_ac03f97e2c30f36d1e4d95a425e1db7e.bindTooltip(
+                `<div>
+                     Royal Canadian Henley Rowing Course
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_7ce3f2738d09cbc06f4d56ee58bd4d6c = L.marker(
+                [43.147, -79.263],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_0c42e733c5f23cff6b0e41246dbd54f6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ef4b96ba858ba3fa18dd68364acbf67e = $(`<div id="html_ef4b96ba858ba3fa18dd68364acbf67e" style="width: 100.0%; height: 100.0%;"><b>Ball’s Falls Conservation Area</b><br>3295 Sixth Ave, Jordan, ON L0R 1S0</div>`)[0];
+                popup_0c42e733c5f23cff6b0e41246dbd54f6.setContent(html_ef4b96ba858ba3fa18dd68364acbf67e);
+            
+        
+
+        marker_7ce3f2738d09cbc06f4d56ee58bd4d6c.bindPopup(popup_0c42e733c5f23cff6b0e41246dbd54f6)
+        ;
+
+        
+    
+    
+            marker_7ce3f2738d09cbc06f4d56ee58bd4d6c.bindTooltip(
+                `<div>
+                     Ball’s Falls Conservation Area
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_088d8f9985c804b094652d0eaa7d5f86 = L.marker(
+                [44.416, -80.533],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_94a4f52ef61f3ae2ccce5f6574abc975 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2d230484775a1d912e7d1b48d323e741 = $(`<div id="html_2d230484775a1d912e7d1b48d323e741" style="width: 100.0%; height: 100.0%;"><b>Beaver Valley Ski Club</b><br>176 Beaver Valley Rd, Flesherton, ON N0C 1E0</div>`)[0];
+                popup_94a4f52ef61f3ae2ccce5f6574abc975.setContent(html_2d230484775a1d912e7d1b48d323e741);
+            
+        
+
+        marker_088d8f9985c804b094652d0eaa7d5f86.bindPopup(popup_94a4f52ef61f3ae2ccce5f6574abc975)
+        ;
+
+        
+    
+    
+            marker_088d8f9985c804b094652d0eaa7d5f86.bindTooltip(
+                `<div>
+                     Beaver Valley Ski Club
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_bd54606442a89847ae1f499af131a411 = L.marker(
+                [44.309, -78.329],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_915c16da84f793d8a343b790fa78bd8d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ff7450b7f8506620c868ab3d770ae2b0 = $(`<div id="html_ff7450b7f8506620c868ab3d770ae2b0" style="width: 100.0%; height: 100.0%;"><b>Canadian Canoe Museum</b><br>910 Victoria St N, Peterborough, ON K9H 7L3</div>`)[0];
+                popup_915c16da84f793d8a343b790fa78bd8d.setContent(html_ff7450b7f8506620c868ab3d770ae2b0);
+            
+        
+
+        marker_bd54606442a89847ae1f499af131a411.bindPopup(popup_915c16da84f793d8a343b790fa78bd8d)
+        ;
+
+        
+    
+    
+            marker_bd54606442a89847ae1f499af131a411.bindTooltip(
+                `<div>
+                     Canadian Canoe Museum
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a2b3ae1bd29a7524d4eee1a62bc6f3fa = L.marker(
+                [43.637, -79.381],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_f7573aa44411866b03c84cfd4cf52198 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_55999f08cf27e30b93e6e125bed1a266 = $(`<div id="html_55999f08cf27e30b93e6e125bed1a266" style="width: 100.0%; height: 100.0%;"><b>Toronto Harbourfront Centre</b><br>235 Queens Quay W, Toronto, ON M5J 2G8</div>`)[0];
+                popup_f7573aa44411866b03c84cfd4cf52198.setContent(html_55999f08cf27e30b93e6e125bed1a266);
+            
+        
+
+        marker_a2b3ae1bd29a7524d4eee1a62bc6f3fa.bindPopup(popup_f7573aa44411866b03c84cfd4cf52198)
+        ;
+
+        
+    
+    
+            marker_a2b3ae1bd29a7524d4eee1a62bc6f3fa.bindTooltip(
+                `<div>
+                     Toronto Harbourfront Centre
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_8fdcf3b4ccebc0f45e659e63af847071 = L.marker(
+                [45.338, -79.38],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_b76a557f85faf9e025176807a7ce6772 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_187d00a714bc547173fd572ce41afbc0 = $(`<div id="html_187d00a714bc547173fd572ce41afbc0" style="width: 100.0%; height: 100.0%;"><b>Muskoka Lakes</b><br>Muskoka, ON</div>`)[0];
+                popup_b76a557f85faf9e025176807a7ce6772.setContent(html_187d00a714bc547173fd572ce41afbc0);
+            
+        
+
+        marker_8fdcf3b4ccebc0f45e659e63af847071.bindPopup(popup_b76a557f85faf9e025176807a7ce6772)
+        ;
+
+        
+    
+    
+            marker_8fdcf3b4ccebc0f45e659e63af847071.bindTooltip(
+                `<div>
+                     Muskoka Lakes
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_b82bc355d696be26bd3f50e7167d2afc = L.marker(
+                [44.511, -80.321],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_9dd735d3a399d55430bc368177ff111f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a0f4465bf88509ba7b469a3430bbf017 = $(`<div id="html_a0f4465bf88509ba7b469a3430bbf017" style="width: 100.0%; height: 100.0%;"><b>Scenic Caves Nature Adventures</b><br>1912 Scenic Caves Rd, Blue Mountains, ON L9Y 0T2</div>`)[0];
+                popup_9dd735d3a399d55430bc368177ff111f.setContent(html_a0f4465bf88509ba7b469a3430bbf017);
+            
+        
+
+        marker_b82bc355d696be26bd3f50e7167d2afc.bindPopup(popup_9dd735d3a399d55430bc368177ff111f)
+        ;
+
+        
+    
+    
+            marker_b82bc355d696be26bd3f50e7167d2afc.bindTooltip(
+                `<div>
+                     Scenic Caves Nature Adventures
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_b84ea16d3cf55720285e9db6b249d398 = L.marker(
+                [44.034, -79.891],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_f55aff34e31e5987d55f872958e9a361 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1a8f86883d0fc89a861a2d8fc990afe0 = $(`<div id="html_1a8f86883d0fc89a861a2d8fc990afe0" style="width: 100.0%; height: 100.0%;"><b>Hockley Valley Resort</b><br>793522 Mono 3rd Line, Mono, ON L9W 6K1</div>`)[0];
+                popup_f55aff34e31e5987d55f872958e9a361.setContent(html_1a8f86883d0fc89a861a2d8fc990afe0);
+            
+        
+
+        marker_b84ea16d3cf55720285e9db6b249d398.bindPopup(popup_f55aff34e31e5987d55f872958e9a361)
+        ;
+
+        
+    
+    
+            marker_b84ea16d3cf55720285e9db6b249d398.bindTooltip(
+                `<div>
+                     Hockley Valley Resort
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9235ae64abe36bfa9c7f996cd2b9258a = L.marker(
+                [44.571, -80.936],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_f92c8ad031d9e9badbe7ad17ab4506f1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b3c9ba75d5f4d795b06774611ebc741e = $(`<div id="html_b3c9ba75d5f4d795b06774611ebc741e" style="width: 100.0%; height: 100.0%;"><b>Tom Thomson Art Gallery</b><br>1250 Hume St, Owen Sound, ON N4K 3N9</div>`)[0];
+                popup_f92c8ad031d9e9badbe7ad17ab4506f1.setContent(html_b3c9ba75d5f4d795b06774611ebc741e);
+            
+        
+
+        marker_9235ae64abe36bfa9c7f996cd2b9258a.bindPopup(popup_f92c8ad031d9e9badbe7ad17ab4506f1)
+        ;
+
+        
+    
+    
+            marker_9235ae64abe36bfa9c7f996cd2b9258a.bindTooltip(
+                `<div>
+                     Tom Thomson Art Gallery
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_82e22d28bf0fd3f66b97dbf10ff34182 = L.marker(
+                [44.741, -79.888],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_7acddfb6459f8cc3da20da56ef78540b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6bd07ded7d9c351e0256f21d8b1607f8 = $(`<div id="html_6bd07ded7d9c351e0256f21d8b1607f8" style="width: 100.0%; height: 100.0%;"><b>Big Bay Point Lighthouse</b><br>1 Big Bay Point Rd, Midland, ON L4R 4K4</div>`)[0];
+                popup_7acddfb6459f8cc3da20da56ef78540b.setContent(html_6bd07ded7d9c351e0256f21d8b1607f8);
+            
+        
+
+        marker_82e22d28bf0fd3f66b97dbf10ff34182.bindPopup(popup_7acddfb6459f8cc3da20da56ef78540b)
+        ;
+
+        
+    
+    
+            marker_82e22d28bf0fd3f66b97dbf10ff34182.bindTooltip(
+                `<div>
+                     Big Bay Point Lighthouse
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_698b63fa6c053d55510c248f0a57a144 = L.marker(
+                [43.547, -80.249],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_815d33a8321867970fc4721a5e061dc2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a43c6f4e7cd330b4c988f3dcf1189a98 = $(`<div id="html_a43c6f4e7cd330b4c988f3dcf1189a98" style="width: 100.0%; height: 100.0%;"><b>MacDonald Stewart Art Centre</b><br>63 Church St, Guelph, ON N1H 4B2</div>`)[0];
+                popup_815d33a8321867970fc4721a5e061dc2.setContent(html_a43c6f4e7cd330b4c988f3dcf1189a98);
+            
+        
+
+        marker_698b63fa6c053d55510c248f0a57a144.bindPopup(popup_815d33a8321867970fc4721a5e061dc2)
+        ;
+
+        
+    
+    
+            marker_698b63fa6c053d55510c248f0a57a144.bindTooltip(
+                `<div>
+                     MacDonald Stewart Art Centre
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_0183d4b239ad2c448ae1de50391374b0 = L.marker(
+                [44.71, -75.536],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_cce73356fc64c6d7c520f784e0624f3a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_eb44f8f56e4dd1365476e108a10dacfb = $(`<div id="html_eb44f8f56e4dd1365476e108a10dacfb" style="width: 100.0%; height: 100.0%;"><b>Fort Wellington National Historic Site</b><br>12 Wellington St, Prescott, ON K0E 1T0</div>`)[0];
+                popup_cce73356fc64c6d7c520f784e0624f3a.setContent(html_eb44f8f56e4dd1365476e108a10dacfb);
+            
+        
+
+        marker_0183d4b239ad2c448ae1de50391374b0.bindPopup(popup_cce73356fc64c6d7c520f784e0624f3a)
+        ;
+
+        
+    
+    
+            marker_0183d4b239ad2c448ae1de50391374b0.bindTooltip(
+                `<div>
+                     Fort Wellington National Historic Site
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_891802102b9008e8f42b0450a435ab36 = L.marker(
+                [43.6677, -79.3948],
+                {
+}
+            ).addTo(map_56436cc64af9a6c202620cd0541cfbb4);
+        
+    
+        var popup_e5611afce10f9b4a19b226c97bba3fd9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_233c00fc4c73a92c043f5424566d4e53 = $(`<div id="html_233c00fc4c73a92c043f5424566d4e53" style="width: 100.0%; height: 100.0%;"><b>Royal Ontario Museum Special Exhibits</b><br>100 Queens Park, Toronto, ON M5S 2C6</div>`)[0];
+                popup_e5611afce10f9b4a19b226c97bba3fd9.setContent(html_233c00fc4c73a92c043f5424566d4e53);
+            
+        
+
+        marker_891802102b9008e8f42b0450a435ab36.bindPopup(popup_e5611afce10f9b4a19b226c97bba3fd9)
+        ;
+
+        
+    
+    
+            marker_891802102b9008e8f42b0450a435ab36.bindTooltip(
+                `<div>
+                     Royal Ontario Museum Special Exhibits
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>

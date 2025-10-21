@@ -1,0 +1,58 @@
+name: Update Fever Opportunity Map
+
+on:
+  workflow_dispatch:        # Allows you to trigger manually
+  schedule:
+    - cron: "0 12 * * *"    # Runs every day at 12:00 UTC (optional – can remove this line if you want manual only)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests folium branca pandas numpy python-dotenv pytrends
+
+      - name: Run Fever Opportunity Map generator
+        env:
+          TM_API_KEY: ${{ secrets.TM_API_KEY }}
+        run: |
+          python - <<'EOF'
+          import nbformat, nbconvert
+          import os, sys
+
+          nb_path = "notebooks/fever_market_opportunity_map.ipynb"
+          html_out = "docs/fever_market_opportunity_map.html"
+
+          print(f"Running notebook: {nb_path}")
+          from nbconvert.preprocessors import ExecutePreprocessor
+
+          with open(nb_path, 'r', encoding='utf-8') as f:
+              nb = nbformat.read(f, as_version=4)
+
+          ep = ExecutePreprocessor(timeout=1800, kernel_name='python3')
+          ep.preprocess(nb, {'metadata': {'path': './'}})
+
+          with open(nb_path, 'w', encoding='utf-8') as f:
+              nbformat.write(nb, f)
+
+          print(f"✅ Notebook executed. HTML output at {html_out}")
+          EOF
+
+      - name: Commit and push updated HTML map
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add docs/fever_market_opportunity_map.html
+          git commit -m "Auto-update map with latest Ticketmaster data" || echo "No changes to commit"
+          git push

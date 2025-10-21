@@ -27,3 +27,4 @@ You can install the dependencies with:
 
 ```bash
 pip install pandas folium
+"# fever-opportunity-map" 

@@ -1,0 +1,31 @@
+City,Latitude,Longitude,Country,OpportunityScore,SearchInterest,ExistingEvents,AvgTicketPrice,TopGenres
+New York,40.7128,-74.006,USA,4.8,96,220,72,Pop;Hip-Hop
+Los Angeles,34.0522,-118.2437,USA,4.6,94,180,68,Pop;EDM
+Chicago,41.8781,-87.6298,USA,3.9,91,140,55,Jazz;Indie
+Houston,29.7604,-95.3698,USA,3.2,85,110,50,Rap;R&B
+Phoenix,33.4484,-112.074,USA,3.5,82,90,48,Rock;Pop
+Philadelphia,39.9526,-75.1652,USA,3.8,88,120,54,Indie;Hip-Hop
+San Antonio,29.4241,-98.4936,USA,3.1,81,80,45,Country;Rock
+San Diego,32.7157,-117.1611,USA,3.4,86,100,53,Pop;Surf
+Dallas,32.7767,-96.797,USA,3.7,89,130,58,EDM;Pop
+San Jose,37.3382,-121.8863,USA,3.3,84,85,49,Indie;Pop
+Austin,30.2672,-97.7431,USA,4.2,95,160,61,Indie;Rock
+Jacksonville,30.3322,-81.6557,USA,2.9,78,70,44,Country;Rap
+Fort Worth,32.7555,-97.3308,USA,3.0,80,75,46,Country;Pop
+Columbus,39.9612,-82.9988,USA,3.1,82,85,47,Indie;Rock
+San Francisco,37.7749,-122.4194,USA,4.1,92,150,65,Alternative;Pop
+Charlotte,35.2271,-80.8431,USA,3.3,84,95,48,Gospel;R&B
+Indianapolis,39.7684,-86.1581,USA,3.0,79,70,45,Country;Rock
+Seattle,47.6062,-122.3321,USA,4.0,91,135,64,Alternative;Indie
+Denver,39.7392,-104.9903,USA,3.8,87,115,58,Rock;EDM
+Washington DC,38.9072,-77.0369,USA,4.3,94,160,67,Jazz;Pop
+Boston,42.3601,-71.0589,USA,4.2,92,150,63,Indie;Alternative
+Nashville,36.1627,-86.7816,USA,4.5,95,155,66,Country;Rock
+Detroit,42.3314,-83.0458,USA,3.4,83,95,50,R&B;Rap
+Portland,45.5051,-122.675,USA,3.7,85,110,52,Alternative;Indie
+Las Vegas,36.1699,-115.1398,USA,4.4,96,200,70,EDM;Pop
+Miami,25.7617,-80.1918,USA,4.5,97,190,69,Latin;EDM
+Orlando,28.5383,-81.3792,USA,3.8,88,120,56,Pop;Dance
+Tampa,27.9506,-82.4572,USA,3.6,84,105,54,Pop;Rock
+Atlanta,33.749,-84.388,USA,4.1,93,160,62,Hip-Hop;R&B
+New Orleans,29.9511,-90.0715,USA,4.0,91,145,59,Jazz;Blues

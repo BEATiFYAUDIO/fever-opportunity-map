@@ -1,1 +1,24 @@
+# Secrets
 .env
+*.env
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# HTML exports (keep only Pages output)
+*.html
+!docs/*.html
+

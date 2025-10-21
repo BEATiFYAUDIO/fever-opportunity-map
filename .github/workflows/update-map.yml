@@ -1,9 +1,12 @@
 name: Update Fever Opportunity Map
 
 on:
-  workflow_dispatch:        # Allows you to trigger manually
+  workflow_dispatch:        # allows manual trigger
+  push:
+    branches:
+      - main                # rebuild when you push updates
   schedule:
-    - cron: "0 12 * * *"    # Runs every day at 12:00 UTC (optional – can remove this line if you want manual only)
+    - cron: "0 12 * * *"    # ⏰ every day at 12:00 UTC
 
 jobs:
   build:

@@ -1,0 +1,7 @@
+﻿requests
+folium
+branca
+pandas
+numpy
+python-dotenv
+pytrends

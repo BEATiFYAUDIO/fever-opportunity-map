@@ -1,12 +1,15 @@
 name: Update Fever Opportunity Map
 
 on:
-  workflow_dispatch:        # allows manual trigger
+  workflow_dispatch:          # allow manual "Run workflow"
   push:
-    branches:
-      - main                # rebuild when you push updates
+    branches: [ main ]        # rebuild on pushes to main
   schedule:
-    - cron: "0 12 * * *"    # ⏰ every day at 12:00 UTC
+    - cron: "0 12 * * *"      # daily at 12:00 UTC
+
+# Needed so the workflow can commit back to the repo
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -17,45 +20,57 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
+          # Use your requirements plus the notebook tooling
+          pip install -r requirements.txt || true
+          pip install nbformat nbconvert jupyter ipykernel
+          # safety net if requirements.txt is missing anything:
           pip install requests folium branca pandas numpy python-dotenv pytrends
 
-      - name: Run Fever Opportunity Map generator
+      - name: Generate updated map (execute notebook)
         env:
           TM_API_KEY: ${{ secrets.TM_API_KEY }}
         run: |
-          python - <<'EOF'
-          import nbformat, nbconvert
-          import os, sys
-
-          nb_path = "notebooks/fever_market_opportunity_map.ipynb"
-          html_out = "docs/fever_market_opportunity_map.html"
-
-          print(f"Running notebook: {nb_path}")
+          python - <<'PY'
+          import os, sys, json
+          from pathlib import Path
+          import nbformat
           from nbconvert.preprocessors import ExecutePreprocessor
 
-          with open(nb_path, 'r', encoding='utf-8') as f:
+          REPO = Path(__file__).resolve().parents[2]
+          nb_path = REPO / "notebooks" / "fever_market_opportunity_map.ipynb"
+          docs_dir = REPO / "docs"
+          docs_dir.mkdir(parents=True, exist_ok=True)
+
+          # Minimal sanity logging (does NOT print your key)
+          print("Notebook path exists:", nb_path.exists())
+          print("Docs dir:", docs_dir)
+          print("TM_API_KEY set:", bool(os.getenv("TM_API_KEY")))
+
+          # Execute notebook with cwd at repo root so relative paths work
+          with open(nb_path, "r", encoding="utf-8") as f:
               nb = nbformat.read(f, as_version=4)
 
-          ep = ExecutePreprocessor(timeout=1800, kernel_name='python3')
-          ep.preprocess(nb, {'metadata': {'path': './'}})
+          ep = ExecutePreprocessor(timeout=1800, kernel_name="python3")
+          ep.preprocess(nb, {"metadata": {"path": str(REPO)}})
 
-          with open(nb_path, 'w', encoding='utf-8') as f:
+          # Save executed notebook back (optional)
+          with open(nb_path, "w", encoding="utf-8") as f:
               nbformat.write(nb, f)
 
-          print(f"✅ Notebook executed. HTML output at {html_out}")
-          EOF
+          print("✅ Notebook executed successfully.")
+          PY
 
-      - name: Commit and push updated HTML map
+      - name: Commit and push updated HTML
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add docs/fever_market_opportunity_map.html
+          git add docs/fever_market_opportunity_map.html || true
           git commit -m "Auto-update map with latest Ticketmaster data" || echo "No changes to commit"
           git push

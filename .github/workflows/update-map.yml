@@ -33,39 +33,46 @@ jobs:
           # safety net if requirements.txt is missing anything:
           pip install requests folium branca pandas numpy python-dotenv pytrends
 
-      - name: Generate updated map (execute notebook)
+            - name: Generate updated map (execute notebook)
         env:
           TM_API_KEY: ${{ secrets.TM_API_KEY }}
         run: |
           python - <<'PY'
-          import os, sys, json
+          import os
           from pathlib import Path
           import nbformat
           from nbconvert.preprocessors import ExecutePreprocessor
 
-          REPO = Path(__file__).resolve().parents[2]
+          # Use the GitHub workspace path provided by Actions
+          REPO = Path(os.getenv("GITHUB_WORKSPACE", ".")).resolve()
           nb_path = REPO / "notebooks" / "fever_market_opportunity_map.ipynb"
           docs_dir = REPO / "docs"
           docs_dir.mkdir(parents=True, exist_ok=True)
 
-          # Minimal sanity logging (does NOT print your key)
+          print("CWD:", Path.cwd())
+          print("REPO:", REPO)
+          print("Notebook path:", nb_path)
           print("Notebook path exists:", nb_path.exists())
           print("Docs dir:", docs_dir)
           print("TM_API_KEY set:", bool(os.getenv("TM_API_KEY")))
 
-          # Execute notebook with cwd at repo root so relative paths work
+          if not nb_path.exists():
+              raise FileNotFoundError(f"Notebook not found at {nb_path}")
+
+          # Execute notebook with repo root as working dir so relative paths work
           with open(nb_path, "r", encoding="utf-8") as f:
               nb = nbformat.read(f, as_version=4)
 
           ep = ExecutePreprocessor(timeout=1800, kernel_name="python3")
           ep.preprocess(nb, {"metadata": {"path": str(REPO)}})
 
-          # Save executed notebook back (optional)
+          # (Optional) save executed notebook
           with open(nb_path, "w", encoding="utf-8") as f:
               nbformat.write(nb, f)
 
           print("✅ Notebook executed successfully.")
           PY
+
 
       - name: Commit and push updated HTML
         run: |

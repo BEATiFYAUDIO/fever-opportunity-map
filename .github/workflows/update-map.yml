@@ -1,14 +1,14 @@
 name: Update Fever Opportunity Map
 
 on:
-  workflow_dispatch:          # allow manual "Run workflow"
+  workflow_dispatch:          # manual trigger
   push:
-    branches: [ main ]        # rebuild on pushes to main
+    branches: [ main ]        # rebuild on pushes
   schedule:
     - cron: "0 12 * * *"      # daily at 12:00 UTC
 
 permissions:
-  contents: write             # allow committing back to the repo
+  contents: write             # allow committing back to repo
 
 jobs:
   build:
@@ -26,13 +26,46 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Use your requirements plus the notebook tooling
-          pip install -r requirements.txt || true
+          # your requirements first (if file exists)
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # ensure notebook execution + libs are present
           pip install nbformat nbconvert jupyter ipykernel
-          # safety net if requirements.txt is missing anything:
           pip install requests folium branca pandas numpy python-dotenv pytrends
 
-      - name: Generate updated map (execute notebook)
+      # This step fixes the notebook for CI:
+      #  - removes any os.chdir(...) Windows path lines
+      #  - rewrites any "Coolest_Locations.html" save to docs/fever_market_opportunity_map.html
+      - name: Sanitize notebook for CI
+        run: |
+          python - <<'PY'
+          import os, re
+          from pathlib import Path
+          import nbformat
+
+          REPO = Path(os.getenv("GITHUB_WORKSPACE", ".")).resolve()
+          NB = REPO / "notebooks" / "fever_market_opportunity_map.ipynb"
+          assert NB.exists(), f"Notebook not found: {NB}"
+
+          nb = nbformat.read(NB.open("r", encoding="utf-8"), as_version=4)
+          changed = False
+          for cell in nb.cells:
+            if cell.cell_type != "code":
+              continue
+            src = cell.source
+            new_src = re.sub(r'^\s*os\.chdir\([^)]+\)\s*$', '', src, flags=re.MULTILINE)  # remove hardcoded chdir
+            new_src = new_src.replace("Coolest_Locations.html", "docs/fever_market_opportunity_map.html")
+            if new_src != src:
+              cell.source = new_src
+              changed = True
+
+          if changed:
+            nbformat.write(nb, NB.open("w", encoding="utf-8"))
+            print("Notebook sanitized for CI.")
+          else:
+            print("Notebook already CI-safe.")
+          PY
+
+      - name: Execute notebook and build HTML
         env:
           TM_API_KEY: ${{ secrets.TM_API_KEY }}
         run: |
@@ -42,32 +75,26 @@ jobs:
           import nbformat
           from nbconvert.preprocessors import ExecutePreprocessor
 
-          # Use the GitHub workspace path provided by Actions
           REPO = Path(os.getenv("GITHUB_WORKSPACE", ".")).resolve()
-          nb_path = REPO / "notebooks" / "fever_market_opportunity_map.ipynb"
-          docs_dir = REPO / "docs"
-          docs_dir.mkdir(parents=True, exist_ok=True)
+          NB = REPO / "notebooks" / "fever_market_opportunity_map.ipynb"
+          DOCS = REPO / "docs"
+          DOCS.mkdir(parents=True, exist_ok=True)
 
           print("CWD:", Path.cwd())
           print("REPO:", REPO)
-          print("Notebook path:", nb_path)
-          print("Notebook path exists:", nb_path.exists())
-          print("Docs dir:", docs_dir)
+          print("Notebook exists:", NB.exists())
           print("TM_API_KEY set:", bool(os.getenv("TM_API_KEY")))
 
-          if not nb_path.exists():
-              raise FileNotFoundError(f"Notebook not found at {nb_path}")
+          with NB.open("r", encoding="utf-8") as f:
+            nb = nbformat.read(f, as_version=4)
 
-          # Execute notebook with repo root as working dir so relative paths work
-          with open(nb_path, "r", encoding="utf-8") as f:
-              nb = nbformat.read(f, as_version=4)
-
+          # Execute with repo root as working dir so relative paths work
           ep = ExecutePreprocessor(timeout=1800, kernel_name="python3")
           ep.preprocess(nb, {"metadata": {"path": str(REPO)}})
 
-          # (Optional) save executed notebook
-          with open(nb_path, "w", encoding="utf-8") as f:
-              nbformat.write(nb, f)
+          # Save executed notebook (optional)
+          with NB.open("w", encoding="utf-8") as f:
+            nbformat.write(nb, f)
 
           print("✅ Notebook executed successfully.")
           PY

@@ -1,26 +1,22 @@
-name: Update Opportunity Map
+name: Update Fever Opportunity Map
 
 on:
+  workflow_dispatch:          # manual trigger
+  push:
+    branches: [ main ]        # rebuild on pushes
   schedule:
-    # Every day at 12:00 UTC
-    - cron: "0 12 * * *"
-  workflow_dispatch:
+    - cron: "0 12 * * *"      # daily at 12:00 UTC
 
 permissions:
-  contents: write    # needed to commit back to the repo
-  actions: read
+  contents: write             # allow committing back to repo
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    env:
-      TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -30,45 +26,83 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          else
-            # Fallbacks if requirements.txt isn't present
-            pip install folium requests pandas python-dateutil
-          fi
+          # your requirements first (if file exists)
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # ensure notebook execution + libs are present
+          pip install nbformat nbconvert jupyter ipykernel
+          pip install requests folium branca pandas numpy python-dotenv pytrends
 
-      - name: Build map HTML
-        shell: bash
+      # This step fixes the notebook for CI:
+      #  - removes any os.chdir(...) Windows path lines
+      #  - rewrites any "Coolest_Locations.html" save to docs/fever_market_opportunity_map.html
+      - name: Sanitize notebook for CI
         run: |
-          set -euo pipefail
-          echo "Using Python $(python --version)"
-          # Try common entry points; adjust if your repo uses a specific script.
-          if [ -f update_map.py ]; then
-            python update_map.py
-          elif [ -f scripts/update_map.py ]; then
-            python scripts/update_map.py
-          elif [ -f tools/update_map.py ]; then
-            python tools/update_map.py
-          else
-            echo "ERROR: Could not find update_map.py (tried ./, scripts/, tools/)."
-            exit 1
-          fi
+          python - <<'PY'
+          import os, re
+          from pathlib import Path
+          import nbformat
 
-          # Ensure the expected output path exists
-          if [ ! -f docs/fever_market_opportunity_map.html ]; then
-            echo "ERROR: docs/fever_market_opportunity_map.html was not created."
-            exit 1
-          fi
+          REPO = Path(os.getenv("GITHUB_WORKSPACE", ".")).resolve()
+          NB = REPO / "notebooks" / "fever_market_opportunity_map.ipynb"
+          assert NB.exists(), f"Notebook not found: {NB}"
 
-      - name: Commit changes (if any)
+          nb = nbformat.read(NB.open("r", encoding="utf-8"), as_version=4)
+          changed = False
+          for cell in nb.cells:
+            if cell.cell_type != "code":
+              continue
+            src = cell.source
+            new_src = re.sub(r'^\s*os\.chdir\([^)]+\)\s*$', '', src, flags=re.MULTILINE)  # remove hardcoded chdir
+            new_src = new_src.replace("Coolest_Locations.html", "docs/fever_market_opportunity_map.html")
+            if new_src != src:
+              cell.source = new_src
+              changed = True
+
+          if changed:
+            nbformat.write(nb, NB.open("w", encoding="utf-8"))
+            print("Notebook sanitized for CI.")
+          else:
+            print("Notebook already CI-safe.")
+          PY
+
+      - name: Execute notebook and build HTML
+        env:
+          TM_API_KEY: ${{ secrets.TM_API_KEY }}
         run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          if ! git diff --quiet; then
-            git add docs/fever_market_opportunity_map.html
-            git commit -m "chore: auto-update map (GitHub Actions)"
-            git push
-          else
-            echo "No changes to commit."
-          fi
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import nbformat
+          from nbconvert.preprocessors import ExecutePreprocessor
+
+          REPO = Path(os.getenv("GITHUB_WORKSPACE", ".")).resolve()
+          NB = REPO / "notebooks" / "fever_market_opportunity_map.ipynb"
+          DOCS = REPO / "docs"
+          DOCS.mkdir(parents=True, exist_ok=True)
+
+          print("CWD:", Path.cwd())
+          print("REPO:", REPO)
+          print("Notebook exists:", NB.exists())
+          print("TM_API_KEY set:", bool(os.getenv("TM_API_KEY")))
+
+          with NB.open("r", encoding="utf-8") as f:
+            nb = nbformat.read(f, as_version=4)
+
+          # Execute with repo root as working dir so relative paths work
+          ep = ExecutePreprocessor(timeout=1800, kernel_name="python3")
+          ep.preprocess(nb, {"metadata": {"path": str(REPO)}})
+
+          # Save executed notebook (optional)
+          with NB.open("w", encoding="utf-8") as f:
+            nbformat.write(nb, f)
+
+          print("✅ Notebook executed successfully.")
+          PY
+
+      - name: Commit and push updated HTML
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add docs/fever_market_opportunity_map.html || true
+          git commit -m "Auto-update map with latest Ticketmaster data" || echo "No changes to commit"
+          git push

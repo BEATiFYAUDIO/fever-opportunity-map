@@ -33,6 +33,7 @@ jobs:
         env:
           TM_API_KEY: ${{ secrets.TM_API_KEY }}
         run: |
+          python - <<'PY'
           import os
           from pathlib import Path
           import nbformat
@@ -61,6 +62,7 @@ jobs:
               nbformat.write(nb, f)
 
           print("✅ Notebook executed successfully.")
+          PY
 
       - name: Commit and push updated HTML
         run: |

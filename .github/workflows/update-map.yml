@@ -7,9 +7,8 @@ on:
   schedule:
     - cron: "0 12 * * *"      # daily at 12:00 UTC
 
-# Needed so the workflow can commit back to the repo
 permissions:
-  contents: write
+  contents: write             # allow committing back to the repo
 
 jobs:
   build:
@@ -33,7 +32,7 @@ jobs:
           # safety net if requirements.txt is missing anything:
           pip install requests folium branca pandas numpy python-dotenv pytrends
 
-            - name: Generate updated map (execute notebook)
+      - name: Generate updated map (execute notebook)
         env:
           TM_API_KEY: ${{ secrets.TM_API_KEY }}
         run: |
@@ -72,7 +71,6 @@ jobs:
 
           print("✅ Notebook executed successfully.")
           PY
-
 
       - name: Commit and push updated HTML
         run: |

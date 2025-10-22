@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_40d0502f0f61b3dea6776958b823f596 {
+                #map_a1a6dadca12040c9bcb5774b8c75fb72 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -50,89 +50,43 @@
             </script>
 
         
-    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 </head>
 <body>
     
     
-<style>
-.fever-title {
-  position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
-  background: rgba(255,255,255,0.95); padding: 10px 14px; border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
-  font-family: Inter,Segoe UI,Arial; font-weight: 700; font-size: 16px;
-  z-index: 9999999; border: 1px solid #e9e9e9;
-}
-.fever-legend {
-  position: fixed; bottom: 18px; left: 12px;
-  background: rgba(255,255,255,0.95); padding: 10px 12px; border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
-  font-family: Inter,Segoe UI,Arial; font-size: 12px; line-height: 1.35;
-  z-index: 9999999; border: 1px solid #e9e9e9;
-}
-.fever-legend .swatch { width: 14px; height: 14px; display: inline-block;
-  border-radius: 3px; margin-right: 6px; vertical-align: -2px; }
-.fever-kpi {
-  position: fixed; bottom: 18px; right: 12px;
-  background: rgba(255,255,255,0.95); padding: 10px 12px; border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
-  font-family: Inter,Segoe UI,Arial; font-size: 12px; line-height: 1.35;
-  z-index: 9999999; border: 1px solid #e9e9e9; min-width: 240px;
-}
-.fever-kpi .kpi-row { display: flex; justify-content: space-between; margin: 2px 0; }
-.fever-kpi .label { color: #666; } .fever-kpi .value { font-weight: 700; }
-</style>
-
-<div class="fever-title">U.S. Music Market Opportunity Map – Fever Expansion Insights</div>
-<div class="fever-legend">
-  <div style="font-weight:700; margin-bottom:6px;">Legend</div>
-  <div><span class="swatch" style="background:#d73027;"></span>High opportunity (few existing events)</div>
-  <div><span class="swatch" style="background:#4575b4;"></span>Saturated (many existing events)</div>
-  <div style="margin-top:6px;">Bubble size = OpportunityScore</div>
-</div>
-<div class="fever-kpi">
-  <div style="font-weight:700; margin-bottom:6px;">KPI Summary</div>
-  <div class="kpi-row"><span class="label">Total Cities</span><span class="value">30</span></div>
-  <div class="kpi-row"><span class="label">Avg Opportunity</span><span class="value">60.35</span></div>
-  <div class="kpi-row"><span class="label">Top Market</span><span class="value">Miami, USA</span></div>
-  <div class="kpi-row"><span class="label">Top OpportunityScore</span><span class="value">96.94</span></div>
-</div>
-    
-            <div class="folium-map" id="map_40d0502f0f61b3dea6776958b823f596" ></div>
+            <div class="folium-map" id="map_a1a6dadca12040c9bcb5774b8c75fb72" ></div>
         
 </body>
 <script>
     
     
-            var map_40d0502f0f61b3dea6776958b823f596 = L.map(
-                "map_40d0502f0f61b3dea6776958b823f596",
+            var map_a1a6dadca12040c9bcb5774b8c75fb72 = L.map(
+                "map_a1a6dadca12040c9bcb5774b8c75fb72",
                 {
-                    center: [35.76260666666666, -94.91745333333331],
+                    center: [44.249052, -79.415964],
                     crs: L.CRS.EPSG3857,
                     ...{
-  "zoom": 5,
+  "zoom": 6,
   "zoomControl": true,
   "preferCanvas": false,
 }
 
                 }
             );
-            L.control.scale().addTo(map_40d0502f0f61b3dea6776958b823f596);
 
             
 
         
     
-            var tile_layer_c5852a3c92210b6e7559337b1dd5cdea = L.tileLayer(
-                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+            var tile_layer_cdae2081d409218aa0db7815910afb5d = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
-  "maxZoom": 20,
-  "maxNativeZoom": 20,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
   "noWrap": false,
-  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
-  "subdomains": "abcd",
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
   "detectRetina": false,
   "tms": false,
   "opacity": 1,
@@ -141,41 +95,36 @@
             );
         
     
-            tile_layer_c5852a3c92210b6e7559337b1dd5cdea.addTo(map_40d0502f0f61b3dea6776958b823f596);
+            tile_layer_cdae2081d409218aa0db7815910afb5d.addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-            var feature_group_89adf3fcc27407f0d4777eb7787756a6 = L.featureGroup(
+            var marker_f4d911342eea48d63155e21a7095cab0 = L.marker(
+                [43.0896, -79.0849],
                 {
 }
-            );
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-            var circle_marker_0936f8b7c9e8fd8a86794e5b8fb8f353 = L.circleMarker(
-                [40.7128, -74.006],
-                {"bubblingMouseEvents": true, "color": "#c6e2efff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c6e2efff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 23.770318021201415, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
-        
-    
-        var popup_74454b64c8e0152c082fa95fda188057 = L.popup({
-  "maxWidth": 320,
+        var popup_92c748dd3160a94537de970a50f0771b = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_975d508d4d294f2a8f210a5ec021e931 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5OZXcgWW9yaywgVVNBPC9kaXY+CiAgICAgICAgICA8dGFibGUgc3R5bGU9ImJvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTsgd2lkdGg6MTAwJTsiPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5PcHBvcnR1bml0eVNjb3JlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjxiPjc5LjMxPC9iPjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+U2VhcmNoSW50ZXJlc3Q8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+OTY8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkV4aXN0aW5nRXZlbnRzIChUaWNrZXRtYXN0ZXIpPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjE4NjE8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjcyPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+UG9wO0hpcC1Ib3A8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkxhdGl0dWRlIC8gTG9uZ2l0dWRlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjQwLjcxMjgsIC03NC4wMDYwPC90ZD48L3RyPgogICAgICAgICAgPC90YWJsZT4KICAgICAgICA8L2Rpdj4KICAgIA==" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_74454b64c8e0152c082fa95fda188057.setContent(i_frame_975d508d4d294f2a8f210a5ec021e931);
+                var html_431fb8174a12c1f3e37616616320baa5 = $(`<div id="html_431fb8174a12c1f3e37616616320baa5" style="width: 100.0%; height: 100.0%;"><b>Niagara Falls</b><br>Niagara Falls, ON L2E 6T2</div>`)[0];
+                popup_92c748dd3160a94537de970a50f0771b.setContent(html_431fb8174a12c1f3e37616616320baa5);
             
         
 
-        circle_marker_0936f8b7c9e8fd8a86794e5b8fb8f353.bindPopup(popup_74454b64c8e0152c082fa95fda188057)
+        marker_f4d911342eea48d63155e21a7095cab0.bindPopup(popup_92c748dd3160a94537de970a50f0771b)
         ;
 
         
     
     
-            circle_marker_0936f8b7c9e8fd8a86794e5b8fb8f353.bindTooltip(
+            marker_f4d911342eea48d63155e21a7095cab0.bindTooltip(
                 `<div>
-                     New York • Opp 79.31
+                     Niagara Falls
                  </div>`,
                 {
   "sticky": true,
@@ -183,32 +132,33 @@
             );
         
     
-            var circle_marker_da7dcda04bd7fb64351351f0463b60b8 = L.circleMarker(
-                [34.0522, -118.2437],
-                {"bubblingMouseEvents": true, "color": "#fec57eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fec57eff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 23.936395759717318, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_18d2d93d6e0509a2482f71aab6e0244e = L.marker(
+                [43.6426, -79.3871],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_d320373d3a5dbceb3384b02b189aadf6 = L.popup({
-  "maxWidth": 320,
+        var popup_bf3c0ff4c895f52fc8b1cb23720b5f15 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_b55863c47de0ac8b700655aa971c0d45 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5Mb3MgQW5nZWxlcywgVVNBPC9kaXY+CiAgICAgICAgICA8dGFibGUgc3R5bGU9ImJvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTsgd2lkdGg6MTAwJTsiPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5PcHBvcnR1bml0eVNjb3JlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjxiPjc5Ljc4PC9iPjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+U2VhcmNoSW50ZXJlc3Q8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+OTQ8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkV4aXN0aW5nRXZlbnRzIChUaWNrZXRtYXN0ZXIpPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjk3NjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+QXZnVGlja2V0UHJpY2U8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+Njg8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlRvcEdlbnJlczwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij5Qb3A7RURNPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4zNC4wNTIyLCAtMTE4LjI0Mzc8L3RkPjwvdHI+CiAgICAgICAgICA8L3RhYmxlPgogICAgICAgIDwvZGl2PgogICAg" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_d320373d3a5dbceb3384b02b189aadf6.setContent(i_frame_b55863c47de0ac8b700655aa971c0d45);
+                var html_76c782c7fcfeb655140cd07ac39c1e98 = $(`<div id="html_76c782c7fcfeb655140cd07ac39c1e98" style="width: 100.0%; height: 100.0%;"><b>CN Tower</b><br>290 Bremner Blvd, Toronto, ON M5V 3L9</div>`)[0];
+                popup_bf3c0ff4c895f52fc8b1cb23720b5f15.setContent(html_76c782c7fcfeb655140cd07ac39c1e98);
             
         
 
-        circle_marker_da7dcda04bd7fb64351351f0463b60b8.bindPopup(popup_d320373d3a5dbceb3384b02b189aadf6)
+        marker_18d2d93d6e0509a2482f71aab6e0244e.bindPopup(popup_bf3c0ff4c895f52fc8b1cb23720b5f15)
         ;
 
         
     
     
-            circle_marker_da7dcda04bd7fb64351351f0463b60b8.bindTooltip(
+            marker_18d2d93d6e0509a2482f71aab6e0244e.bindTooltip(
                 `<div>
-                     Los Angeles • Opp 79.78
+                     CN Tower
                  </div>`,
                 {
   "sticky": true,
@@ -216,32 +166,33 @@
             );
         
     
-            var circle_marker_ddc0dc6c5ae67c33f6b23154bf207adb = L.circleMarker(
-                [41.8781, -87.6298],
-                {"bubblingMouseEvents": true, "color": "#fec57eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fec57eff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 17.86572438162544, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_326631550e171e27df136c4e3b79b6f5 = L.marker(
+                [43.6677, -79.3948],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_7d22259b836cf7031ca406ac6a06270a = L.popup({
-  "maxWidth": 320,
+        var popup_7aec6d063c186a1c0c9b03bad4dcc53a = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_8774c6c9e6044186bba4ac4abb274fa8 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5DaGljYWdvLCBVU0E8L2Rpdj4KICAgICAgICAgIDx0YWJsZSBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlOyB3aWR0aDoxMDAlOyI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPk9wcG9ydHVuaXR5U2NvcmU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+PGI+NjIuNjwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjkxPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij45NzY8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjU1PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+SmF6ejtJbmRpZTwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+TGF0aXR1ZGUgLyBMb25naXR1ZGU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+NDEuODc4MSwgLTg3LjYyOTg8L3RkPjwvdHI+CiAgICAgICAgICA8L3RhYmxlPgogICAgICAgIDwvZGl2PgogICAg" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_7d22259b836cf7031ca406ac6a06270a.setContent(i_frame_8774c6c9e6044186bba4ac4abb274fa8);
+                var html_7fc1e81224ad5a9e49df1961112f22c9 = $(`<div id="html_7fc1e81224ad5a9e49df1961112f22c9" style="width: 100.0%; height: 100.0%;"><b>Royal Ontario Museum (ROM)</b><br>100 Queens Park, Toronto, ON M5S 2C6</div>`)[0];
+                popup_7aec6d063c186a1c0c9b03bad4dcc53a.setContent(html_7fc1e81224ad5a9e49df1961112f22c9);
             
         
 
-        circle_marker_ddc0dc6c5ae67c33f6b23154bf207adb.bindPopup(popup_7d22259b836cf7031ca406ac6a06270a)
+        marker_326631550e171e27df136c4e3b79b6f5.bindPopup(popup_7aec6d063c186a1c0c9b03bad4dcc53a)
         ;
 
         
     
     
-            circle_marker_ddc0dc6c5ae67c33f6b23154bf207adb.bindTooltip(
+            marker_326631550e171e27df136c4e3b79b6f5.bindTooltip(
                 `<div>
-                     Chicago • Opp 62.6
+                     Royal Ontario Museum (ROM)
                  </div>`,
                 {
   "sticky": true,
@@ -249,32 +200,33 @@
             );
         
     
-            var circle_marker_282d45a80b44ed767e74da7ee68791e4 = L.circleMarker(
-                [29.7604, -95.3698],
-                {"bubblingMouseEvents": true, "color": "#ec6443ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ec6443ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.102473498233214, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_e593d7f72bc38844c2dc779bccf03b75 = L.marker(
+                [43.6764, -79.4094],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_869344fbc1b3e320af95acc607d853ec = L.popup({
-  "maxWidth": 320,
+        var popup_59395c94d34f8039150049f277615a29 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_c609636b17c08652892285c75ba69e7a = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5Ib3VzdG9uLCBVU0E8L2Rpdj4KICAgICAgICAgIDx0YWJsZSBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlOyB3aWR0aDoxMDAlOyI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPk9wcG9ydHVuaXR5U2NvcmU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+PGI+NDkuMTI8L2I+PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5TZWFyY2hJbnRlcmVzdDwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij44NTwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+RXhpc3RpbmdFdmVudHMgKFRpY2tldG1hc3Rlcik8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+MzcwPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5BdmdUaWNrZXRQcmljZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij41MDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+VG9wR2VucmVzPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPlJhcDtSJkI8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkxhdGl0dWRlIC8gTG9uZ2l0dWRlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjI5Ljc2MDQsIC05NS4zNjk4PC90ZD48L3RyPgogICAgICAgICAgPC90YWJsZT4KICAgICAgICA8L2Rpdj4KICAgIA==" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_869344fbc1b3e320af95acc607d853ec.setContent(i_frame_c609636b17c08652892285c75ba69e7a);
+                var html_81e175b1590f8bc3a36c9d1b1e22c256 = $(`<div id="html_81e175b1590f8bc3a36c9d1b1e22c256" style="width: 100.0%; height: 100.0%;"><b>Casa Loma</b><br>1 Austin Terrace, Toronto, ON M5R 1X8</div>`)[0];
+                popup_59395c94d34f8039150049f277615a29.setContent(html_81e175b1590f8bc3a36c9d1b1e22c256);
             
         
 
-        circle_marker_282d45a80b44ed767e74da7ee68791e4.bindPopup(popup_869344fbc1b3e320af95acc607d853ec)
+        marker_e593d7f72bc38844c2dc779bccf03b75.bindPopup(popup_59395c94d34f8039150049f277615a29)
         ;
 
         
     
     
-            circle_marker_282d45a80b44ed767e74da7ee68791e4.bindTooltip(
+            marker_e593d7f72bc38844c2dc779bccf03b75.bindTooltip(
                 `<div>
-                     Houston • Opp 49.12
+                     Casa Loma
                  </div>`,
                 {
   "sticky": true,
@@ -282,32 +234,33 @@
             );
         
     
-            var circle_marker_909266d2e77c84cc5b5d1072461ca69c = L.circleMarker(
-                [33.4484, -112.074],
-                {"bubblingMouseEvents": true, "color": "#ec6443ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ec6443ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.54416961130742, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_1f174ec2d9d0310e61076ecdf8020751 = L.marker(
+                [43.627, -79.396],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_344839563623f54457b06b5149e51145 = L.popup({
-  "maxWidth": 320,
+        var popup_838c297643216b52c40ffffb482dd4bd = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_91f1cd6b6920d886c8bd16e999a5a5be = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5QaG9lbml4LCBVU0E8L2Rpdj4KICAgICAgICAgIDx0YWJsZSBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlOyB3aWR0aDoxMDAlOyI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPk9wcG9ydHVuaXR5U2NvcmU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+PGI+MzkuMDU8L2I+PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5TZWFyY2hJbnRlcmVzdDwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij44MjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+RXhpc3RpbmdFdmVudHMgKFRpY2tldG1hc3Rlcik8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+NDQ2PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5BdmdUaWNrZXRQcmljZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij40ODwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+VG9wR2VucmVzPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPlJvY2s7UG9wPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4zMy40NDg0LCAtMTEyLjA3NDA8L3RkPjwvdHI+CiAgICAgICAgICA8L3RhYmxlPgogICAgICAgIDwvZGl2PgogICAg" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_344839563623f54457b06b5149e51145.setContent(i_frame_91f1cd6b6920d886c8bd16e999a5a5be);
+                var html_8d934a172428d533bfa9a52bd4f1875c = $(`<div id="html_8d934a172428d533bfa9a52bd4f1875c" style="width: 100.0%; height: 100.0%;"><b>Toronto Islands</b><br>Toronto, ON M5J 2E6</div>`)[0];
+                popup_838c297643216b52c40ffffb482dd4bd.setContent(html_8d934a172428d533bfa9a52bd4f1875c);
             
         
 
-        circle_marker_909266d2e77c84cc5b5d1072461ca69c.bindPopup(popup_344839563623f54457b06b5149e51145)
+        marker_1f174ec2d9d0310e61076ecdf8020751.bindPopup(popup_838c297643216b52c40ffffb482dd4bd)
         ;
 
         
     
     
-            circle_marker_909266d2e77c84cc5b5d1072461ca69c.bindTooltip(
+            marker_1f174ec2d9d0310e61076ecdf8020751.bindTooltip(
                 `<div>
-                     Phoenix • Opp 39.05
+                     Toronto Islands
                  </div>`,
                 {
   "sticky": true,
@@ -315,32 +268,33 @@
             );
         
     
-            var circle_marker_8933c42f6d65a550949cf8a241381c10 = L.circleMarker(
-                [39.9526, -75.1652],
-                {"bubblingMouseEvents": true, "color": "#ec6443ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ec6443ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 16.618374558303884, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_02c935447c258e182c1dcafb8deead47 = L.marker(
+                [45.9991, -78.3833],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_8c02f883041c1233020fb6e354963d71 = L.popup({
-  "maxWidth": 320,
+        var popup_5365b40980bede9586d79fecd920a7a8 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_44bb5b0921950ea99c4ebcc636835656 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5QaGlsYWRlbHBoaWEsIFVTQTwvZGl2PgogICAgICAgICAgPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7IHdpZHRoOjEwMCU7Ij4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+T3Bwb3J0dW5pdHlTY29yZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij48Yj41OS4wNzwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjg4PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij40NTI8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjU0PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+SW5kaWU7SGlwLUhvcDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+TGF0aXR1ZGUgLyBMb25naXR1ZGU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+MzkuOTUyNiwgLTc1LjE2NTI8L3RkPjwvdHI+CiAgICAgICAgICA8L3RhYmxlPgogICAgICAgIDwvZGl2PgogICAg" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_8c02f883041c1233020fb6e354963d71.setContent(i_frame_44bb5b0921950ea99c4ebcc636835656);
+                var html_be7d302d80f7e28df326d24a01724c82 = $(`<div id="html_be7d302d80f7e28df326d24a01724c82" style="width: 100.0%; height: 100.0%;"><b>Algonquin Provincial Park</b><br>1-800-667-1940, Ontario</div>`)[0];
+                popup_5365b40980bede9586d79fecd920a7a8.setContent(html_be7d302d80f7e28df326d24a01724c82);
             
         
 
-        circle_marker_8933c42f6d65a550949cf8a241381c10.bindPopup(popup_8c02f883041c1233020fb6e354963d71)
+        marker_02c935447c258e182c1dcafb8deead47.bindPopup(popup_5365b40980bede9586d79fecd920a7a8)
         ;
 
         
     
     
-            circle_marker_8933c42f6d65a550949cf8a241381c10.bindTooltip(
+            marker_02c935447c258e182c1dcafb8deead47.bindTooltip(
                 `<div>
-                     Philadelphia • Opp 59.07
+                     Algonquin Provincial Park
                  </div>`,
                 {
   "sticky": true,
@@ -348,32 +302,33 @@
             );
         
     
-            var circle_marker_449d0265c66092311921481e774bcd48 = L.circleMarker(
-                [29.4241, -98.4936],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.586572438162545, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_89be7090a4a79a8d70a428b0228aaee1 = L.marker(
+                [44.35, -75.8833],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_9e017e7e98ff2bd7524eea6d92facfb8 = L.popup({
-  "maxWidth": 320,
+        var popup_9758465c6eeaaadd0c53b7bdb7916c5c = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_c09244da2e4ce5e20965efc42a3c394c = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5TYW4gQW50b25pbywgVVNBPC9kaXY+CiAgICAgICAgICA8dGFibGUgc3R5bGU9ImJvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTsgd2lkdGg6MTAwJTsiPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5PcHBvcnR1bml0eVNjb3JlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjxiPjM2LjM0PC9iPjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+U2VhcmNoSW50ZXJlc3Q8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+ODE8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkV4aXN0aW5nRXZlbnRzIChUaWNrZXRtYXN0ZXIpPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjIzNDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+QXZnVGlja2V0UHJpY2U8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+NDU8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlRvcEdlbnJlczwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij5Db3VudHJ5O1JvY2s8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkxhdGl0dWRlIC8gTG9uZ2l0dWRlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjI5LjQyNDEsIC05OC40OTM2PC90ZD48L3RyPgogICAgICAgICAgPC90YWJsZT4KICAgICAgICA8L2Rpdj4KICAgIA==" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_9e017e7e98ff2bd7524eea6d92facfb8.setContent(i_frame_c09244da2e4ce5e20965efc42a3c394c);
+                var html_31ffcd963bab576562cc3ee95fec0f00 = $(`<div id="html_31ffcd963bab576562cc3ee95fec0f00" style="width: 100.0%; height: 100.0%;"><b>Thousand Islands</b><br>Thousand Islands Parkway, Ontario</div>`)[0];
+                popup_9758465c6eeaaadd0c53b7bdb7916c5c.setContent(html_31ffcd963bab576562cc3ee95fec0f00);
             
         
 
-        circle_marker_449d0265c66092311921481e774bcd48.bindPopup(popup_9e017e7e98ff2bd7524eea6d92facfb8)
+        marker_89be7090a4a79a8d70a428b0228aaee1.bindPopup(popup_9758465c6eeaaadd0c53b7bdb7916c5c)
         ;
 
         
     
     
-            circle_marker_449d0265c66092311921481e774bcd48.bindTooltip(
+            marker_89be7090a4a79a8d70a428b0228aaee1.bindTooltip(
                 `<div>
-                     San Antonio • Opp 36.34
+                     Thousand Islands
                  </div>`,
                 {
   "sticky": true,
@@ -381,32 +336,33 @@
             );
         
     
-            var circle_marker_c35b06af25ce52dc70089eef6fe9c42b = L.circleMarker(
-                [32.7157, -117.1611],
-                {"bubblingMouseEvents": true, "color": "#ec6443ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ec6443ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.455830388692581, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_5effb7a6ede019f7c0bac646053db497 = L.marker(
+                [45.4235, -75.7003],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_cccef6fa30a86efe43f85d5253abf430 = L.popup({
-  "maxWidth": 320,
+        var popup_ef19be1d165022f150f1fa70e18def87 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_22132b42ac58b546f975eeea45cfac53 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5TYW4gRGllZ28sIFVTQTwvZGl2PgogICAgICAgICAgPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7IHdpZHRoOjEwMCU7Ij4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+T3Bwb3J0dW5pdHlTY29yZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij48Yj41Mi45NTwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjg2PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij40Njc8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjUzPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+UG9wO1N1cmY8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkxhdGl0dWRlIC8gTG9uZ2l0dWRlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjMyLjcxNTcsIC0xMTcuMTYxMTwvdGQ+PC90cj4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICA=" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_cccef6fa30a86efe43f85d5253abf430.setContent(i_frame_22132b42ac58b546f975eeea45cfac53);
+                var html_066d8a08f605f2f724f198515598ba27 = $(`<div id="html_066d8a08f605f2f724f198515598ba27" style="width: 100.0%; height: 100.0%;"><b>Parliament Hill</b><br>Wellington St, Ottawa, ON K1A 0A9</div>`)[0];
+                popup_ef19be1d165022f150f1fa70e18def87.setContent(html_066d8a08f605f2f724f198515598ba27);
             
         
 
-        circle_marker_c35b06af25ce52dc70089eef6fe9c42b.bindPopup(popup_cccef6fa30a86efe43f85d5253abf430)
+        marker_5effb7a6ede019f7c0bac646053db497.bindPopup(popup_ef19be1d165022f150f1fa70e18def87)
         ;
 
         
     
     
-            circle_marker_c35b06af25ce52dc70089eef6fe9c42b.bindTooltip(
+            marker_5effb7a6ede019f7c0bac646053db497.bindTooltip(
                 `<div>
-                     San Diego • Opp 52.95
+                     Parliament Hill
                  </div>`,
                 {
   "sticky": true,
@@ -414,32 +370,33 @@
             );
         
     
-            var circle_marker_d01d09025b9f29a6c121367febc171a1 = L.circleMarker(
-                [32.7767, -96.797],
-                {"bubblingMouseEvents": true, "color": "#ec6443ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ec6443ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.840989399293285, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_61858a08550dd20635b45ecd72696805 = L.marker(
+                [43.8345, -79.5402],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_c582276359e98bee97e446a0f6ef8f70 = L.popup({
-  "maxWidth": 320,
+        var popup_14e3c03b71c89278d80adf075c8c95d4 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_5042c472b229e4771886500374bdff15 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5EYWxsYXMsIFVTQTwvZGl2PgogICAgICAgICAgPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7IHdpZHRoOjEwMCU7Ij4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+T3Bwb3J0dW5pdHlTY29yZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij48Yj42NS4zNjwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjg5PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4zNzA8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjU4PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+RURNO1BvcDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+TGF0aXR1ZGUgLyBMb25naXR1ZGU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+MzIuNzc2NywgLTk2Ljc5NzA8L3RkPjwvdHI+CiAgICAgICAgICA8L3RhYmxlPgogICAgICAgIDwvZGl2PgogICAg" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_c582276359e98bee97e446a0f6ef8f70.setContent(i_frame_5042c472b229e4771886500374bdff15);
+                var html_8f68fff941029c31d5db3cafd2a206cd = $(`<div id="html_8f68fff941029c31d5db3cafd2a206cd" style="width: 100.0%; height: 100.0%;"><b>Canada’s Wonderland</b><br>1 Canada's Wonderland Dr, Vaughan, ON L6A 1S6</div>`)[0];
+                popup_14e3c03b71c89278d80adf075c8c95d4.setContent(html_8f68fff941029c31d5db3cafd2a206cd);
             
         
 
-        circle_marker_d01d09025b9f29a6c121367febc171a1.bindPopup(popup_c582276359e98bee97e446a0f6ef8f70)
+        marker_61858a08550dd20635b45ecd72696805.bindPopup(popup_14e3c03b71c89278d80adf075c8c95d4)
         ;
 
         
     
     
-            circle_marker_d01d09025b9f29a6c121367febc171a1.bindTooltip(
+            marker_61858a08550dd20635b45ecd72696805.bindTooltip(
                 `<div>
-                     Dallas • Opp 65.36
+                     Canada’s Wonderland
                  </div>`,
                 {
   "sticky": true,
@@ -447,32 +404,33 @@
             );
         
     
-            var circle_marker_c7d99bc94c0874fa64d0422739fbcf3b = L.circleMarker(
-                [37.3382, -121.8863],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.918727915194346, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_1cd81b978715d0f2c074c43a475f9282 = L.marker(
+                [44.5022, -80.3122],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_4caebed517d466875bcd9176e87814dc = L.popup({
-  "maxWidth": 320,
+        var popup_62185ac17154e00f6ad493596122d944 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_e269cbbdd02da766166d4abf094a6005 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5TYW4gSm9zZSwgVVNBPC9kaXY+CiAgICAgICAgICA8dGFibGUgc3R5bGU9ImJvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTsgd2lkdGg6MTAwJTsiPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5PcHBvcnR1bml0eVNjb3JlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjxiPjQ4LjY8L2I+PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5TZWFyY2hJbnRlcmVzdDwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij44NDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+RXhpc3RpbmdFdmVudHMgKFRpY2tldG1hc3Rlcik8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+Nzg8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjQ5PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+SW5kaWU7UG9wPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4zNy4zMzgyLCAtMTIxLjg4NjM8L3RkPjwvdHI+CiAgICAgICAgICA8L3RhYmxlPgogICAgICAgIDwvZGl2PgogICAg" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_4caebed517d466875bcd9176e87814dc.setContent(i_frame_e269cbbdd02da766166d4abf094a6005);
+                var html_7d96648d61c06ca0c40a3520f1f27af5 = $(`<div id="html_7d96648d61c06ca0c40a3520f1f27af5" style="width: 100.0%; height: 100.0%;"><b>Blue Mountain Resort</b><br>108 Jozo Weider Blvd, Blue Mountains, ON L9Y 0V2</div>`)[0];
+                popup_62185ac17154e00f6ad493596122d944.setContent(html_7d96648d61c06ca0c40a3520f1f27af5);
             
         
 
-        circle_marker_c7d99bc94c0874fa64d0422739fbcf3b.bindPopup(popup_4caebed517d466875bcd9176e87814dc)
+        marker_1cd81b978715d0f2c074c43a475f9282.bindPopup(popup_62185ac17154e00f6ad493596122d944)
         ;
 
         
     
     
-            circle_marker_c7d99bc94c0874fa64d0422739fbcf3b.bindTooltip(
+            marker_1cd81b978715d0f2c074c43a475f9282.bindTooltip(
                 `<div>
-                     San Jose • Opp 48.6
+                     Blue Mountain Resort
                  </div>`,
                 {
   "sticky": true,
@@ -480,32 +438,33 @@
             );
         
     
-            var circle_marker_f60d4838e670f1d985c56b519199ddbe = L.circleMarker(
-                [30.2672, -97.7431],
-                {"bubblingMouseEvents": true, "color": "#ec6443ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ec6443ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 25.19787985865724, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_9cc4fa9a574aa330c56e109bdc5dd03d = L.marker(
+                [43.255, -79.876],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_56f701ab3bf4dfc71892e04f12f662be = L.popup({
-  "maxWidth": 320,
+        var popup_a5529e09d433f8a3a7f083f8582a4356 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_ea74eaaed770c9c5f491ea0e830aca6f = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5BdXN0aW4sIFVTQTwvZGl2PgogICAgICAgICAgPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7IHdpZHRoOjEwMCU7Ij4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+T3Bwb3J0dW5pdHlTY29yZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij48Yj44My4zNTwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjk1PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4zNjQ8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjYxPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+SW5kaWU7Um9jazwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+TGF0aXR1ZGUgLyBMb25naXR1ZGU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+MzAuMjY3MiwgLTk3Ljc0MzE8L3RkPjwvdHI+CiAgICAgICAgICA8L3RhYmxlPgogICAgICAgIDwvZGl2PgogICAg" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_56f701ab3bf4dfc71892e04f12f662be.setContent(i_frame_ea74eaaed770c9c5f491ea0e830aca6f);
+                var html_3b8fe50fe04b48fddb707adba0a42692 = $(`<div id="html_3b8fe50fe04b48fddb707adba0a42692" style="width: 100.0%; height: 100.0%;"><b>Royal Botanical Gardens</b><br>680 Plains Rd W, Burlington, ON L7T 4H4</div>`)[0];
+                popup_a5529e09d433f8a3a7f083f8582a4356.setContent(html_3b8fe50fe04b48fddb707adba0a42692);
             
         
 
-        circle_marker_f60d4838e670f1d985c56b519199ddbe.bindPopup(popup_56f701ab3bf4dfc71892e04f12f662be)
+        marker_9cc4fa9a574aa330c56e109bdc5dd03d.bindPopup(popup_a5529e09d433f8a3a7f083f8582a4356)
         ;
 
         
     
     
-            circle_marker_f60d4838e670f1d985c56b519199ddbe.bindTooltip(
+            marker_9cc4fa9a574aa330c56e109bdc5dd03d.bindTooltip(
                 `<div>
-                     Austin • Opp 83.35
+                     Royal Botanical Gardens
                  </div>`,
                 {
   "sticky": true,
@@ -513,32 +472,33 @@
             );
         
     
-            var circle_marker_89a4269764be8bd8170f0f656271b954 = L.circleMarker(
-                [30.3322, -81.6557],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.0, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_f2233f34fdccc6ffbf2243c290f21d12 = L.marker(
+                [43.7216, -79.3155],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_8af01ce29df49763af4a04bf94fc8fb9 = L.popup({
-  "maxWidth": 320,
+        var popup_2ce4173d68f1412b5cd510d722852b0c = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_629108685b0d2b58949f09100390544b = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5KYWNrc29udmlsbGUsIFVTQTwvZGl2PgogICAgICAgICAgPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7IHdpZHRoOjEwMCU7Ij4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+T3Bwb3J0dW5pdHlTY29yZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij48Yj4yOS4wMjwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjc4PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4xMDE8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjQ0PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+Q291bnRyeTtSYXA8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkxhdGl0dWRlIC8gTG9uZ2l0dWRlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjMwLjMzMjIsIC04MS42NTU3PC90ZD48L3RyPgogICAgICAgICAgPC90YWJsZT4KICAgICAgICA8L2Rpdj4KICAgIA==" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_8af01ce29df49763af4a04bf94fc8fb9.setContent(i_frame_629108685b0d2b58949f09100390544b);
+                var html_dcfcee94a07e61389ab0bc7c01c3a7b5 = $(`<div id="html_dcfcee94a07e61389ab0bc7c01c3a7b5" style="width: 100.0%; height: 100.0%;"><b>Ontario Science Centre</b><br>770 Don Mills Rd, North York, ON M3C 1T3</div>`)[0];
+                popup_2ce4173d68f1412b5cd510d722852b0c.setContent(html_dcfcee94a07e61389ab0bc7c01c3a7b5);
             
         
 
-        circle_marker_89a4269764be8bd8170f0f656271b954.bindPopup(popup_8af01ce29df49763af4a04bf94fc8fb9)
+        marker_f2233f34fdccc6ffbf2243c290f21d12.bindPopup(popup_2ce4173d68f1412b5cd510d722852b0c)
         ;
 
         
     
     
-            circle_marker_89a4269764be8bd8170f0f656271b954.bindTooltip(
+            marker_f2233f34fdccc6ffbf2243c290f21d12.bindTooltip(
                 `<div>
-                     Jacksonville • Opp 29.02
+                     Ontario Science Centre
                  </div>`,
                 {
   "sticky": true,
@@ -546,32 +506,33 @@
             );
         
     
-            var circle_marker_b3d85397e99da5cc6a7a487e4cb3ed09 = L.circleMarker(
-                [32.7555, -97.3308],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.321554770318023, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_1b275e294b53566c65dcb7e45ab526c2 = L.marker(
+                [43.6536, -79.3928],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_a5c14acf5e9fe159c86fd590937811b7 = L.popup({
-  "maxWidth": 320,
+        var popup_72345d0a9c9e477ab2c19b944d2eaf28 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_0932c1afc9b34a6dd08b5166d7d98290 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5Gb3J0IFdvcnRoLCBVU0E8L2Rpdj4KICAgICAgICAgIDx0YWJsZSBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlOyB3aWR0aDoxMDAlOyI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPk9wcG9ydHVuaXR5U2NvcmU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+PGI+MzUuNTk8L2I+PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5TZWFyY2hJbnRlcmVzdDwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij44MDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+RXhpc3RpbmdFdmVudHMgKFRpY2tldG1hc3Rlcik8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+MTE0PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5BdmdUaWNrZXRQcmljZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij40NjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+VG9wR2VucmVzPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPkNvdW50cnk7UG9wPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4zMi43NTU1LCAtOTcuMzMwODwvdGQ+PC90cj4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICA=" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_a5c14acf5e9fe159c86fd590937811b7.setContent(i_frame_0932c1afc9b34a6dd08b5166d7d98290);
+                var html_f329deffb0649b7bf46a26659c0b9de3 = $(`<div id="html_f329deffb0649b7bf46a26659c0b9de3" style="width: 100.0%; height: 100.0%;"><b>Art Gallery of Ontario (AGO)</b><br>317 Dundas St W, Toronto, ON M5T 1G4</div>`)[0];
+                popup_72345d0a9c9e477ab2c19b944d2eaf28.setContent(html_f329deffb0649b7bf46a26659c0b9de3);
             
         
 
-        circle_marker_b3d85397e99da5cc6a7a487e4cb3ed09.bindPopup(popup_a5c14acf5e9fe159c86fd590937811b7)
+        marker_1b275e294b53566c65dcb7e45ab526c2.bindPopup(popup_72345d0a9c9e477ab2c19b944d2eaf28)
         ;
 
         
     
     
-            circle_marker_b3d85397e99da5cc6a7a487e4cb3ed09.bindTooltip(
+            marker_1b275e294b53566c65dcb7e45ab526c2.bindTooltip(
                 `<div>
-                     Fort Worth • Opp 35.59
+                     Art Gallery of Ontario (AGO)
                  </div>`,
                 {
   "sticky": true,
@@ -579,32 +540,33 @@
             );
         
     
-            var circle_marker_235825dff4f4a6d99230e5a8e0998ed4 = L.circleMarker(
-                [39.9612, -82.9988],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.791519434628976, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_a8471814f1f156f97aeb47c0675ade97 = L.marker(
+                [43.37, -80.982],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_f8ebb74b50a2378efbfd9b926e7ab109 = L.popup({
-  "maxWidth": 320,
+        var popup_68757709a7a97d09acc4d3770c9aa3e2 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_38622dc2626ee32d14bcb98ccf609d52 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5Db2x1bWJ1cywgVVNBPC9kaXY+CiAgICAgICAgICA8dGFibGUgc3R5bGU9ImJvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTsgd2lkdGg6MTAwJTsiPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5PcHBvcnR1bml0eVNjb3JlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjxiPjM5Ljc1PC9iPjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+U2VhcmNoSW50ZXJlc3Q8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+ODI8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkV4aXN0aW5nRXZlbnRzIChUaWNrZXRtYXN0ZXIpPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjMwMTwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+QXZnVGlja2V0UHJpY2U8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+NDc8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlRvcEdlbnJlczwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij5JbmRpZTtSb2NrPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4zOS45NjEyLCAtODIuOTk4ODwvdGQ+PC90cj4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICA=" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_f8ebb74b50a2378efbfd9b926e7ab109.setContent(i_frame_38622dc2626ee32d14bcb98ccf609d52);
+                var html_7be89c3ce645d0bcce394e1dd7243968 = $(`<div id="html_7be89c3ce645d0bcce394e1dd7243968" style="width: 100.0%; height: 100.0%;"><b>Stratford Festival Theatre</b><br>55 Queen St, Stratford, ON N5A 6V2</div>`)[0];
+                popup_68757709a7a97d09acc4d3770c9aa3e2.setContent(html_7be89c3ce645d0bcce394e1dd7243968);
             
         
 
-        circle_marker_235825dff4f4a6d99230e5a8e0998ed4.bindPopup(popup_f8ebb74b50a2378efbfd9b926e7ab109)
+        marker_a8471814f1f156f97aeb47c0675ade97.bindPopup(popup_68757709a7a97d09acc4d3770c9aa3e2)
         ;
 
         
     
     
-            circle_marker_235825dff4f4a6d99230e5a8e0998ed4.bindTooltip(
+            marker_a8471814f1f156f97aeb47c0675ade97.bindTooltip(
                 `<div>
-                     Columbus • Opp 39.75
+                     Stratford Festival Theatre
                  </div>`,
                 {
   "sticky": true,
@@ -612,32 +574,33 @@
             );
         
     
-            var circle_marker_c1162683927ec9ac507b170b6f73326c = L.circleMarker(
-                [37.7749, -122.4194],
-                {"bubblingMouseEvents": true, "color": "#fd965fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd965fff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.20141342756184, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_f38146e91e8dce7af4acb404a5818113 = L.marker(
+                [41.949, -82.682],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_6dc48d25cb3575a59544c19e0c005358 = L.popup({
-  "maxWidth": 320,
+        var popup_7dda9b8c39e20e2f9a45a21ebe89976c = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_701e1c5789e7f9414c16fe3ee2aded45 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5TYW4gRnJhbmNpc2NvLCBVU0E8L2Rpdj4KICAgICAgICAgIDx0YWJsZSBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlOyB3aWR0aDoxMDAlOyI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPk9wcG9ydHVuaXR5U2NvcmU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+PGI+NzQuODc8L2I+PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5TZWFyY2hJbnRlcmVzdDwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij45MjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+RXhpc3RpbmdFdmVudHMgKFRpY2tldG1hc3Rlcik8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+NzE4PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5BdmdUaWNrZXRQcmljZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij42NTwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+VG9wR2VucmVzPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPkFsdGVybmF0aXZlO1BvcDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+TGF0aXR1ZGUgLyBMb25naXR1ZGU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+MzcuNzc0OSwgLTEyMi40MTk0PC90ZD48L3RyPgogICAgICAgICAgPC90YWJsZT4KICAgICAgICA8L2Rpdj4KICAgIA==" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_6dc48d25cb3575a59544c19e0c005358.setContent(i_frame_701e1c5789e7f9414c16fe3ee2aded45);
+                var html_507114d6fb55cfe2e48e6372029b40cc = $(`<div id="html_507114d6fb55cfe2e48e6372029b40cc" style="width: 100.0%; height: 100.0%;"><b>Point Pelee National Park</b><br>1118 Point Pelee Dr, Leamington, ON N8H 3V4</div>`)[0];
+                popup_7dda9b8c39e20e2f9a45a21ebe89976c.setContent(html_507114d6fb55cfe2e48e6372029b40cc);
             
         
 
-        circle_marker_c1162683927ec9ac507b170b6f73326c.bindPopup(popup_6dc48d25cb3575a59544c19e0c005358)
+        marker_f38146e91e8dce7af4acb404a5818113.bindPopup(popup_7dda9b8c39e20e2f9a45a21ebe89976c)
         ;
 
         
     
     
-            circle_marker_c1162683927ec9ac507b170b6f73326c.bindTooltip(
+            marker_f38146e91e8dce7af4acb404a5818113.bindTooltip(
                 `<div>
-                     San Francisco • Opp 74.87
+                     Point Pelee National Park
                  </div>`,
                 {
   "sticky": true,
@@ -645,32 +608,33 @@
             );
         
     
-            var circle_marker_2b1e7a9fc6a44f219ca74022ffbe1377 = L.circleMarker(
-                [35.2271, -80.8431],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.095406360424029, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_3ea8e99f60060bd39e2bcf720a525626 = L.marker(
+                [43.6833, -80.4333],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_c1ced9a37cd7bb56bf8d304c5dc7a5ec = L.popup({
-  "maxWidth": 320,
+        var popup_bb4d2cfbdd78269daa41af4787f8fdab = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_a61e65aebad81de66b5dbd9505e2f223 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5DaGFybG90dGUsIFVTQTwvZGl2PgogICAgICAgICAgPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7IHdpZHRoOjEwMCU7Ij4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+T3Bwb3J0dW5pdHlTY29yZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij48Yj40Ni4yNzwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjg0PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4yNDU8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjQ4PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+R29zcGVsO1ImQjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+TGF0aXR1ZGUgLyBMb25naXR1ZGU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+MzUuMjI3MSwgLTgwLjg0MzE8L3RkPjwvdHI+CiAgICAgICAgICA8L3RhYmxlPgogICAgICAgIDwvZGl2PgogICAg" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_c1ced9a37cd7bb56bf8d304c5dc7a5ec.setContent(i_frame_a61e65aebad81de66b5dbd9505e2f223);
+                var html_42ad4c907cae578bc0396e4700f53880 = $(`<div id="html_42ad4c907cae578bc0396e4700f53880" style="width: 100.0%; height: 100.0%;"><b>Elora Gorge Conservation Area</b><br>319-321 Church St, Elora, ON N0B 1S0</div>`)[0];
+                popup_bb4d2cfbdd78269daa41af4787f8fdab.setContent(html_42ad4c907cae578bc0396e4700f53880);
             
         
 
-        circle_marker_2b1e7a9fc6a44f219ca74022ffbe1377.bindPopup(popup_c1ced9a37cd7bb56bf8d304c5dc7a5ec)
+        marker_3ea8e99f60060bd39e2bcf720a525626.bindPopup(popup_bb4d2cfbdd78269daa41af4787f8fdab)
         ;
 
         
     
     
-            circle_marker_2b1e7a9fc6a44f219ca74022ffbe1377.bindTooltip(
+            marker_3ea8e99f60060bd39e2bcf720a525626.bindTooltip(
                 `<div>
-                     Charlotte • Opp 46.27
+                     Elora Gorge Conservation Area
                  </div>`,
                 {
   "sticky": true,
@@ -678,32 +642,33 @@
             );
         
     
-            var circle_marker_9187b0f42f744b8e4bee75fba49f94f7 = L.circleMarker(
-                [39.7684, -86.1581],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.901060070671378, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_1567776039ef05f34ebf6855f893e1ab = L.marker(
+                [44.2, -79.0],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_0a556d63cf020ddc7a307f3657041602 = L.popup({
-  "maxWidth": 320,
+        var popup_4bd78a5f89284e8a135f7abad4cf53d1 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_affd4b0c2bc298cd5109aee1aea33c11 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5JbmRpYW5hcG9saXMsIFVTQTwvZGl2PgogICAgICAgICAgPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7IHdpZHRoOjEwMCU7Ij4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+T3Bwb3J0dW5pdHlTY29yZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij48Yj4zMS41NzwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjc5PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4xODM8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjQ1PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+Q291bnRyeTtSb2NrPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4zOS43Njg0LCAtODYuMTU4MTwvdGQ+PC90cj4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICA=" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_0a556d63cf020ddc7a307f3657041602.setContent(i_frame_affd4b0c2bc298cd5109aee1aea33c11);
+                var html_9a3eda75825c554f73dfeb494441b22f = $(`<div id="html_9a3eda75825c554f73dfeb494441b22f" style="width: 100.0%; height: 100.0%;"><b>Sibbald Point Provincial Park</b><br>26071 Park Rd, Sutton West, ON L0E 1R0</div>`)[0];
+                popup_4bd78a5f89284e8a135f7abad4cf53d1.setContent(html_9a3eda75825c554f73dfeb494441b22f);
             
         
 
-        circle_marker_9187b0f42f744b8e4bee75fba49f94f7.bindPopup(popup_0a556d63cf020ddc7a307f3657041602)
+        marker_1567776039ef05f34ebf6855f893e1ab.bindPopup(popup_4bd78a5f89284e8a135f7abad4cf53d1)
         ;
 
         
     
     
-            circle_marker_9187b0f42f744b8e4bee75fba49f94f7.bindTooltip(
+            marker_1567776039ef05f34ebf6855f893e1ab.bindTooltip(
                 `<div>
-                     Indianapolis • Opp 31.57
+                     Sibbald Point Provincial Park
                  </div>`,
                 {
   "sticky": true,
@@ -711,32 +676,33 @@
             );
         
     
-            var circle_marker_e7b73aa882c051cd02dfbd15984a0cf6 = L.circleMarker(
-                [47.6062, -122.3321],
-                {"bubblingMouseEvents": true, "color": "#fd965fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd965fff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 21.229681978798588, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_9056270fd0d1be66f0351c7c79119e52 = L.marker(
+                [43.7769, -79.9244],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_8ff7a9e6d5aba7d028e1d197bf1b0ea0 = L.popup({
-  "maxWidth": 320,
+        var popup_1c9525711193cf7f6d5497acac03f389 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_30c0eec7758fd7fec8e80abe48c495a7 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5TZWF0dGxlLCBVU0E8L2Rpdj4KICAgICAgICAgIDx0YWJsZSBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlOyB3aWR0aDoxMDAlOyI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPk9wcG9ydHVuaXR5U2NvcmU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+PGI+NzIuMTI8L2I+PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5TZWFyY2hJbnRlcmVzdDwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij45MTwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+RXhpc3RpbmdFdmVudHMgKFRpY2tldG1hc3Rlcik8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+NjU3PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5BdmdUaWNrZXRQcmljZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij42NDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+VG9wR2VucmVzPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPkFsdGVybmF0aXZlO0luZGllPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij40Ny42MDYyLCAtMTIyLjMzMjE8L3RkPjwvdHI+CiAgICAgICAgICA8L3RhYmxlPgogICAgICAgIDwvZGl2PgogICAg" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_8ff7a9e6d5aba7d028e1d197bf1b0ea0.setContent(i_frame_30c0eec7758fd7fec8e80abe48c495a7);
+                var html_c5c85f9a69edf0581efcfc2a913d8b5c = $(`<div id="html_c5c85f9a69edf0581efcfc2a913d8b5c" style="width: 100.0%; height: 100.0%;"><b>Cheltenham Badlands</b><br>1736 Olde Base Line Rd, Caledon, ON L7K 2M6</div>`)[0];
+                popup_1c9525711193cf7f6d5497acac03f389.setContent(html_c5c85f9a69edf0581efcfc2a913d8b5c);
             
         
 
-        circle_marker_e7b73aa882c051cd02dfbd15984a0cf6.bindPopup(popup_8ff7a9e6d5aba7d028e1d197bf1b0ea0)
+        marker_9056270fd0d1be66f0351c7c79119e52.bindPopup(popup_1c9525711193cf7f6d5497acac03f389)
         ;
 
         
     
     
-            circle_marker_e7b73aa882c051cd02dfbd15984a0cf6.bindTooltip(
+            marker_9056270fd0d1be66f0351c7c79119e52.bindTooltip(
                 `<div>
-                     Seattle • Opp 72.12
+                     Cheltenham Badlands
                  </div>`,
                 {
   "sticky": true,
@@ -744,32 +710,33 @@
             );
         
     
-            var circle_marker_1b752fcd38ed00977dfe793227d46387 = L.circleMarker(
-                [39.7392, -104.9903],
-                {"bubblingMouseEvents": true, "color": "#fd965fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd965fff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 16.113074204946997, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_cb9ba2ddd449f5585440d38a957f8adb = L.marker(
+                [45.975, -79.204],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_43d75eded91dc4cb964fa40da9e82628 = L.popup({
-  "maxWidth": 320,
+        var popup_8da29eb10f8a08dec90bfab70be2e1b4 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_4115ade269f19d505fbfcf3417b8d7de = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5EZW52ZXIsIFVTQTwvZGl2PgogICAgICAgICAgPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7IHdpZHRoOjEwMCU7Ij4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+T3Bwb3J0dW5pdHlTY29yZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij48Yj41Ny42NDwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjg3PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij42MjM8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjU4PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+Um9jaztFRE08L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkxhdGl0dWRlIC8gTG9uZ2l0dWRlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjM5LjczOTIsIC0xMDQuOTkwMzwvdGQ+PC90cj4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICA=" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_43d75eded91dc4cb964fa40da9e82628.setContent(i_frame_4115ade269f19d505fbfcf3417b8d7de);
+                var html_ab551085fa64de423011850c5e7acafb = $(`<div id="html_ab551085fa64de423011850c5e7acafb" style="width: 100.0%; height: 100.0%;"><b>Arrowhead Provincial Park</b><br>451 Arrowhead Park Rd, Huntsville, ON P1H 2J4</div>`)[0];
+                popup_8da29eb10f8a08dec90bfab70be2e1b4.setContent(html_ab551085fa64de423011850c5e7acafb);
             
         
 
-        circle_marker_1b752fcd38ed00977dfe793227d46387.bindPopup(popup_43d75eded91dc4cb964fa40da9e82628)
+        marker_cb9ba2ddd449f5585440d38a957f8adb.bindPopup(popup_8da29eb10f8a08dec90bfab70be2e1b4)
         ;
 
         
     
     
-            circle_marker_1b752fcd38ed00977dfe793227d46387.bindTooltip(
+            marker_cb9ba2ddd449f5585440d38a957f8adb.bindTooltip(
                 `<div>
-                     Denver • Opp 57.64
+                     Arrowhead Provincial Park
                  </div>`,
                 {
   "sticky": true,
@@ -777,32 +744,33 @@
             );
         
     
-            var circle_marker_e54ae56eb09a6808a29156920a716dfa = L.circleMarker(
-                [38.9072, -77.0369],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 27.02826855123675, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_6366c6b139cc9340303ecb4b7a69ce97 = L.marker(
+                [45.947, -81.593],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_899b529f2f2ac2080abcf6d263e3baed = L.popup({
-  "maxWidth": 320,
+        var popup_27166ad61e8299e8cc466f4e61f25804 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_8291f9838ce6a24e2c4cdfd0accf6cf1 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5XYXNoaW5ndG9uIERDLCBVU0E8L2Rpdj4KICAgICAgICAgIDx0YWJsZSBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlOyB3aWR0aDoxMDAlOyI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPk9wcG9ydHVuaXR5U2NvcmU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+PGI+ODguNTM8L2I+PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5TZWFyY2hJbnRlcmVzdDwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij45NDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+RXhpc3RpbmdFdmVudHMgKFRpY2tldG1hc3Rlcik8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+MDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+QXZnVGlja2V0UHJpY2U8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+Njc8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlRvcEdlbnJlczwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij5KYXp6O1BvcDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+TGF0aXR1ZGUgLyBMb25naXR1ZGU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+MzguOTA3MiwgLTc3LjAzNjk8L3RkPjwvdHI+CiAgICAgICAgICA8L3RhYmxlPgogICAgICAgIDwvZGl2PgogICAg" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_899b529f2f2ac2080abcf6d263e3baed.setContent(i_frame_8291f9838ce6a24e2c4cdfd0accf6cf1);
+                var html_0390c72c8fa986e427fe794b4c68fcdd = $(`<div id="html_0390c72c8fa986e427fe794b4c68fcdd" style="width: 100.0%; height: 100.0%;"><b>Killarney Provincial Park</b><br>1 Killarney Bay Rd, Killarney, ON P0G 1G0</div>`)[0];
+                popup_27166ad61e8299e8cc466f4e61f25804.setContent(html_0390c72c8fa986e427fe794b4c68fcdd);
             
         
 
-        circle_marker_e54ae56eb09a6808a29156920a716dfa.bindPopup(popup_899b529f2f2ac2080abcf6d263e3baed)
+        marker_6366c6b139cc9340303ecb4b7a69ce97.bindPopup(popup_27166ad61e8299e8cc466f4e61f25804)
         ;
 
         
     
     
-            circle_marker_e54ae56eb09a6808a29156920a716dfa.bindTooltip(
+            marker_6366c6b139cc9340303ecb4b7a69ce97.bindTooltip(
                 `<div>
-                     Washington DC • Opp 88.53
+                     Killarney Provincial Park
                  </div>`,
                 {
   "sticky": true,
@@ -810,32 +778,33 @@
             );
         
     
-            var circle_marker_bbcf096a10aba4292d6389378e3c8c0c = L.circleMarker(
-                [42.3601, -71.0589],
-                {"bubblingMouseEvents": true, "color": "#ec6443ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ec6443ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.593639575971736, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_167a16b80dd7cbb9bbf22dbb8f3c8764 = L.marker(
+                [45.237, -81.536],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_55468196623d4ea218be4832493f317d = L.popup({
-  "maxWidth": 320,
+        var popup_128c00f0303efaec10ed7f9404b15943 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_da15b4e2ba2d0c6fc7d5cd2c5dfd9def = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5Cb3N0b24sIFVTQTwvZGl2PgogICAgICAgICAgPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7IHdpZHRoOjEwMCU7Ij4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+T3Bwb3J0dW5pdHlTY29yZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij48Yj43NS45ODwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjkyPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij40NTc8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjYzPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+SW5kaWU7QWx0ZXJuYXRpdmU8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkxhdGl0dWRlIC8gTG9uZ2l0dWRlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjQyLjM2MDEsIC03MS4wNTg5PC90ZD48L3RyPgogICAgICAgICAgPC90YWJsZT4KICAgICAgICA8L2Rpdj4KICAgIA==" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_55468196623d4ea218be4832493f317d.setContent(i_frame_da15b4e2ba2d0c6fc7d5cd2c5dfd9def);
+                var html_f762a73894f0cd22c046b0489966ae09 = $(`<div id="html_f762a73894f0cd22c046b0489966ae09" style="width: 100.0%; height: 100.0%;"><b>Bruce Peninsula National Park</b><br>28 Cyprus Lake Rd, Tobermory, ON N0H 2R0</div>`)[0];
+                popup_128c00f0303efaec10ed7f9404b15943.setContent(html_f762a73894f0cd22c046b0489966ae09);
             
         
 
-        circle_marker_bbcf096a10aba4292d6389378e3c8c0c.bindPopup(popup_55468196623d4ea218be4832493f317d)
+        marker_167a16b80dd7cbb9bbf22dbb8f3c8764.bindPopup(popup_128c00f0303efaec10ed7f9404b15943)
         ;
 
         
     
     
-            circle_marker_bbcf096a10aba4292d6389378e3c8c0c.bindTooltip(
+            marker_167a16b80dd7cbb9bbf22dbb8f3c8764.bindTooltip(
                 `<div>
-                     Boston • Opp 75.98
+                     Bruce Peninsula National Park
                  </div>`,
                 {
   "sticky": true,
@@ -843,32 +812,33 @@
             );
         
     
-            var circle_marker_43c686caf044213c3b56ffc14da34878 = L.circleMarker(
-                [36.1627, -86.7816],
-                {"bubblingMouseEvents": true, "color": "#fd965fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd965fff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 25.0565371024735, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_3a9ebff9da64475c77528572fd865be8 = L.marker(
+                [48.736, -81.866],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_6f89106e68fdf3aafa25637a6c6320ab = L.popup({
-  "maxWidth": 320,
+        var popup_cc7338afc20e9ac17695d3e14314f6f6 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_37355d19ac763f56135be7f398cd67bc = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5OYXNodmlsbGUsIFVTQTwvZGl2PgogICAgICAgICAgPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7IHdpZHRoOjEwMCU7Ij4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+T3Bwb3J0dW5pdHlTY29yZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij48Yj44Mi45NTwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjk1PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij43NzM8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjY2PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+Q291bnRyeTtSb2NrPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4zNi4xNjI3LCAtODYuNzgxNjwvdGQ+PC90cj4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICA=" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_6f89106e68fdf3aafa25637a6c6320ab.setContent(i_frame_37355d19ac763f56135be7f398cd67bc);
+                var html_8734d391caf589063394d1b01a9ae056 = $(`<div id="html_8734d391caf589063394d1b01a9ae056" style="width: 100.0%; height: 100.0%;"><b>Pukaskwa National Park</b><br>1 Hattie Cove Rd, Marathon, ON P0T 2E0</div>`)[0];
+                popup_cc7338afc20e9ac17695d3e14314f6f6.setContent(html_8734d391caf589063394d1b01a9ae056);
             
         
 
-        circle_marker_43c686caf044213c3b56ffc14da34878.bindPopup(popup_6f89106e68fdf3aafa25637a6c6320ab)
+        marker_3a9ebff9da64475c77528572fd865be8.bindPopup(popup_cc7338afc20e9ac17695d3e14314f6f6)
         ;
 
         
     
     
-            circle_marker_43c686caf044213c3b56ffc14da34878.bindTooltip(
+            marker_3a9ebff9da64475c77528572fd865be8.bindTooltip(
                 `<div>
-                     Nashville • Opp 82.95
+                     Pukaskwa National Park
                  </div>`,
                 {
   "sticky": true,
@@ -876,32 +846,33 @@
             );
         
     
-            var circle_marker_4710162670aa7ddb52944ff41757d9e9 = L.circleMarker(
-                [42.3314, -83.0458],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.70671378091873, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_e088bf028ea75b03f151328881c95fde = L.marker(
+                [47.97, -81.7],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_1677a30c7293b03ca51cff7e22068b7f = L.popup({
-  "maxWidth": 320,
+        var popup_2e7474e707cc29b3b3bb7e6a03c6603e = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_603f88938570ee4658d8d4496af663f0 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5EZXRyb2l0LCBVU0E8L2Rpdj4KICAgICAgICAgIDx0YWJsZSBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlOyB3aWR0aDoxMDAlOyI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPk9wcG9ydHVuaXR5U2NvcmU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+PGI+NDUuMTc8L2I+PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5TZWFyY2hJbnRlcmVzdDwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij44MzwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+RXhpc3RpbmdFdmVudHMgKFRpY2tldG1hc3Rlcik8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+MjM0PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5BdmdUaWNrZXRQcmljZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij41MDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+VG9wR2VucmVzPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPlImQjtSYXA8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkxhdGl0dWRlIC8gTG9uZ2l0dWRlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjQyLjMzMTQsIC04My4wNDU4PC90ZD48L3RyPgogICAgICAgICAgPC90YWJsZT4KICAgICAgICA8L2Rpdj4KICAgIA==" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_1677a30c7293b03ca51cff7e22068b7f.setContent(i_frame_603f88938570ee4658d8d4496af663f0);
+                var html_95774bda143c9290c086941cea64f110 = $(`<div id="html_95774bda143c9290c086941cea64f110" style="width: 100.0%; height: 100.0%;"><b>Lake Superior Provincial Park</b><br>1 Highway 17, Wawa, ON P0S 1K0</div>`)[0];
+                popup_2e7474e707cc29b3b3bb7e6a03c6603e.setContent(html_95774bda143c9290c086941cea64f110);
             
         
 
-        circle_marker_4710162670aa7ddb52944ff41757d9e9.bindPopup(popup_1677a30c7293b03ca51cff7e22068b7f)
+        marker_e088bf028ea75b03f151328881c95fde.bindPopup(popup_2e7474e707cc29b3b3bb7e6a03c6603e)
         ;
 
         
     
     
-            circle_marker_4710162670aa7ddb52944ff41757d9e9.bindTooltip(
+            marker_e088bf028ea75b03f151328881c95fde.bindTooltip(
                 `<div>
-                     Detroit • Opp 45.17
+                     Lake Superior Provincial Park
                  </div>`,
                 {
   "sticky": true,
@@ -909,32 +880,33 @@
             );
         
     
-            var circle_marker_abfbac9049c92fcb195b5bedbc9db856 = L.circleMarker(
-                [45.5051, -122.675],
-                {"bubblingMouseEvents": true, "color": "#ec6443ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ec6443ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.45583038869258, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_549aaedcfe81e1a68953eb865532c291 = L.marker(
+                [45.877, -81.907],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_211eb2fade954362759d6a8d78a8bdfd = L.popup({
-  "maxWidth": 320,
+        var popup_12892ab085721c1a22e187da6d6041f8 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_842408c5767fe60b99eacf4417024a05 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5Qb3J0bGFuZCwgVVNBPC9kaXY+CiAgICAgICAgICA8dGFibGUgc3R5bGU9ImJvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTsgd2lkdGg6MTAwJTsiPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5PcHBvcnR1bml0eVNjb3JlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjxiPjUwLjEyPC9iPjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+U2VhcmNoSW50ZXJlc3Q8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+ODU8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkV4aXN0aW5nRXZlbnRzIChUaWNrZXRtYXN0ZXIpPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjQxNDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+QXZnVGlja2V0UHJpY2U8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+NTI8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlRvcEdlbnJlczwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij5BbHRlcm5hdGl2ZTtJbmRpZTwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+TGF0aXR1ZGUgLyBMb25naXR1ZGU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+NDUuNTA1MSwgLTEyMi42NzUwPC90ZD48L3RyPgogICAgICAgICAgPC90YWJsZT4KICAgICAgICA8L2Rpdj4KICAgIA==" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_211eb2fade954362759d6a8d78a8bdfd.setContent(i_frame_842408c5767fe60b99eacf4417024a05);
+                var html_5e94f15fc5626b1945eb25c9ece7471a = $(`<div id="html_5e94f15fc5626b1945eb25c9ece7471a" style="width: 100.0%; height: 100.0%;"><b>Manitoulin Island</b><br>Manitoulin Island, ON</div>`)[0];
+                popup_12892ab085721c1a22e187da6d6041f8.setContent(html_5e94f15fc5626b1945eb25c9ece7471a);
             
         
 
-        circle_marker_abfbac9049c92fcb195b5bedbc9db856.bindPopup(popup_211eb2fade954362759d6a8d78a8bdfd)
+        marker_549aaedcfe81e1a68953eb865532c291.bindPopup(popup_12892ab085721c1a22e187da6d6041f8)
         ;
 
         
     
     
-            circle_marker_abfbac9049c92fcb195b5bedbc9db856.bindTooltip(
+            marker_549aaedcfe81e1a68953eb865532c291.bindTooltip(
                 `<div>
-                     Portland • Opp 50.12
+                     Manitoulin Island
                  </div>`,
                 {
   "sticky": true,
@@ -942,32 +914,33 @@
             );
         
     
-            var circle_marker_e3390191232ec9d5d47482b207a66f50 = L.circleMarker(
-                [36.1699, -115.1398],
-                {"bubblingMouseEvents": true, "color": "#4575b4ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4575b4ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 19.045936395759718, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_9b214dbed09f0ac46d7f4c0123fe6bfb = L.marker(
+                [43.95, -77.2],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_6cc68b8daa0be80c11d2ad676e0fd0d8 = L.popup({
-  "maxWidth": 320,
+        var popup_7e0ce23b4dc17cc5f845a8dd12c023b0 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_8ff2f6bb5226d52bca3e058402444d19 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5MYXMgVmVnYXMsIFVTQTwvZGl2PgogICAgICAgICAgPHRhYmxlIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7IHdpZHRoOjEwMCU7Ij4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+T3Bwb3J0dW5pdHlTY29yZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij48Yj42NS45NDwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjk2PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4zMDkxPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5BdmdUaWNrZXRQcmljZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij43MDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+VG9wR2VucmVzPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPkVETTtQb3A8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkxhdGl0dWRlIC8gTG9uZ2l0dWRlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjM2LjE2OTksIC0xMTUuMTM5ODwvdGQ+PC90cj4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICA=" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_6cc68b8daa0be80c11d2ad676e0fd0d8.setContent(i_frame_8ff2f6bb5226d52bca3e058402444d19);
+                var html_3aa01b83efb975ed99f6b571160ad566 = $(`<div id="html_3aa01b83efb975ed99f6b571160ad566" style="width: 100.0%; height: 100.0%;"><b>Sandbanks Provincial Park</b><br>3004 County Rd 12, Picton, ON K0K 2T0</div>`)[0];
+                popup_7e0ce23b4dc17cc5f845a8dd12c023b0.setContent(html_3aa01b83efb975ed99f6b571160ad566);
             
         
 
-        circle_marker_e3390191232ec9d5d47482b207a66f50.bindPopup(popup_6cc68b8daa0be80c11d2ad676e0fd0d8)
+        marker_9b214dbed09f0ac46d7f4c0123fe6bfb.bindPopup(popup_7e0ce23b4dc17cc5f845a8dd12c023b0)
         ;
 
         
     
     
-            circle_marker_e3390191232ec9d5d47482b207a66f50.bindTooltip(
+            marker_9b214dbed09f0ac46d7f4c0123fe6bfb.bindTooltip(
                 `<div>
-                     Las Vegas • Opp 65.94
+                     Sandbanks Provincial Park
                  </div>`,
                 {
   "sticky": true,
@@ -975,32 +948,33 @@
             );
         
     
-            var circle_marker_8e827ec397fb518fac6f58beae0b4b2d = L.circleMarker(
-                [25.7617, -80.1918],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 30.0, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_ac9a826c3d0ed0ce95a86371125bc331 = L.marker(
+                [43.9333, -77.7],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_4a7755e0bf9f51aeb0df083a2ea1e4a7 = L.popup({
-  "maxWidth": 320,
+        var popup_850d8ec50f2b1f0d25d4d818e5aa709d = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_44017c80bca1fd8f57b0e89679113e46 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5NaWFtaSwgVVNBPC9kaXY+CiAgICAgICAgICA8dGFibGUgc3R5bGU9ImJvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTsgd2lkdGg6MTAwJTsiPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5PcHBvcnR1bml0eVNjb3JlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjxiPjk2Ljk0PC9iPjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+U2VhcmNoSW50ZXJlc3Q8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+OTc8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkV4aXN0aW5nRXZlbnRzIChUaWNrZXRtYXN0ZXIpPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjk1PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5BdmdUaWNrZXRQcmljZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij42OTwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+VG9wR2VucmVzPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPkxhdGluO0VETTwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+TGF0aXR1ZGUgLyBMb25naXR1ZGU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+MjUuNzYxNywgLTgwLjE5MTg8L3RkPjwvdHI+CiAgICAgICAgICA8L3RhYmxlPgogICAgICAgIDwvZGl2PgogICAg" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_4a7755e0bf9f51aeb0df083a2ea1e4a7.setContent(i_frame_44017c80bca1fd8f57b0e89679113e46);
+                var html_dddde67ea7fa70537314e90ff490a7a4 = $(`<div id="html_dddde67ea7fa70537314e90ff490a7a4" style="width: 100.0%; height: 100.0%;"><b>Presqu'ile Provincial Park</b><br>328 Presqu'ile Pkwy, Brighton, ON K0K 1H0</div>`)[0];
+                popup_850d8ec50f2b1f0d25d4d818e5aa709d.setContent(html_dddde67ea7fa70537314e90ff490a7a4);
             
         
 
-        circle_marker_8e827ec397fb518fac6f58beae0b4b2d.bindPopup(popup_4a7755e0bf9f51aeb0df083a2ea1e4a7)
+        marker_ac9a826c3d0ed0ce95a86371125bc331.bindPopup(popup_850d8ec50f2b1f0d25d4d818e5aa709d)
         ;
 
         
     
     
-            circle_marker_8e827ec397fb518fac6f58beae0b4b2d.bindTooltip(
+            marker_ac9a826c3d0ed0ce95a86371125bc331.bindTooltip(
                 `<div>
-                     Miami • Opp 96.94
+                     Presqu'ile Provincial Park
                  </div>`,
                 {
   "sticky": true,
@@ -1008,32 +982,33 @@
             );
         
     
-            var circle_marker_1c57d136031e902bf0dd4f4d7010dcc1 = L.circleMarker(
-                [28.5383, -81.3792],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 17.795053003533567, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_449c9b7f10dcf09f3144ac04ef9ad180 = L.marker(
+                [44.5, -80.0],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_d0a742d7857b7ff28acc45b079ead219 = L.popup({
-  "maxWidth": 320,
+        var popup_fffd0b08a732aab1b38531fb1dd08ad7 = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_7abaa4668074e71a4ed0f601d7c68615 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5PcmxhbmRvLCBVU0E8L2Rpdj4KICAgICAgICAgIDx0YWJsZSBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlOyB3aWR0aDoxMDAlOyI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPk9wcG9ydHVuaXR5U2NvcmU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+PGI+NjIuNDwvYj48L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlNlYXJjaEludGVyZXN0PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjg4PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5FeGlzdGluZ0V2ZW50cyAoVGlja2V0bWFzdGVyKTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4yNTY8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkF2Z1RpY2tldFByaWNlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjU2PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5Ub3BHZW5yZXM8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+UG9wO0RhbmNlPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4yOC41MzgzLCAtODEuMzc5MjwvdGQ+PC90cj4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICA=" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_d0a742d7857b7ff28acc45b079ead219.setContent(i_frame_7abaa4668074e71a4ed0f601d7c68615);
+                var html_ef99b8ff978d2ca94b0f40eefe41c1fa = $(`<div id="html_ef99b8ff978d2ca94b0f40eefe41c1fa" style="width: 100.0%; height: 100.0%;"><b>Wasaga Beach Provincial Park</b><br>170 Beach Dr, Wasaga Beach, ON L9Z 2L3</div>`)[0];
+                popup_fffd0b08a732aab1b38531fb1dd08ad7.setContent(html_ef99b8ff978d2ca94b0f40eefe41c1fa);
             
         
 
-        circle_marker_1c57d136031e902bf0dd4f4d7010dcc1.bindPopup(popup_d0a742d7857b7ff28acc45b079ead219)
+        marker_449c9b7f10dcf09f3144ac04ef9ad180.bindPopup(popup_fffd0b08a732aab1b38531fb1dd08ad7)
         ;
 
         
     
     
-            circle_marker_1c57d136031e902bf0dd4f4d7010dcc1.bindTooltip(
+            marker_449c9b7f10dcf09f3144ac04ef9ad180.bindTooltip(
                 `<div>
-                     Orlando • Opp 62.4
+                     Wasaga Beach Provincial Park
                  </div>`,
                 {
   "sticky": true,
@@ -1041,32 +1016,33 @@
             );
         
     
-            var circle_marker_cbb219b678a3182d533cf970ef73f935 = L.circleMarker(
-                [27.9506, -82.4572],
-                {"bubblingMouseEvents": true, "color": "#d73027ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d73027ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.134275618374557, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_72908ea056fcdb6968ba7975f0f4d85a = L.marker(
+                [43.6465, -79.4637],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_0a68536b4dce91eb52ded5529e84534d = L.popup({
-  "maxWidth": 320,
+        var popup_8cf6a39127577e3ee78fa3e688be08ae = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_e4282065b99099526a796a2d3095fe97 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5UYW1wYSwgVVNBPC9kaXY+CiAgICAgICAgICA8dGFibGUgc3R5bGU9ImJvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTsgd2lkdGg6MTAwJTsiPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5PcHBvcnR1bml0eVNjb3JlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjxiPjUyLjA0PC9iPjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+U2VhcmNoSW50ZXJlc3Q8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+ODQ8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkV4aXN0aW5nRXZlbnRzIChUaWNrZXRtYXN0ZXIpPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjkyPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5BdmdUaWNrZXRQcmljZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij41NDwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+VG9wR2VucmVzPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPlBvcDtSb2NrPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4yNy45NTA2LCAtODIuNDU3MjwvdGQ+PC90cj4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICA=" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_0a68536b4dce91eb52ded5529e84534d.setContent(i_frame_e4282065b99099526a796a2d3095fe97);
+                var html_df036c2553ca18cb6c5f14856d311a76 = $(`<div id="html_df036c2553ca18cb6c5f14856d311a76" style="width: 100.0%; height: 100.0%;"><b>High Park</b><br>1873 Bloor St W, Toronto, ON M6R 2Z3</div>`)[0];
+                popup_8cf6a39127577e3ee78fa3e688be08ae.setContent(html_df036c2553ca18cb6c5f14856d311a76);
             
         
 
-        circle_marker_cbb219b678a3182d533cf970ef73f935.bindPopup(popup_0a68536b4dce91eb52ded5529e84534d)
+        marker_72908ea056fcdb6968ba7975f0f4d85a.bindPopup(popup_8cf6a39127577e3ee78fa3e688be08ae)
         ;
 
         
     
     
-            circle_marker_cbb219b678a3182d533cf970ef73f935.bindTooltip(
+            marker_72908ea056fcdb6968ba7975f0f4d85a.bindTooltip(
                 `<div>
-                     Tampa • Opp 52.04
+                     High Park
                  </div>`,
                 {
   "sticky": true,
@@ -1074,32 +1050,33 @@
             );
         
     
-            var circle_marker_824df4ae374faf5013758c58f1d1fc45 = L.circleMarker(
-                [33.749, -84.388],
-                {"bubblingMouseEvents": true, "color": "#fd965fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd965fff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.653710247349828, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_fcbe3ae7981130e988f4555191d45647 = L.marker(
+                [43.6425, -79.386],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_1728d4968982f6a507992904b35dac7a = L.popup({
-  "maxWidth": 320,
+        var popup_2e8c54834d30f6d829dc02b67cc3caeb = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_42c3c70c9e3f7c2e22f612ca8e3fb4a0 = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5BdGxhbnRhLCBVU0E8L2Rpdj4KICAgICAgICAgIDx0YWJsZSBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlOyB3aWR0aDoxMDAlOyI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPk9wcG9ydHVuaXR5U2NvcmU8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+PGI+NzYuMTU8L2I+PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5TZWFyY2hJbnRlcmVzdDwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij45MzwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+RXhpc3RpbmdFdmVudHMgKFRpY2tldG1hc3Rlcik8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+NjM3PC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5BdmdUaWNrZXRQcmljZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij42MjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+VG9wR2VucmVzPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPkhpcC1Ib3A7UiZCPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4zMy43NDkwLCAtODQuMzg4MDwvdGQ+PC90cj4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICA=" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_1728d4968982f6a507992904b35dac7a.setContent(i_frame_42c3c70c9e3f7c2e22f612ca8e3fb4a0);
+                var html_bd371199b2b3a0c5b07d9f8cbbed123e = $(`<div id="html_bd371199b2b3a0c5b07d9f8cbbed123e" style="width: 100.0%; height: 100.0%;"><b>Ripley's Aquarium of Canada</b><br>288 Bremner Blvd, Toronto, ON M5V 3L9</div>`)[0];
+                popup_2e8c54834d30f6d829dc02b67cc3caeb.setContent(html_bd371199b2b3a0c5b07d9f8cbbed123e);
             
         
 
-        circle_marker_824df4ae374faf5013758c58f1d1fc45.bindPopup(popup_1728d4968982f6a507992904b35dac7a)
+        marker_fcbe3ae7981130e988f4555191d45647.bindPopup(popup_2e8c54834d30f6d829dc02b67cc3caeb)
         ;
 
         
     
     
-            circle_marker_824df4ae374faf5013758c58f1d1fc45.bindTooltip(
+            marker_fcbe3ae7981130e988f4555191d45647.bindTooltip(
                 `<div>
-                     Atlanta • Opp 76.15
+                     Ripley's Aquarium of Canada
                  </div>`,
                 {
   "sticky": true,
@@ -1107,32 +1084,33 @@
             );
         
     
-            var circle_marker_c6c32408e89865e7dd7669d66c7eccfa = L.circleMarker(
-                [29.9511, -90.0715],
-                {"bubblingMouseEvents": true, "color": "#ec6443ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ec6443ff", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 21.148409893992934, "stroke": true, "weight": 1.0}
-            ).addTo(feature_group_89adf3fcc27407f0d4777eb7787756a6);
+            var marker_a67e6a2f6f6090cbc2f3b4e73582dc91 = L.marker(
+                [43.817, -79.185],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-        var popup_3b8a01fb4b749cc5e2adc655a37c8804 = L.popup({
-  "maxWidth": 320,
+        var popup_f8226afec802b0d36db9b44e0b41a23f = L.popup({
+  "maxWidth": "100%",
 });
 
         
             
-                var i_frame_c1861c59d6271bba4032e9f32eb176fa = $(`<iframe src="data:text/html;charset=utf-8;base64,CiAgICAKICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpJbnRlcixTZWdvZSBVSSxBcmlhbDsgZm9udC1zaXplOjEzcHg7IGxpbmUtaGVpZ2h0OjEuMzU7IG1pbi13aWR0aDoyNjBweDsiPgogICAgICAgICAgPGRpdiBzdHlsZT0iZm9udC13ZWlnaHQ6NjAwOyBmb250LXNpemU6MTRweDsgbWFyZ2luLWJvdHRvbTo0cHg7Ij5OZXcgT3JsZWFucywgVVNBPC9kaXY+CiAgICAgICAgICA8dGFibGUgc3R5bGU9ImJvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTsgd2lkdGg6MTAwJTsiPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5PcHBvcnR1bml0eVNjb3JlPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjxiPjcxLjg5PC9iPjwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+U2VhcmNoSW50ZXJlc3Q8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+OTE8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPkV4aXN0aW5nRXZlbnRzIChUaWNrZXRtYXN0ZXIpPC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsgdGV4dC1hbGlnbjpyaWdodDsiPjMxMzwvdGQ+PC90cj4KICAgICAgICAgICAgPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyI+QXZnVGlja2V0UHJpY2U8L3RkPjx0ZCBzdHlsZT0icGFkZGluZzoycHggNnB4OyB0ZXh0LWFsaWduOnJpZ2h0OyI+NTk8L3RkPjwvdHI+CiAgICAgICAgICAgIDx0cj48dGQgc3R5bGU9InBhZGRpbmc6MnB4IDZweDsiPlRvcEdlbnJlczwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij5KYXp6O0JsdWVzPC90ZD48L3RyPgogICAgICAgICAgICA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7Ij5MYXRpdHVkZSAvIExvbmdpdHVkZTwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjJweCA2cHg7IHRleHQtYWxpZ246cmlnaHQ7Ij4yOS45NTExLCAtOTAuMDcxNTwvdGQ+PC90cj4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICA=" width="300" style="border:none !important;" height="190"></iframe>`)[0];
-                popup_3b8a01fb4b749cc5e2adc655a37c8804.setContent(i_frame_c1861c59d6271bba4032e9f32eb176fa);
+                var html_dbfe87258abba3204a5059cf3cd71ab5 = $(`<div id="html_dbfe87258abba3204a5059cf3cd71ab5" style="width: 100.0%; height: 100.0%;"><b>Toronto Zoo</b><br>2000 Meadowvale Rd, Toronto, ON M1B 5K7</div>`)[0];
+                popup_f8226afec802b0d36db9b44e0b41a23f.setContent(html_dbfe87258abba3204a5059cf3cd71ab5);
             
         
 
-        circle_marker_c6c32408e89865e7dd7669d66c7eccfa.bindPopup(popup_3b8a01fb4b749cc5e2adc655a37c8804)
+        marker_a67e6a2f6f6090cbc2f3b4e73582dc91.bindPopup(popup_f8226afec802b0d36db9b44e0b41a23f)
         ;
 
         
     
     
-            circle_marker_c6c32408e89865e7dd7669d66c7eccfa.bindTooltip(
+            marker_a67e6a2f6f6090cbc2f3b4e73582dc91.bindTooltip(
                 `<div>
-                     New Orleans • Opp 71.89
+                     Toronto Zoo
                  </div>`,
                 {
   "sticky": true,
@@ -1140,101 +1118,687 @@
             );
         
     
-            feature_group_89adf3fcc27407f0d4777eb7787756a6.addTo(map_40d0502f0f61b3dea6776958b823f596);
+            var marker_23902a6aa13ee8a89b1ee147e80ceb22 = L.marker(
+                [43.71, -79.25],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-            var feature_group_98cf0578597d2b8bcd05fe4b36ee3abd = L.featureGroup(
+        var popup_3631262726db95698d499b8e2df5fb71 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_39b20886d04b539b1a5756ddb23f7ed6 = $(`<div id="html_39b20886d04b539b1a5756ddb23f7ed6" style="width: 100.0%; height: 100.0%;"><b>Scarborough Bluffs</b><br>1 Brimley Rd S, Scarborough, ON M1M 3W3</div>`)[0];
+                popup_3631262726db95698d499b8e2df5fb71.setContent(html_39b20886d04b539b1a5756ddb23f7ed6);
+            
+        
+
+        marker_23902a6aa13ee8a89b1ee147e80ceb22.bindPopup(popup_3631262726db95698d499b8e2df5fb71)
+        ;
+
+        
+    
+    
+            marker_23902a6aa13ee8a89b1ee147e80ceb22.bindTooltip(
+                `<div>
+                     Scarborough Bluffs
+                 </div>`,
                 {
+  "sticky": true,
 }
             );
         
     
-            var heat_map_5921ffc28952bcf0a383dc464764959b = L.heatLayer(
-                [[40.7128, -74.006, 79.31], [34.0522, -118.2437, 79.78], [41.8781, -87.6298, 62.6], [29.7604, -95.3698, 49.12], [33.4484, -112.074, 39.05], [39.9526, -75.1652, 59.07], [29.4241, -98.4936, 36.34], [32.7157, -117.1611, 52.95], [32.7767, -96.797, 65.36], [37.3382, -121.8863, 48.6], [30.2672, -97.7431, 83.35], [30.3322, -81.6557, 29.02], [32.7555, -97.3308, 35.59], [39.9612, -82.9988, 39.75], [37.7749, -122.4194, 74.87], [35.2271, -80.8431, 46.27], [39.7684, -86.1581, 31.57], [47.6062, -122.3321, 72.12], [39.7392, -104.9903, 57.64], [38.9072, -77.0369, 88.53], [42.3601, -71.0589, 75.98], [36.1627, -86.7816, 82.95], [42.3314, -83.0458, 45.17], [45.5051, -122.675, 50.12], [36.1699, -115.1398, 65.94], [25.7617, -80.1918, 96.94], [28.5383, -81.3792, 62.4], [27.9506, -82.4572, 52.04], [33.749, -84.388, 76.15], [29.9511, -90.0715, 71.89]],
+            var marker_c6823bc7cf25e6facbdcefafabdac967 = L.marker(
+                [43.255, -79.074],
                 {
-  "minOpacity": 0.2,
-  "maxZoom": 18,
-  "radius": 24,
-  "blur": 18,
-  "maxOpacity": 0.85,
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_7eef2e95c5f960518bfcdc20f53787a6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c2e35d1b3563f552609bce76a3fe2744 = $(`<div id="html_c2e35d1b3563f552609bce76a3fe2744" style="width: 100.0%; height: 100.0%;"><b>Niagara-on-the-Lake</b><br>Niagara-on-the-Lake, ON</div>`)[0];
+                popup_7eef2e95c5f960518bfcdc20f53787a6.setContent(html_c2e35d1b3563f552609bce76a3fe2744);
+            
+        
+
+        marker_c6823bc7cf25e6facbdcefafabdac967.bindPopup(popup_7eef2e95c5f960518bfcdc20f53787a6)
+        ;
+
+        
+    
+    
+            marker_c6823bc7cf25e6facbdcefafabdac967.bindTooltip(
+                `<div>
+                     Niagara-on-the-Lake
+                 </div>`,
+                {
+  "sticky": true,
 }
             );
         
     
-            heat_map_5921ffc28952bcf0a383dc464764959b.addTo(feature_group_98cf0578597d2b8bcd05fe4b36ee3abd);
+            var marker_75ed9842adde61ef45ad107ac7a979ff = L.marker(
+                [43.26, -79.085],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
     
-    var color_map_7818c53a99144231ccd12895f86373d7 = {};
+        var popup_dae631e145ba1d4c01ee64fb2bb27ac3 = L.popup({
+  "maxWidth": "100%",
+});
 
+        
+            
+                var html_e19841dcaeee0edab1ac924fc8363059 = $(`<div id="html_e19841dcaeee0edab1ac924fc8363059" style="width: 100.0%; height: 100.0%;"><b>Jackson Triggs Winery</b><br>2145 Niagara Stone Rd, Niagara-on-the-Lake, ON L0S 1J0</div>`)[0];
+                popup_dae631e145ba1d4c01ee64fb2bb27ac3.setContent(html_e19841dcaeee0edab1ac924fc8363059);
+            
+        
+
+        marker_75ed9842adde61ef45ad107ac7a979ff.bindPopup(popup_dae631e145ba1d4c01ee64fb2bb27ac3)
+        ;
+
+        
     
-    color_map_7818c53a99144231ccd12895f86373d7.color = d3.scale.threshold()
-              .domain([0.0, 6.19438877755511, 12.38877755511022, 18.583166332665332, 24.77755511022044, 30.971943887775552, 37.166332665330664, 43.36072144288577, 49.55511022044088, 55.74949899799599, 61.943887775551104, 68.13827655310621, 74.33266533066133, 80.52705410821643, 86.72144288577154, 92.91583166332666, 99.11022044088176, 105.30460921843688, 111.49899799599199, 117.69338677354709, 123.88777555110221, 130.0821643286573, 136.27655310621242, 142.47094188376752, 148.66533066132266, 154.85971943887776, 161.05410821643287, 167.24849699398797, 173.44288577154308, 179.6372745490982, 185.8316633266533, 192.02605210420842, 198.22044088176352, 204.41482965931863, 210.60921843687376, 216.80360721442887, 222.99799599198397, 229.19238476953907, 235.38677354709418, 241.5811623246493, 247.77555110220442, 253.96993987975952, 260.1643286573146, 266.35871743486973, 272.55310621242484, 278.74749498997994, 284.94188376753505, 291.1362725450902, 297.3306613226453, 303.5250501002004, 309.7194388777555, 315.9138276553106, 322.10821643286573, 328.30260521042084, 334.49699398797594, 340.69138276553105, 346.88577154308615, 353.08016032064126, 359.2745490981964, 365.4689378757515, 371.6633266533066, 377.85771543086173, 384.05210420841684, 390.24649298597194, 396.44088176352705, 402.63527054108215, 408.82965931863725, 415.02404809619236, 421.2184368737475, 427.4128256513026, 433.60721442885773, 439.80160320641284, 445.99599198396794, 452.19038076152304, 458.38476953907815, 464.57915831663325, 470.77354709418836, 476.96793587174346, 483.1623246492986, 489.35671342685373, 495.55110220440883, 501.74549098196394, 507.93987975951904, 514.1342685370741, 520.3286573146293, 526.5230460921844, 532.7174348697395, 538.9118236472946, 545.1062124248497, 551.3006012024048, 557.4949899799599, 563.689378757515, 569.8837675350701, 576.0781563126252, 582.2725450901804, 588.4669338677355, 594.6613226452906, 600.8557114228457, 607.0501002004008, 613.2444889779559, 619.438877755511, 625.6332665330661, 631.8276553106213, 638.0220440881764, 644.2164328657315, 650.4108216432866, 656.6052104208417, 662.7995991983968, 668.9939879759519, 675.188376753507, 681.3827655310621, 687.5771543086172, 693.7715430861723, 699.9659318637274, 706.1603206412825, 712.3547094188377, 718.5490981963928, 724.7434869739479, 730.937875751503, 737.1322645290581, 743.3266533066133, 749.5210420841684, 755.7154308617235, 761.9098196392786, 768.1042084168337, 774.2985971943888, 780.4929859719439, 786.687374749499, 792.8817635270541, 799.0761523046092, 805.2705410821643, 811.4649298597194, 817.6593186372745, 823.8537074148296, 830.0480961923847, 836.2424849699398, 842.436873747495, 848.6312625250501, 854.8256513026053, 861.0200400801604, 867.2144288577155, 873.4088176352706, 879.6032064128257, 885.7975951903808, 891.9919839679359, 898.186372745491, 904.3807615230461, 910.5751503006012, 916.7695390781563, 922.9639278557114, 929.1583166332665, 935.3527054108216, 941.5470941883767, 947.7414829659318, 953.9358717434869, 960.130260521042, 966.3246492985973, 972.5190380761524, 978.7134268537075, 984.9078156312626, 991.1022044088177, 997.2965931863728, 1003.4909819639279, 1009.685370741483, 1015.8797595190381, 1022.0741482965932, 1028.2685370741483, 1034.4629258517034, 1040.6573146292585, 1046.8517034068136, 1053.0460921843687, 1059.2404809619238, 1065.434869739479, 1071.629258517034, 1077.8236472945891, 1084.0180360721442, 1090.2124248496993, 1096.4068136272545, 1102.6012024048096, 1108.7955911823647, 1114.9899799599198, 1121.1843687374749, 1127.37875751503, 1133.573146292585, 1139.7675350701402, 1145.9619238476953, 1152.1563126252504, 1158.3507014028055, 1164.5450901803608, 1170.739478957916, 1176.933867735471, 1183.1282565130261, 1189.3226452905812, 1195.5170340681364, 1201.7114228456915, 1207.9058116232466, 1214.1002004008017, 1220.2945891783568, 1226.4889779559119, 1232.683366733467, 1238.877755511022, 1245.0721442885772, 1251.2665330661323, 1257.4609218436874, 1263.6553106212425, 1269.8496993987976, 1276.0440881763527, 1282.2384769539078, 1288.432865731463, 1294.627254509018, 1300.8216432865731, 1307.0160320641282, 1313.2104208416833, 1319.4048096192384, 1325.5991983967936, 1331.7935871743487, 1337.9879759519038, 1344.1823647294589, 1350.376753507014, 1356.571142284569, 1362.7655310621242, 1368.9599198396793, 1375.1543086172344, 1381.3486973947895, 1387.5430861723446, 1393.7374749498997, 1399.9318637274548, 1406.12625250501, 1412.320641282565, 1418.5150300601204, 1424.7094188376755, 1430.9038076152306, 1437.0981963927857, 1443.2925851703408, 1449.4869739478959, 1455.681362725451, 1461.875751503006, 1468.0701402805612, 1474.2645290581163, 1480.4589178356714, 1486.6533066132265, 1492.8476953907816, 1499.0420841683367, 1505.2364729458918, 1511.430861723447, 1517.625250501002, 1523.8196392785571, 1530.0140280561122, 1536.2084168336673, 1542.4028056112224, 1548.5971943887776, 1554.7915831663327, 1560.9859719438878, 1567.1803607214429, 1573.374749498998, 1579.569138276553, 1585.7635270541082, 1591.9579158316633, 1598.1523046092184, 1604.3466933867735, 1610.5410821643286, 1616.7354709418837, 1622.9298597194388, 1629.124248496994, 1635.318637274549, 1641.5130260521041, 1647.7074148296592, 1653.9018036072143, 1660.0961923847694, 1666.2905811623245, 1672.4849699398796, 1678.679358717435, 1684.87374749499, 1691.0681362725452, 1697.2625250501003, 1703.4569138276554, 1709.6513026052105, 1715.8456913827656, 1722.0400801603207, 1728.2344689378758, 1734.428857715431, 1740.623246492986, 1746.8176352705411, 1753.0120240480962, 1759.2064128256513, 1765.4008016032064, 1771.5951903807616, 1777.7895791583167, 1783.9839679358718, 1790.1783567134269, 1796.372745490982, 1802.567134268537, 1808.7615230460922, 1814.9559118236473, 1821.1503006012024, 1827.3446893787575, 1833.5390781563126, 1839.7334669338677, 1845.9278557114228, 1852.122244488978, 1858.316633266533, 1864.5110220440881, 1870.7054108216432, 1876.8997995991983, 1883.0941883767534, 1889.2885771543085, 1895.4829659318636, 1901.6773547094188, 1907.8717434869739, 1914.066132264529, 1920.260521042084, 1926.4549098196392, 1932.6492985971945, 1938.8436873747496, 1945.0380761523047, 1951.2324649298598, 1957.426853707415, 1963.62124248497, 1969.8156312625251, 1976.0100200400802, 1982.2044088176353, 1988.3987975951904, 1994.5931863727455, 2000.7875751503007, 2006.9819639278558, 2013.1763527054109, 2019.370741482966, 2025.565130260521, 2031.7595190380762, 2037.9539078156313, 2044.1482965931864, 2050.3426853707415, 2056.5370741482966, 2062.7314629258517, 2068.925851703407, 2075.120240480962, 2081.314629258517, 2087.509018036072, 2093.703406813627, 2099.8977955911823, 2106.0921843687374, 2112.2865731462925, 2118.4809619238476, 2124.6753507014027, 2130.869739478958, 2137.064128256513, 2143.258517034068, 2149.452905811623, 2155.6472945891783, 2161.8416833667334, 2168.0360721442885, 2174.2304609218436, 2180.4248496993987, 2186.619238476954, 2192.813627254509, 2199.008016032064, 2205.202404809619, 2211.396793587174, 2217.5911823647293, 2223.7855711422844, 2229.9799599198395, 2236.1743486973946, 2242.3687374749497, 2248.563126252505, 2254.75751503006, 2260.951903807615, 2267.14629258517, 2273.3406813627253, 2279.5350701402804, 2285.7294589178355, 2291.9238476953906, 2298.1182364729457, 2304.312625250501, 2310.507014028056, 2316.701402805611, 2322.8957915831666, 2329.0901803607217, 2335.2845691382768, 2341.478957915832, 2347.673346693387, 2353.867735470942, 2360.062124248497, 2366.2565130260523, 2372.4509018036074, 2378.6452905811625, 2384.8396793587176, 2391.0340681362727, 2397.228456913828, 2403.422845691383, 2409.617234468938, 2415.811623246493, 2422.0060120240482, 2428.2004008016033, 2434.3947895791584, 2440.5891783567135, 2446.7835671342687, 2452.9779559118238, 2459.172344689379, 2465.366733466934, 2471.561122244489, 2477.755511022044, 2483.9498997995993, 2490.1442885771544, 2496.3386773547095, 2502.5330661322646, 2508.7274549098197, 2514.921843687375, 2521.11623246493, 2527.310621242485, 2533.50501002004, 2539.699398797595, 2545.8937875751503, 2552.0881763527054, 2558.2825651302605, 2564.4769539078156, 2570.6713426853707, 2576.865731462926, 2583.060120240481, 2589.254509018036, 2595.448897795591, 2601.6432865731463, 2607.8376753507014, 2614.0320641282565, 2620.2264529058116, 2626.4208416833667, 2632.615230460922, 2638.809619238477, 2645.004008016032, 2651.198396793587, 2657.392785571142, 2663.5871743486973, 2669.7815631262524, 2675.9759519038075, 2682.1703406813626, 2688.3647294589177, 2694.559118236473, 2700.753507014028, 2706.947895791583, 2713.142284569138, 2719.3366733466933, 2725.5310621242484, 2731.7254509018035, 2737.9198396793586, 2744.1142284569137, 2750.308617234469, 2756.503006012024, 2762.697394789579, 2768.891783567134, 2775.086172344689, 2781.2805611222443, 2787.4749498997994, 2793.6693386773545, 2799.8637274549096, 2806.0581162324647, 2812.25250501002, 2818.446893787575, 2824.64128256513, 2830.835671342685, 2837.0300601202407, 2843.224448897796, 2849.418837675351, 2855.613226452906, 2861.807615230461, 2868.0020040080162, 2874.1963927855713, 2880.3907815631264, 2886.5851703406815, 2892.7795591182366, 2898.9739478957918, 2905.168336673347, 2911.362725450902, 2917.557114228457, 2923.751503006012, 2929.9458917835673, 2936.1402805611224, 2942.3346693386775, 2948.5290581162326, 2954.7234468937877, 2960.917835671343, 2967.112224448898, 2973.306613226453, 2979.501002004008, 2985.695390781563, 2991.8897795591183, 2998.0841683366734, 3004.2785571142285, 3010.4729458917836, 3016.6673346693387, 3022.861723446894, 3029.056112224449, 3035.250501002004, 3041.444889779559, 3047.6392785571143, 3053.8336673346694, 3060.0280561122245, 3066.2224448897796, 3072.4168336673347, 3078.61122244489, 3084.805611222445, 3091.0])
-              .range(['#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#d73027ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#ec6443ff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fd965fff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#fec57eff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#f8e5a7ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#e7efe1ff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#c6e2efff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#9ac5dfff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#6f9ecaff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff', '#4575b4ff']);
     
-
-    color_map_7818c53a99144231ccd12895f86373d7.x = d3.scale.linear()
-              .domain([0.0, 3091.0])
-              .range([0, 450 - 50]);
-
-    color_map_7818c53a99144231ccd12895f86373d7.legend = L.control({position: 'topright'});
-    color_map_7818c53a99144231ccd12895f86373d7.legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
-    color_map_7818c53a99144231ccd12895f86373d7.legend.addTo(map_40d0502f0f61b3dea6776958b823f596);
-
-    color_map_7818c53a99144231ccd12895f86373d7.xAxis = d3.svg.axis()
-        .scale(color_map_7818c53a99144231ccd12895f86373d7.x)
-        .orient("top")
-        .tickSize(1)
-        .tickValues([0.0, '', 618.2, '', 1236.4, '', 1854.6, '', 2472.8, '', 3091.0, '']);
-
-    color_map_7818c53a99144231ccd12895f86373d7.svg = d3.select(".legend.leaflet-control").append("svg")
-        .attr("id", 'legend')
-        .attr("width", 450)
-        .attr("height", 40);
-
-    color_map_7818c53a99144231ccd12895f86373d7.g = color_map_7818c53a99144231ccd12895f86373d7.svg.append("g")
-        .attr("class", "key")
-        .attr("fill", "black")
-        .attr("transform", "translate(25,16)");
-
-    color_map_7818c53a99144231ccd12895f86373d7.g.selectAll("rect")
-        .data(color_map_7818c53a99144231ccd12895f86373d7.color.range().map(function(d, i) {
-          return {
-            x0: i ? color_map_7818c53a99144231ccd12895f86373d7.x(color_map_7818c53a99144231ccd12895f86373d7.color.domain()[i - 1]) : color_map_7818c53a99144231ccd12895f86373d7.x.range()[0],
-            x1: i < color_map_7818c53a99144231ccd12895f86373d7.color.domain().length ? color_map_7818c53a99144231ccd12895f86373d7.x(color_map_7818c53a99144231ccd12895f86373d7.color.domain()[i]) : color_map_7818c53a99144231ccd12895f86373d7.x.range()[1],
-            z: d
-          };
-        }))
-      .enter().append("rect")
-        .attr("height", 40 - 30)
-        .attr("x", function(d) { return d.x0; })
-        .attr("width", function(d) { return d.x1 - d.x0; })
-        .style("fill", function(d) { return d.z; });
-
-    color_map_7818c53a99144231ccd12895f86373d7.g.call(color_map_7818c53a99144231ccd12895f86373d7.xAxis).append("text")
-        .attr("class", "caption")
-        .attr("y", 21)
-        .attr("fill", "black")
-        .text("Existing Events (low \u2192 high)");
-    
-            var layer_control_1984a485367c3ae08e2d839924851a69_layers = {
-                base_layers : {
-                    "cartodbpositron" : tile_layer_c5852a3c92210b6e7559337b1dd5cdea,
-                },
-                overlays :  {
-                    "Bubbles" : feature_group_89adf3fcc27407f0d4777eb7787756a6,
-                    "Heatmap" : feature_group_98cf0578597d2b8bcd05fe4b36ee3abd,
-                },
-            };
-            let layer_control_1984a485367c3ae08e2d839924851a69 = L.control.layers(
-                layer_control_1984a485367c3ae08e2d839924851a69_layers.base_layers,
-                layer_control_1984a485367c3ae08e2d839924851a69_layers.overlays,
+            marker_75ed9842adde61ef45ad107ac7a979ff.bindTooltip(
+                `<div>
+                     Jackson Triggs Winery
+                 </div>`,
                 {
-  "position": "topleft",
-  "collapsed": false,
-  "autoZIndex": true,
+  "sticky": true,
 }
-            ).addTo(map_40d0502f0f61b3dea6776958b823f596);
+            );
+        
+    
+            var marker_348ece7cc9f4eb1d2db8aeee803262d1 = L.marker(
+                [43.4, -80.33],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_c72781d2e35aabd183c8897488485b6c = L.popup({
+  "maxWidth": "100%",
+});
 
+        
+            
+                var html_7ff8b68a1a6fc81592f48065bb7710ef = $(`<div id="html_7ff8b68a1a6fc81592f48065bb7710ef" style="width: 100.0%; height: 100.0%;"><b>African Lion Safari</b><br>1386 Wilton Grove Rd, Cambridge, ON N3C 4E5</div>`)[0];
+                popup_c72781d2e35aabd183c8897488485b6c.setContent(html_7ff8b68a1a6fc81592f48065bb7710ef);
+            
+        
+
+        marker_348ece7cc9f4eb1d2db8aeee803262d1.bindPopup(popup_c72781d2e35aabd183c8897488485b6c)
+        ;
+
+        
+    
+    
+            marker_348ece7cc9f4eb1d2db8aeee803262d1.bindTooltip(
+                `<div>
+                     African Lion Safari
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_f7a33e5945966bc3ce63d0dc05f2383c = L.marker(
+                [44.889, -75.519],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_e459a3b54277df69bcc41231d09c7836 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3cd83392e8b88e72637179d382942554 = $(`<div id="html_3cd83392e8b88e72637179d382942554" style="width: 100.0%; height: 100.0%;"><b>Upper Canada Village</b><br>13750 County Rd 2, Morrisburg, ON K0C 1X0</div>`)[0];
+                popup_e459a3b54277df69bcc41231d09c7836.setContent(html_3cd83392e8b88e72637179d382942554);
+            
+        
+
+        marker_f7a33e5945966bc3ce63d0dc05f2383c.bindPopup(popup_e459a3b54277df69bcc41231d09c7836)
+        ;
+
+        
+    
+    
+            marker_f7a33e5945966bc3ce63d0dc05f2383c.bindTooltip(
+                `<div>
+                     Upper Canada Village
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_f461a7998e8580132f56e933061bee06 = L.marker(
+                [44.2411, -76.4821],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_f91e32d6302b4a3f47f9016c7fc76849 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b152108b76a1f184b7b333e5be98dd0f = $(`<div id="html_b152108b76a1f184b7b333e5be98dd0f" style="width: 100.0%; height: 100.0%;"><b>Fort Henry National Historic Site</b><br>1 Fort Henry Dr, Kingston, ON K7K 5A7</div>`)[0];
+                popup_f91e32d6302b4a3f47f9016c7fc76849.setContent(html_b152108b76a1f184b7b333e5be98dd0f);
+            
+        
+
+        marker_f461a7998e8580132f56e933061bee06.bindPopup(popup_f91e32d6302b4a3f47f9016c7fc76849)
+        ;
+
+        
+    
+    
+            marker_f461a7998e8580132f56e933061bee06.bindTooltip(
+                `<div>
+                     Fort Henry National Historic Site
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9f6d8d84d8a11066510d51dc88d582aa = L.marker(
+                [43.2565, -79.8711],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_29780f3ac73751d6f44da1e511b543fd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7ed59019dcb78d307f2e4e3e67aa3628 = $(`<div id="html_7ed59019dcb78d307f2e4e3e67aa3628" style="width: 100.0%; height: 100.0%;"><b>Dundurn Castle</b><br>610 York Blvd, Hamilton, ON L8R 3H1</div>`)[0];
+                popup_29780f3ac73751d6f44da1e511b543fd.setContent(html_7ed59019dcb78d307f2e4e3e67aa3628);
+            
+        
+
+        marker_9f6d8d84d8a11066510d51dc88d582aa.bindPopup(popup_29780f3ac73751d6f44da1e511b543fd)
+        ;
+
+        
+    
+    
+            marker_9f6d8d84d8a11066510d51dc88d582aa.bindTooltip(
+                `<div>
+                     Dundurn Castle
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_c8d2bf44ca7a6783354fcb1be4d9d476 = L.marker(
+                [43.159, -79.247],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_79b9f3d7864077c7569df26a753cf9ce = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a8ad556094bbb9f59c88621dd8ef3aaa = $(`<div id="html_a8ad556094bbb9f59c88621dd8ef3aaa" style="width: 100.0%; height: 100.0%;"><b>Royal Canadian Henley Rowing Course</b><br>400 Martindale Rd, St. Catharines, ON L2N 2N4</div>`)[0];
+                popup_79b9f3d7864077c7569df26a753cf9ce.setContent(html_a8ad556094bbb9f59c88621dd8ef3aaa);
+            
+        
+
+        marker_c8d2bf44ca7a6783354fcb1be4d9d476.bindPopup(popup_79b9f3d7864077c7569df26a753cf9ce)
+        ;
+
+        
+    
+    
+            marker_c8d2bf44ca7a6783354fcb1be4d9d476.bindTooltip(
+                `<div>
+                     Royal Canadian Henley Rowing Course
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_6bc970249c08a749fdbbfff170f85765 = L.marker(
+                [43.147, -79.263],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_a237a5e7ff065e51a8b507b010e8e3c3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_591b925016dfc0a3dd64ab0c2aad523b = $(`<div id="html_591b925016dfc0a3dd64ab0c2aad523b" style="width: 100.0%; height: 100.0%;"><b>Ball’s Falls Conservation Area</b><br>3295 Sixth Ave, Jordan, ON L0R 1S0</div>`)[0];
+                popup_a237a5e7ff065e51a8b507b010e8e3c3.setContent(html_591b925016dfc0a3dd64ab0c2aad523b);
+            
+        
+
+        marker_6bc970249c08a749fdbbfff170f85765.bindPopup(popup_a237a5e7ff065e51a8b507b010e8e3c3)
+        ;
+
+        
+    
+    
+            marker_6bc970249c08a749fdbbfff170f85765.bindTooltip(
+                `<div>
+                     Ball’s Falls Conservation Area
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_0497b28a0d752be120dfdedd5bf71829 = L.marker(
+                [44.416, -80.533],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_4e2f64c7a825bb5dd31ab55afbad55b9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9c29add606cd9c55064e6b1f5a85eabc = $(`<div id="html_9c29add606cd9c55064e6b1f5a85eabc" style="width: 100.0%; height: 100.0%;"><b>Beaver Valley Ski Club</b><br>176 Beaver Valley Rd, Flesherton, ON N0C 1E0</div>`)[0];
+                popup_4e2f64c7a825bb5dd31ab55afbad55b9.setContent(html_9c29add606cd9c55064e6b1f5a85eabc);
+            
+        
+
+        marker_0497b28a0d752be120dfdedd5bf71829.bindPopup(popup_4e2f64c7a825bb5dd31ab55afbad55b9)
+        ;
+
+        
+    
+    
+            marker_0497b28a0d752be120dfdedd5bf71829.bindTooltip(
+                `<div>
+                     Beaver Valley Ski Club
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_271a55345e411001accb07156997248d = L.marker(
+                [44.309, -78.329],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_b5759419801e45a480f3e4d1a951f1ca = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6dbfe62f9722dddb83feb6689e6294dd = $(`<div id="html_6dbfe62f9722dddb83feb6689e6294dd" style="width: 100.0%; height: 100.0%;"><b>Canadian Canoe Museum</b><br>910 Victoria St N, Peterborough, ON K9H 7L3</div>`)[0];
+                popup_b5759419801e45a480f3e4d1a951f1ca.setContent(html_6dbfe62f9722dddb83feb6689e6294dd);
+            
+        
+
+        marker_271a55345e411001accb07156997248d.bindPopup(popup_b5759419801e45a480f3e4d1a951f1ca)
+        ;
+
+        
+    
+    
+            marker_271a55345e411001accb07156997248d.bindTooltip(
+                `<div>
+                     Canadian Canoe Museum
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_0bd49e7750d371de56a482f610a6955e = L.marker(
+                [43.637, -79.381],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_faa4673e9ed019b5c54cd722e74e2a07 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a51ef2c8e1994e41c36c070572f9e3b7 = $(`<div id="html_a51ef2c8e1994e41c36c070572f9e3b7" style="width: 100.0%; height: 100.0%;"><b>Toronto Harbourfront Centre</b><br>235 Queens Quay W, Toronto, ON M5J 2G8</div>`)[0];
+                popup_faa4673e9ed019b5c54cd722e74e2a07.setContent(html_a51ef2c8e1994e41c36c070572f9e3b7);
+            
+        
+
+        marker_0bd49e7750d371de56a482f610a6955e.bindPopup(popup_faa4673e9ed019b5c54cd722e74e2a07)
+        ;
+
+        
+    
+    
+            marker_0bd49e7750d371de56a482f610a6955e.bindTooltip(
+                `<div>
+                     Toronto Harbourfront Centre
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_eacca3a6f7c371ead3a5c5645435e99c = L.marker(
+                [45.338, -79.38],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_6832bde9d4033e3d98adb6d6a0e8c243 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2a91d9cfa10aeeac69ae714ae447fa89 = $(`<div id="html_2a91d9cfa10aeeac69ae714ae447fa89" style="width: 100.0%; height: 100.0%;"><b>Muskoka Lakes</b><br>Muskoka, ON</div>`)[0];
+                popup_6832bde9d4033e3d98adb6d6a0e8c243.setContent(html_2a91d9cfa10aeeac69ae714ae447fa89);
+            
+        
+
+        marker_eacca3a6f7c371ead3a5c5645435e99c.bindPopup(popup_6832bde9d4033e3d98adb6d6a0e8c243)
+        ;
+
+        
+    
+    
+            marker_eacca3a6f7c371ead3a5c5645435e99c.bindTooltip(
+                `<div>
+                     Muskoka Lakes
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_2408ace281a87ad3674a36068c391be0 = L.marker(
+                [44.511, -80.321],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_72dcc1ab3f04e901ddfbe61b2ef05bed = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_90b8889f20ee4cb3446e9c80f6703a7c = $(`<div id="html_90b8889f20ee4cb3446e9c80f6703a7c" style="width: 100.0%; height: 100.0%;"><b>Scenic Caves Nature Adventures</b><br>1912 Scenic Caves Rd, Blue Mountains, ON L9Y 0T2</div>`)[0];
+                popup_72dcc1ab3f04e901ddfbe61b2ef05bed.setContent(html_90b8889f20ee4cb3446e9c80f6703a7c);
+            
+        
+
+        marker_2408ace281a87ad3674a36068c391be0.bindPopup(popup_72dcc1ab3f04e901ddfbe61b2ef05bed)
+        ;
+
+        
+    
+    
+            marker_2408ace281a87ad3674a36068c391be0.bindTooltip(
+                `<div>
+                     Scenic Caves Nature Adventures
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_0717cef7ea12feb67b21d3be5f371131 = L.marker(
+                [44.034, -79.891],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_ae55e03ab91a47827e73640bf8984c05 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b27eeda873c2dc36dbd3291fb6b39aec = $(`<div id="html_b27eeda873c2dc36dbd3291fb6b39aec" style="width: 100.0%; height: 100.0%;"><b>Hockley Valley Resort</b><br>793522 Mono 3rd Line, Mono, ON L9W 6K1</div>`)[0];
+                popup_ae55e03ab91a47827e73640bf8984c05.setContent(html_b27eeda873c2dc36dbd3291fb6b39aec);
+            
+        
+
+        marker_0717cef7ea12feb67b21d3be5f371131.bindPopup(popup_ae55e03ab91a47827e73640bf8984c05)
+        ;
+
+        
+    
+    
+            marker_0717cef7ea12feb67b21d3be5f371131.bindTooltip(
+                `<div>
+                     Hockley Valley Resort
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_23c74ccac16b2495bf85d4a1754a6520 = L.marker(
+                [44.571, -80.936],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_cee6f8797fc72b30ef8d80474a6f96b2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_dc4e95732ca8f9174e65f2de73a17473 = $(`<div id="html_dc4e95732ca8f9174e65f2de73a17473" style="width: 100.0%; height: 100.0%;"><b>Tom Thomson Art Gallery</b><br>1250 Hume St, Owen Sound, ON N4K 3N9</div>`)[0];
+                popup_cee6f8797fc72b30ef8d80474a6f96b2.setContent(html_dc4e95732ca8f9174e65f2de73a17473);
+            
+        
+
+        marker_23c74ccac16b2495bf85d4a1754a6520.bindPopup(popup_cee6f8797fc72b30ef8d80474a6f96b2)
+        ;
+
+        
+    
+    
+            marker_23c74ccac16b2495bf85d4a1754a6520.bindTooltip(
+                `<div>
+                     Tom Thomson Art Gallery
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_93dbf5fbea228d3eb815eaa41606c091 = L.marker(
+                [44.741, -79.888],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_3ab74b77fe1c6c6b7b58231de780f22a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5eae77673c768ce35d831e2204040097 = $(`<div id="html_5eae77673c768ce35d831e2204040097" style="width: 100.0%; height: 100.0%;"><b>Big Bay Point Lighthouse</b><br>1 Big Bay Point Rd, Midland, ON L4R 4K4</div>`)[0];
+                popup_3ab74b77fe1c6c6b7b58231de780f22a.setContent(html_5eae77673c768ce35d831e2204040097);
+            
+        
+
+        marker_93dbf5fbea228d3eb815eaa41606c091.bindPopup(popup_3ab74b77fe1c6c6b7b58231de780f22a)
+        ;
+
+        
+    
+    
+            marker_93dbf5fbea228d3eb815eaa41606c091.bindTooltip(
+                `<div>
+                     Big Bay Point Lighthouse
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_aa9446d1b222932aa0fc4fa0e177e082 = L.marker(
+                [43.547, -80.249],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_4a92d86de4a6aed8b123b4d5c1368bf0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3d233ba7587c0d984115f6c2f12c095e = $(`<div id="html_3d233ba7587c0d984115f6c2f12c095e" style="width: 100.0%; height: 100.0%;"><b>MacDonald Stewart Art Centre</b><br>63 Church St, Guelph, ON N1H 4B2</div>`)[0];
+                popup_4a92d86de4a6aed8b123b4d5c1368bf0.setContent(html_3d233ba7587c0d984115f6c2f12c095e);
+            
+        
+
+        marker_aa9446d1b222932aa0fc4fa0e177e082.bindPopup(popup_4a92d86de4a6aed8b123b4d5c1368bf0)
+        ;
+
+        
+    
+    
+            marker_aa9446d1b222932aa0fc4fa0e177e082.bindTooltip(
+                `<div>
+                     MacDonald Stewart Art Centre
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_cbb319c07f99e76ac63ff2a2b4d4353c = L.marker(
+                [44.71, -75.536],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_833df83269c795ddb9bfcdeea1a28644 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e4ea043eb9f0bc41fd9a9206da154714 = $(`<div id="html_e4ea043eb9f0bc41fd9a9206da154714" style="width: 100.0%; height: 100.0%;"><b>Fort Wellington National Historic Site</b><br>12 Wellington St, Prescott, ON K0E 1T0</div>`)[0];
+                popup_833df83269c795ddb9bfcdeea1a28644.setContent(html_e4ea043eb9f0bc41fd9a9206da154714);
+            
+        
+
+        marker_cbb319c07f99e76ac63ff2a2b4d4353c.bindPopup(popup_833df83269c795ddb9bfcdeea1a28644)
+        ;
+
+        
+    
+    
+            marker_cbb319c07f99e76ac63ff2a2b4d4353c.bindTooltip(
+                `<div>
+                     Fort Wellington National Historic Site
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_608096c475f00ad686922f2c8bf37550 = L.marker(
+                [43.6677, -79.3948],
+                {
+}
+            ).addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
+        
+    
+        var popup_e61a22afa008c41f1b742db2247dff43 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b75e29a9fc9f8bb8842154b69519f228 = $(`<div id="html_b75e29a9fc9f8bb8842154b69519f228" style="width: 100.0%; height: 100.0%;"><b>Royal Ontario Museum Special Exhibits</b><br>100 Queens Park, Toronto, ON M5S 2C6</div>`)[0];
+                popup_e61a22afa008c41f1b742db2247dff43.setContent(html_b75e29a9fc9f8bb8842154b69519f228);
+            
+        
+
+        marker_608096c475f00ad686922f2c8bf37550.bindPopup(popup_e61a22afa008c41f1b742db2247dff43)
+        ;
+
+        
+    
+    
+            marker_608096c475f00ad686922f2c8bf37550.bindTooltip(
+                `<div>
+                     Royal Ontario Museum Special Exhibits
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            tile_layer_cdae2081d409218aa0db7815910afb5d.addTo(map_a1a6dadca12040c9bcb5774b8c75fb72);
         
 </script>
 </html>

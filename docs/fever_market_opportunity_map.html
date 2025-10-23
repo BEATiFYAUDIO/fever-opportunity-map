@@ -154,6 +154,209 @@
           <span>40.0</span><span>→</span><span>74.3</span>
         </div>
     </div>
+<!-- ===== FEVER: Robust Genre Filter (works with nested Folium layers) ===== -->
+<script>
+(function(){
+  // ==== utilities ====
+  function log(){ try{ console.log.apply(console, arguments); }catch(e){} }
+  function findMap(){
+    // Find the first Leaflet map object on the page
+    for (var k in window){
+      var v = window[k];
+      if (v && v.addLayer && v.removeLayer && v.getCenter && v._layers) return v;
+    }
+    return null;
+  }
+  function isLeafletLayer(x){
+    return x && (x.getLayers || x.eachLayer || x._leaflet_id);
+  }
+  function setMarkerVisible(m, show){
+    try{
+      if (m._path)   m._path.style.display   = show ? "" : "none";   // SVG circle markers
+      if (m._icon)   m._icon.style.display   = show ? "" : "none";   // icon markers
+      if (m._shadow) m._shadow.style.display = show ? "" : "none";
+      if (m.setStyle) m.setStyle({opacity: show ? 1 : 0, fillOpacity: show ? 0.85 : 0});
+      if (!show && m._popup && m._popup._container) m._popup._container.style.display = "none";
+    }catch(e){}
+  }
+  function getPopupHTML(m){
+    try{
+      if (m.getPopup && m.getPopup()) return m.getPopup().getContent();
+      if (m._popup && m._popup.getContent) return m._popup.getContent();
+      if (m._popup && typeof m._popup === 'string') return m._popup;
+    }catch(e){}
+    return "";
+  }
+  function parseGenreFromPopup(m){
+    // Look for <i>Genre</i> or "Score:" block; fallback to "Other"
+    var html = getPopupHTML(m) || "";
+    if (!html) return null;
+    try{
+      var div = document.createElement('div'); div.innerHTML = html;
+      var i = div.querySelector('i');
+      if (i && i.textContent && i.textContent.trim()) return i.textContent.trim();
+      // fallback: look for "Top Genres:" or simple "Genre:" labels
+      var text = div.textContent || "";
+      var m1 = text.match(/Top Genres:\s*([A-Za-z0-9 ,\-\/&]+)/i);
+      if (m1 && m1[1]) return m1[1].split(',')[0].trim();
+      var m2 = text.match(/Genre:\s*([A-Za-z0-9 ,\-\/&]+)/i);
+      if (m2 && m2[1]) return m2[1].split(',')[0].trim();
+    }catch(e){}
+    return null;
+  }
+
+  // recursively collect all layers contained by layer/group
+  function collectLayers(layer, out){
+    if (!layer) return;
+    if (layer.getLayers) {  // LayerGroup/FeatureGroup
+      try{
+        var kids = layer.getLayers();
+        for (var i=0;i<kids.length;i++) collectLayers(kids[i], out);
+      }catch(e){}
+    } else if (layer.eachLayer){
+      try{
+        layer.eachLayer(function(l){ collectLayers(l, out); });
+      }catch(e){}
+    } else {
+      out.push(layer);
+    }
+  }
+
+  // build our venue list from the actual rendered layers
+  function discoverVenues(map){
+    var all = [];
+    // top-level layers
+    for (var id in map._layers){
+      var Lyr = map._layers[id];
+      collectLayers(Lyr, all);
+    }
+    // dedupe by Leaflet id
+    var seen = new Set(), flat = [];
+    all.forEach(function(l){ if (l && l._leaflet_id && !seen.has(l._leaflet_id)){ seen.add(l._leaflet_id); flat.push(l); } });
+
+    // filter to markers with a genre tag or a parsable popup
+    var venues = [];
+    flat.forEach(function(m){
+      try{
+        if (!m || !isLeafletLayer(m)) return;
+        var g = (m.options && (m.options.feverGenre || m.options.genre)) || null;
+        if (!g){
+          // try to parse from popup
+          var fromPopup = parseGenreFromPopup(m);
+          if (fromPopup) g = fromPopup;
+        }
+        if (g){
+          // Canonicalize a bit to reduce mismatches like "Hip-Hop/Rap" vs "Hip-Hop"
+          var cg = (g || "Other").toString().split('/')[0].split('&')[0].trim();
+          m._feverGenre = cg;
+          venues.push(m);
+        }
+      }catch(e){}
+    });
+    return venues;
+  }
+
+  // UI
+  function ensureUI(genreList){
+    var box = document.getElementById('fever-genre-box');
+    if (!box){
+      box = document.createElement('div');
+      box.id = 'fever-genre-box';
+      box.style.cssText = 'position:fixed;top:80px;left:10px;z-index:9999;background:rgba(0,0,0,.6);color:#fff;padding:8px 10px;border-radius:8px;font-size:13px;';
+      box.innerHTML = '<label style="display:block;margin-bottom:4px;">Filter by Genre</label>';
+      document.body.appendChild(box);
+      if (window.L && L.DomEvent) L.DomEvent.disableClickPropagation(box);
+    } else {
+      box.innerHTML = '<label style="display:block;margin-bottom:4px;">Filter by Genre</label>';
+    }
+    var sel = document.createElement('select');
+    sel.id = 'genreFilter';
+    sel.style.cssText = 'width:180px;padding:4px;';
+    // Build options from list
+    var list = Array.from(new Set(['All'].concat(genreList))).sort(function(a,b){
+      if (a==='All') return -1;
+      if (b==='All') return 1;
+      return a.localeCompare(b);
+    });
+    list.forEach(function(g){
+      var opt = document.createElement('option');
+      opt.value = g; opt.textContent = g;
+      sel.appendChild(opt);
+    });
+    box.appendChild(sel);
+    var tip = document.createElement('div');
+    tip.style.cssText = 'margin-top:6px;opacity:.8;';
+    tip.textContent = '(shows only matching venues)';
+    box.appendChild(tip);
+    return sel;
+  }
+
+  function applyFilter(venues, value){
+    var val = (value || 'All');
+    venues.forEach(function(m){
+      var g = m._feverGenre || (m.options && (m.options.feverGenre || m.options.genre)) || 'Other';
+      // same canonicalization applied to value (split on "/" and "&")
+      var vcanon = val.split('/')[0].split('&')[0].trim();
+      var match = (vcanon === 'All') || (g === vcanon);
+      setMarkerVisible(m, match);
+    });
+  }
+
+  // === Orchestrate ===
+  var tries = 0, maxTries = 40; // ~20s
+  function bootstrap(){
+    var map = findMap();
+    if (!map){ tries++; if (tries<maxTries) return setTimeout(bootstrap, 500); return; }
+
+    var venues = discoverVenues(map);
+    log('[FEVER] discovered venues:', venues.length);
+
+    if (!venues.length){
+      tries++;
+      if (tries < maxTries) return setTimeout(bootstrap, 500);
+      log('[FEVER] No venues discovered after retries.');
+      return;
+    }
+
+    // Build genre list from actual markers
+    var genres = [];
+    venues.forEach(function(m){
+      var g = m._feverGenre || (m.options && (m.options.feverGenre || m.options.genre)) || 'Other';
+      if (g) genres.push(g);
+    });
+
+    var sel = ensureUI(genres);
+    sel.addEventListener('change', function(){ applyFilter(venues, this.value); });
+    applyFilter(venues, 'All');
+
+    // Also keep watching for late-added markers for a bit
+    var lateTries = 0, lateTimer = setInterval(function(){
+      var more = discoverVenues(map);
+      if (more.length > venues.length){
+        venues = more;
+        // Rebuild options if new genres appeared
+        var gens = [];
+        venues.forEach(function(m){ gens.push(m._feverGenre || (m.options && (m.options.feverGenre || m.options.genre)) || 'Other'); });
+        var current = sel.value;
+        sel.replaceWith(sel = ensureUI(gens));
+        sel.value = current || 'All';
+        sel.addEventListener('change', function(){ applyFilter(venues, this.value); });
+        applyFilter(venues, sel.value);
+        log('[FEVER] venues updated:', venues.length);
+      }
+      lateTries++;
+      if (lateTries > 10) clearInterval(lateTimer); // stop after ~5s
+    }, 500);
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive'){
+    bootstrap();
+  } else {
+    document.addEventListener('DOMContentLoaded', bootstrap);
+  }
+})();
+</script>
+<!-- ===== /FEVER: Robust Genre Filter ===== -->
     
 </body>
 <script>

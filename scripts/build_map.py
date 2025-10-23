@@ -64,6 +64,7 @@ def fetch_events() -> List[Dict[str, Any]]:
     return all_events
 
 def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Flatten TM events to point dicts; capture city/state/country + genre & prices."""
     pts = []
     for ev in events:
         venues = (ev.get("_embedded", {}) or {}).get("venues", []) or []
@@ -100,6 +101,8 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         pts.append({
             "name": name, "date": when, "venue": v.get("name") or "",
             "city": (v.get("city") or {}).get("name") or "",
+            "state": (v.get("state") or {}).get("name") or "",
+            "stateCode": (v.get("state") or {}).get("stateCode") or "",
             "country": (v.get("country") or {}).get("countryCode") or "",
             "genre": gen or "Other",
             "price_min": price_min, "price_max": price_max, "currency": currency,
@@ -119,9 +122,13 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
     for key, plist in groups.items():
         city, country = key.split(",", 1)
 
-        # coordinate snapping: use the most common (lat,lng) to avoid drift
+        # coordinate snapping: most common (lat,lng) to avoid drift
         coords = [(p["lat"], p["lng"]) for p in plist]
         (lat, lng), _ = Counter(coords).most_common(1)[0]
+
+        # most common state/province (for Trends REGION match)
+        states = [p.get("state") for p in plist if p.get("state")]
+        state = Counter(states).most_common(1)[0][0] if states else ""
 
         event_count = len(plist)
         genres = [p.get("genre") for p in plist if p.get("genre")]
@@ -131,40 +138,103 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
         avg_price = statistics.mean(prices) if prices else 0
 
         rows.append({
-            "city": city, "country": country,
-            "event_count": event_count,
-            "genre_div": genre_div,
-            "avg_price": avg_price,
-            "top_genres": ", ".join(top_genres) if top_genres else "—",
+            "city": city, "state": state, "country": country,
+            "event_count": event_count, "genre_div": genre_div,
+            "avg_price": avg_price, "top_genres": ", ".join(top_genres) if top_genres else "—",
             "lat": lat, "lng": lng
         })
     return pd.DataFrame(rows)
 
 def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
-    """Add Google Trends interest per city for 'live music' (limited for runtime)."""
+    """
+    For each city:
+      1) Try Trends 'CITY' within country
+      2) Else 'REGION' (state/province)
+      3) Else country-level interest_over_time
+    Use multiple keywords: 'live music', 'concerts', and the city's top genre.
+    Take the max as final demand proxy (0–100).
+    """
     if df.empty:
-        return df.assign(search_interest=0)
+        return df.assign(search_interest=0.0)
 
     pytrends = TrendReq(hl="en-US", tz=360)
-    interests = []
-    # limit to first 30 cities to keep workflow fast
-    cities = df["city"].tolist()
-    for city in cities[:30]:
+    df["search_interest"] = 0.0
+
+    countries = df["country"].dropna().unique().tolist()
+
+    def city_genre_kw(row):
+        tg = row.get("top_genres") or ""
+        return (tg.split(",")[0] or "").strip() or None
+
+    for cc in countries:
+        sub_idx = df["country"] == cc
+        sub = df[sub_idx].copy()
+        if sub.empty:
+            continue
+
+        # 1) CITY resolution
         try:
-            pytrends.build_payload(["live music"], geo="", timeframe="today 3-m")
-            data = pytrends.interest_by_region(resolution="CITY", inc_low_vol=True)
-            val = float(data.loc[city]["live music"]) if city in data.index else 0
+            pytrends.build_payload(["live music", "concerts"], geo=cc, timeframe="today 3-m")
+            city_tbl = pytrends.interest_by_region(resolution="CITY", inc_low_vol=True)
         except Exception:
-            val = 0
-        interests.append(val)
-    # pad remaining with zeros
-    df["search_interest"] = interests + [0]*(len(df)-len(interests))
+            city_tbl = pd.DataFrame()
+
+        # 2) REGION resolution
+        try:
+            pytrends.build_payload(["live music", "concerts"], geo=cc, timeframe="today 3-m")
+            region_tbl = pytrends.interest_by_region(resolution="REGION", inc_low_vol=True)
+        except Exception:
+            region_tbl = pd.DataFrame()
+
+        # 3) Country-level TS
+        try:
+            pytrends.build_payload(["live music", "concerts"], geo=cc, timeframe="today 3-m")
+            country_ts = pytrends.interest_over_time()
+            country_val = float(country_ts[["live music", "concerts"]].mean(axis=1).tail(12).mean()) if not country_ts.empty else 0.0
+        except Exception:
+            country_val = 0.0
+
+        updates = []
+        for idx, row in sub.iterrows():
+            city_name = row["city"]
+            state_name = (row.get("state") or "").strip()
+            genre_kw = city_genre_kw(row)
+
+            city_val = 0.0
+            if not city_tbl.empty and city_name in city_tbl.index:
+                city_val = float(city_tbl.loc[city_name][["live music", "concerts"]].max())
+
+            region_val = 0.0
+            if state_name and not region_tbl.empty and state_name in region_tbl.index:
+                region_val = float(region_tbl.loc[state_name][["live music", "concerts"]].max())
+
+            genre_val = 0.0
+            if genre_kw:
+                try:
+                    # try region first for finer grain
+                    pytrends.build_payload([genre_kw], geo=cc, timeframe="today 3-m")
+                    g_tbl = pytrends.interest_by_region(resolution="REGION", inc_low_vol=True)
+                    if not g_tbl.empty and state_name in g_tbl.index:
+                        genre_val = float(g_tbl.loc[state_name][genre_kw])
+                    else:
+                        g_ts = pytrends.interest_over_time()
+                        genre_val = float(g_ts[genre_kw].tail(12).mean()) if not g_ts.empty else 0.0
+                except Exception:
+                    genre_val = 0.0
+
+            final = max(city_val, region_val, country_val, genre_val)
+            updates.append((idx, final))
+
+        for idx, v in updates:
+            df.loc[idx, "search_interest"] = v
+
+    df["search_interest"] = df["search_interest"].clip(lower=0, upper=100)
     return df
 
 def compute_opportunity_scores(df: pd.DataFrame) -> pd.DataFrame:
     """Weighted Fever model: Events + Price (inverse) + Genre Diversity + Search Interest."""
     if df.empty:
-        return df.assign(opportunity_score=0)
+        return df.assign(opportunity_score=0.0)
 
     def norm(series, invert=False):
         smin, smax = series.min(), series.max() or 1
@@ -175,7 +245,7 @@ def compute_opportunity_scores(df: pd.DataFrame) -> pd.DataFrame:
 
     df["event_norm"] = norm(df["event_count"])
     df["genre_norm"] = norm(df["genre_div"])
-    df["price_norm"] = norm(df["avg_price"], invert=True)
+    df["price_norm"] = norm(df["avg_price"], invert=True)  # lower price -> higher score
     df["trend_norm"] = norm(df["search_interest"])
 
     df["opportunity_score"] = (
@@ -209,9 +279,10 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
     fg_city = FeatureGroup(name="City Opportunity Scores", show=True)
     for r in df_city.itertuples():
         color = hsl_hotcold(r.opportunity_score)
+        state_label = f", {r.state}" if isinstance(r.state, str) and r.state else ""
         html = f"""
         <div style='font-size:13px;'>
-          <b>{r.city}, {r.country}</b><br/>
+          <b>{r.city}{state_label}, {r.country}</b><br/>
           🔥 <b>Opportunity Score:</b> {r.opportunity_score:.1f}<br/>
           🎟️ Events: {r.event_count}<br/>
           💰 Avg Ticket Price: ${r.avg_price:.0f}<br/>
@@ -230,9 +301,10 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
     for idx, r in top10.iterrows():
         rank = idx + 1
         color = hsl_hotcold(r["opportunity_score"])
+        state_label = f", {r['state']}" if isinstance(r["state"], str) and r["state"] else ""
         html = f"""
         <div style='font-size:13px;'>
-          <b>#{rank} — {r['city']}, {r['country']}</b><br/>
+          <b>#{rank} — {r['city']}{state_label}, {r['country']}</b><br/>
           Opportunity Score: {r['opportunity_score']:.1f}<br/>
           Events: {r['event_count']} · Avg ${r['avg_price']:.0f}<br/>
           Top Genres: {r['top_genres']}
@@ -256,7 +328,6 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
 
     # Build markers + collect JS handles for filtering
     venue_js_entries = []   # [(marker_var_name, genreBucket)]
-    # dropdown genres = global top N (+ Other)
     genre_counts = Counter([p["genre"] for p in points if p.get("genre")])
     top_genres = [g for g,_ in genre_counts.most_common(TOP_GENRE_COUNT)]
     def genre_bucket(g):
@@ -264,13 +335,14 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
         return g if g in top_genres else "Other"
 
     for p in points:
-        score = float(df_city.loc[df_city["city"] == p["city"], "opportunity_score"].mean()) \
-                if p["city"] in df_city["city"].values else 0.0
+        # score: city average
+        mask = (df_city["city"] == p["city"]) & (df_city["country"] == p["country"])
+        score = float(df_city.loc[mask, "opportunity_score"].mean()) if mask.any() else 0.0
         color = hsl_hotcold(score)
         html = f"""
         <div style='font-size:12px;'>
           <b>{p['name']}</b><br/>
-          {p['venue']} — {p['city']} {p['country']}<br/>
+          {p['venue']} — {p['city']}, {p['country']}<br/>
           <i>{p.get('genre','')}</i><br/>
           <a href='{p['url']}' target='_blank'>Tickets</a><br/>
           Score: {score:.1f}
@@ -286,7 +358,6 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
     fg_venues_js = fg_venues.get_name()
     options_html = "".join([f"<option value='{g}'>{g}</option>" for g in ["All"] + top_genres + ["Other"]])
 
-    # Safely build the JS object mapping without backslashes in f-strings
     mapping_pairs = []
     for name, genre in venue_js_entries:
         safe_genre = genre.replace('"', '\\"')  # escape quotes manually
@@ -391,4 +462,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

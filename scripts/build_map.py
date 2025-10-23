@@ -67,7 +67,7 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     pts = []
     for ev in events:
         venues = (ev.get("_embedded", {}) or {}).get("venues", []) or []
-        if not venues: 
+        if not venues:
             continue
         v = venues[0]
         loc = v.get("location") or {}
@@ -76,7 +76,7 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         except Exception:
             continue  # skip bad/missing coords
 
-        # quick sanity filter to drop obviously invalid coords
+        # sanity filter to drop obviously invalid coords
         if not (-90.0 <= lat <= 90.0 and -180.0 <= lng <= 180.0):
             continue
 
@@ -92,12 +92,10 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             break
 
         classifs = ev.get("classifications", []) or []
-        seg = gen = sub = None
+        gen = None
         if classifs:
             c0 = classifs[0]
-            seg = (c0.get("segment") or {}).get("name")
             gen = (c0.get("genre") or {}).get("name")
-            sub = (c0.get("subGenre") or {}).get("name")
 
         pts.append({
             "name": name, "date": when, "venue": v.get("name") or "",
@@ -121,7 +119,7 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
     for key, plist in groups.items():
         city, country = key.split(",", 1)
 
-        # --- coordinate snapping: use the most common (lat,lng) to avoid drift ---
+        # coordinate snapping: use the most common (lat,lng) to avoid drift
         coords = [(p["lat"], p["lng"]) for p in plist]
         (lat, lng), _ = Counter(coords).most_common(1)[0]
 
@@ -284,14 +282,21 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
         mk.add_to(fg_venues)
         venue_js_entries.append((mk.get_name(), genre_bucket(p.get("genre"))))
 
-    # Inject dropdown + filtering JS
+    # Inject dropdown + filtering JS (correctly escaped)
     fg_venues_js = fg_venues.get_name()
     options_html = "".join([f"<option value='{g}'>{g}</option>" for g in ["All"] + top_genres + ["Other"]])
-    mapping_js = ",\n      ".join([f"'{name}':'{genre.replace('\"','\\\"')}'" for name, genre in venue_js_entries])
+
+    # Safely build the JS object mapping without backslashes in f-strings
+    mapping_pairs = []
+    for name, genre in venue_js_entries:
+        safe_genre = genre.replace('"', '\\"')  # escape quotes manually
+        mapping_pairs.append(f"'{name}':'{safe_genre}'")
+    mapping_js = ",\n      ".join(mapping_pairs)
+
     markers_js = ",\n      ".join([f"'{name}': {name}" for name, _ in venue_js_entries])
 
     control_html = f"""
-    {% macro html(this, kwargs) %}
+    {{% macro html(this, kwargs) %}}
     <div id="genre-control" style="
         position: fixed; top: 80px; left: 10px; z-index: 9999;
         background: rgba(0,0,0,0.6); color: white; padding: 8px 10px;
@@ -330,7 +335,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
       L.DomEvent.disableClickPropagation(sel);
       sel.addEventListener('change', function() {{ applyGenreFilter(this.value); }});
     </script>
-    {% endmacro %}
+    {{% endmacro %}}
     """
     ctl = MacroElement(); ctl._template = Template(control_html)
     m.get_root().add_child(ctl)

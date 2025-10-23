@@ -1,14 +1,16 @@
 # scripts/build_map.py
-import os, sys, json, math, statistics, time
+import os, sys, json, statistics
 from pathlib import Path
 from typing import Dict, Any, List
 from collections import defaultdict
 
 import requests
+import pandas as pd
 from tenacity import retry, stop_after_attempt, wait_exponential
 import folium
 from folium import FeatureGroup, CircleMarker, LayerControl
-import pandas as pd
+from folium.plugins import HeatMap
+from branca.element import Template, MacroElement
 from pytrends.request import TrendReq
 
 # === Paths ===
@@ -30,7 +32,7 @@ SEGMENT   = os.getenv("TM_SEGMENT", "Music")
 PAGES_MAX = int(os.getenv("TM_PAGES_MAX", "3"))
 SIZE      = int(os.getenv("TM_PAGE_SIZE", "200"))
 
-# === Helpers ===
+# === Ticketmaster API ===
 def tm_params(base: Dict[str, Any], page: int) -> Dict[str, Any]:
     p = {"apikey": API_KEY, "size": SIZE, "sort": "date,asc", "page": page}
     p.update(base)
@@ -45,8 +47,10 @@ def tm_get(url: str, params: Dict[str, Any]) -> Dict[str, Any]:
 def fetch_events() -> List[Dict[str, Any]]:
     url = "https://app.ticketmaster.com/discovery/v2/events.json"
     base = {}
-    if SEGMENT: base["segmentName"] = SEGMENT
-    if KEYWORD: base["keyword"] = KEYWORD
+    if SEGMENT:
+        base["segmentName"] = SEGMENT
+    if KEYWORD:
+        base["keyword"] = KEYWORD
 
     all_events = []
     for cc in COUNTRIES:
@@ -66,7 +70,8 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         venues = (ev.get("_embedded", {}) or {}).get("venues", []) or []
         if not venues: continue
         v = venues[0]; loc = v.get("location") or {}
-        try: lat, lng = float(loc["latitude"]), float(loc["longitude"])
+        try:
+            lat, lng = float(loc["latitude"]), float(loc["longitude"])
         except: continue
         name = ev.get("name") or "Untitled"
         start = (ev.get("dates", {}) or {}).get("start", {}) or {}
@@ -94,118 +99,169 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         })
     return pts
 
-# === Fever Opportunity Model ===
-def compute_scores(points: List[Dict[str, Any]]) -> Dict[str, float]:
+# === Aggregation + Scoring ===
+def aggregate_city_stats(points: list[dict]) -> pd.DataFrame:
     groups = defaultdict(list)
     for p in points:
         key = f"{p['city']},{p['country']}"
         groups[key].append(p)
 
-    df = pd.DataFrame([
-        {"city": p["city"], "country": p["country"],
-         "genre": p["genre"],
-         "price": p["price_min"] or p["price_max"] or None}
-        for p in points if p.get("city")
-    ])
-    city_stats = []
+    rows = []
     for key, plist in groups.items():
-        city, country = key.split(",",1)
+        city, country = key.split(",", 1)
         event_count = len(plist)
-        genres = {p["genre"] for p in plist if p.get("genre")}
-        genre_div = len(genres)
+        genres = [p.get("genre") for p in plist if p.get("genre")]
+        top_genres = pd.Series(genres).value_counts().head(3).index.tolist()
+        genre_div = len(set(genres))
         prices = [p["price_min"] or p["price_max"] for p in plist if p.get("price_min") or p.get("price_max")]
         avg_price = statistics.mean(prices) if prices else 0
-        city_stats.append({"city":city,"country":country,
-                           "event_count":event_count,
-                           "genre_div":genre_div,
-                           "avg_price":avg_price})
-    df_city = pd.DataFrame(city_stats)
-    if df_city.empty: return {}
-
-    # 🔥 Google Trends demand (live music + top genre)
-    pytrends = TrendReq(hl="en-US", tz=360)
-    cities = df_city["city"].dropna().unique().tolist()
-    interest = []
-    for city in cities[:30]:  # limit to 30 for runtime
-        try:
-            pytrends.build_payload([f"{SEGMENT} concerts"], geo="", timeframe="today 3-m")
-            data = pytrends.interest_by_region(resolution="CITY", inc_low_vol=True)
-            if city in data.index:
-                interest_val = float(data.loc[city][f"{SEGMENT} concerts"])
-            else:
-                interest_val = 0
-        except Exception:
-            interest_val = 0
-        interest.append({"city": city, "search_interest": interest_val})
-    df_trends = pd.DataFrame(interest)
-    df_city = df_city.merge(df_trends, on="city", how="left").fillna({"search_interest":0})
-
-    # Normalize all features 0–1
-    for col in ["event_count","genre_div","avg_price","search_interest"]:
-        if col not in df_city: continue
-        vmin, vmax = df_city[col].min(), df_city[col].max() or 1
-        if vmax == vmin: df_city[col+"_norm"] = 0.5
-        else:
-            if col == "avg_price":
-                df_city[col+"_norm"] = 1 - ((df_city[col]-vmin)/(vmax-vmin))
-            else:
-                df_city[col+"_norm"] = (df_city[col]-vmin)/(vmax-vmin)
-
-    # Weighted composite
-    df_city["score"] = (
-        df_city["event_count_norm"]*0.35 +
-        df_city["avg_price_norm"]*0.15 +
-        df_city["genre_div_norm"]*0.20 +
-        df_city["search_interest_norm"]*0.30
-    ) * 100
-    return {f"{r.city},{r.country}": round(r.score,1) for r in df_city.itertuples()}
-
-# === Output ===
-def write_geojson(points: List[Dict[str, Any]], scores: Dict[str,float], path: Path):
-    fc = {"type":"FeatureCollection","features":[]}
-    for i,p in enumerate(points):
-        key=f"{p['city']},{p['country']}"
-        props={**p,"id":f"tm-{i}","opportunity_score":scores.get(key,0)}
-        fc["features"].append({
-            "type":"Feature",
-            "properties":props,
-            "geometry":{"type":"Point","coordinates":[p["lng"],p["lat"]]}
+        lat = statistics.mean(p["lat"] for p in plist)
+        lng = statistics.mean(p["lng"] for p in plist)
+        rows.append({
+            "city": city, "country": country, "event_count": event_count,
+            "genre_div": genre_div, "avg_price": avg_price,
+            "top_genres": ", ".join(top_genres), "lat": lat, "lng": lng
         })
-    path.write_text(json.dumps(fc,ensure_ascii=False),encoding="utf-8")
+    return pd.DataFrame(rows)
 
-def write_html_map(points: List[Dict[str, Any]], scores: Dict[str,float], path: Path):
-    if not points: raise SystemExit("No events to plot.")
-    avg_lat = sum(p["lat"] for p in points)/len(points)
-    avg_lng = sum(p["lng"] for p in points)/len(points)
-    m = folium.Map(location=[avg_lat,avg_lng], zoom_start=3, tiles="CartoDB dark_matter")
-    fg = FeatureGroup(name="Venues",show=True)
+def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
+    pytrends = TrendReq(hl="en-US", tz=360)
+    interests = []
+    for city in df["city"].head(30):  # limit for runtime
+        try:
+            pytrends.build_payload(["live music"], geo="", timeframe="today 3-m")
+            data = pytrends.interest_by_region(resolution="CITY", inc_low_vol=True)
+            val = float(data.loc[city]["live music"]) if city in data.index else 0
+        except Exception:
+            val = 0
+        interests.append(val)
+    df["search_interest"] = interests + [0]*(len(df)-len(interests))
+    return df
+
+def compute_opportunity_scores(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty: return df.assign(opportunity_score=0)
+
+    def norm(series, invert=False):
+        smin, smax = series.min(), series.max() or 1
+        if smax == smin:
+            return pd.Series([0.5]*len(series))
+        v = (series - smin) / (smax - smin)
+        return 1 - v if invert else v
+
+    df["event_norm"] = norm(df["event_count"])
+    df["genre_norm"] = norm(df["genre_div"])
+    df["price_norm"] = norm(df["avg_price"], invert=True)
+    df["trend_norm"] = norm(df["search_interest"])
+
+    df["opportunity_score"] = (
+        df["event_norm"]*0.35 +
+        df["price_norm"]*0.15 +
+        df["genre_norm"]*0.20 +
+        df["trend_norm"]*0.30
+    ) * 100
+    return df
+
+# === Mapping ===
+def write_html_map(points: list[dict], df_city: pd.DataFrame, path: Path):
+    if df_city.empty:
+        raise SystemExit("No city data to plot.")
+
+    avg_lat = df_city["lat"].mean()
+    avg_lng = df_city["lng"].mean()
+    m = folium.Map(location=[avg_lat, avg_lng], zoom_start=3, tiles="CartoDB dark_matter")
+
+    # 1️⃣ Heatmap
+    heat_data = df_city[["lat", "lng", "opportunity_score"]].dropna().values.tolist()
+    HeatMap([[r[0], r[1], r[2] / 100] for r in heat_data],
+            name="Opportunity Heatmap", radius=25, blur=20, min_opacity=0.4).add_to(m)
+
+    # 2️⃣ City Bubbles
+    fg_city = FeatureGroup(name="City Opportunity Scores", show=True)
+    for row in df_city.itertuples():
+        # blue (240°) → red (0°)
+        color = f"hsl({240 - (240 * (row.opportunity_score / 100)):.0f},80%,50%)"
+        html = f"""
+        <div style='font-size:13px;'>
+        <b>{row.city}, {row.country}</b><br/>
+        🔥 <b>Opportunity Score:</b> {row.opportunity_score:.1f}<br/>
+        🎟️ Events: {row.event_count}<br/>
+        💰 Avg Ticket Price: ${row.avg_price:.0f}<br/>
+        📈 Search Interest: {row.search_interest:.0f}<br/>
+        🎶 Top Genres: {row.top_genres}<br/>
+        </div>
+        """
+        CircleMarker(location=[row.lat, row.lng], radius=8, color=color,
+                     fillColor=color, fill=True, fill_opacity=0.9)\
+                     .add_child(folium.Popup(html, max_width=320)).add_to(fg_city)
+    fg_city.add_to(m)
+
+    # 3️⃣ Venues
+    fg_venues = FeatureGroup(name="Individual Venues", show=False)
     for p in points:
-        key=f"{p['city']},{p['country']}"
-        s=scores.get(key,0)
-        color=f"hsl({120*(s/100):.0f},80%,50%)"
-        html=f"""
+        score = df_city.loc[df_city["city"] == p["city"], "opportunity_score"].mean() \
+                 if p["city"] in df_city["city"].values else 0
+        color = f"hsl({240 - (240 * (score / 100)):.0f},80%,50%)"
+        html = f"""
+        <div style='font-size:12px;'>
         <b>{p['name']}</b><br/>
         {p['venue']} — {p['city']} {p['country']}<br/>
         <i>{p.get('genre','')}</i><br/>
-        Opportunity Score: <b>{s}</b><br/>
-        <a href='{p['url']}' target='_blank'>Tickets</a>
+        <a href='{p['url']}' target='_blank'>Tickets</a><br/>
+        Score: {score:.1f}
+        </div>
         """
-        CircleMarker(location=[p["lat"],p["lng"]],radius=6,
-            color=color,fillColor=color,fill=True,fill_opacity=0.9
-        ).add_child(folium.Popup(html,max_width=300)).add_to(fg)
-    fg.add_to(m); LayerControl(collapsed=True).add_to(m)
+        CircleMarker(location=[p["lat"], p["lng"]], radius=4, color=color,
+                     fillColor=color, fill=True, fill_opacity=0.8)\
+                     .add_child(folium.Popup(html, max_width=300)).add_to(fg_venues)
+    fg_venues.add_to(m)
+
+    # 🔑 Legend
+    legend_html = """
+    {% macro html(this, kwargs) %}
+    <div style="
+        position: fixed;
+        bottom: 50px;
+        right: 30px;
+        width: 180px;
+        height: 110px;
+        z-index:9999;
+        font-size:13px;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        padding: 10px;
+        border-radius: 10px;">
+        <b>Opportunity Score</b><br>
+        <div style="height:10px;
+            background:linear-gradient(to right, blue, lightblue, yellow, orange, red);
+            margin-top:5px; margin-bottom:5px;"></div>
+        <div style="display:flex; justify-content:space-between;">
+          <span>Cold</span><span>Warm</span><span>Hot</span>
+        </div>
+        <hr style="border-color:rgba(255,255,255,0.3); margin:6px 0;">
+        <b>Layers:</b><br>
+        - Opportunity Heatmap<br>
+        - City Scores<br>
+        - Venues
+    </div>
+    {% endmacro %}
+    """
+    legend = MacroElement()
+    legend._template = Template(legend_html)
+    m.get_root().add_child(legend)
+
+    LayerControl(collapsed=False).add_to(m)
     m.save(str(path))
 
 # === Main ===
 def main():
     events = fetch_events()
     points = to_points(events)
-    scores = compute_scores(points)
-    write_geojson(points,scores,OUT_GEOJSON)
-    write_html_map(points,scores,OUT_HTML)
-    print(f"✅ Wrote {OUT_GEOJSON}")
+    df_city = aggregate_city_stats(points)
+    df_city = enrich_with_trends(df_city)
+    df_city = compute_opportunity_scores(df_city)
+    OUT_GEOJSON.write_text(df_city.to_json(orient="records"), encoding="utf-8")
+    write_html_map(points, df_city, OUT_HTML)
     print(f"✅ Wrote {OUT_HTML}")
 
 if __name__ == "__main__":
     main()
-

@@ -1,5 +1,5 @@
 # scripts/build_map.py
-import os, sys, json, statistics, math, time
+import os, sys, statistics, math, time
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 from collections import defaultdict, Counter
@@ -36,10 +36,12 @@ SIZE      = int(os.getenv("TM_PAGE_SIZE", "200"))
 
 TOP_GENRE_COUNT = 8
 
+# Color scaling to avoid “all blue”
 COLOR_PCT_LOW  = float(os.getenv("COLOR_PCT_LOW",  "25"))
 COLOR_PCT_HIGH = float(os.getenv("COLOR_PCT_HIGH", "90"))
 
-TRENDS_MODE = os.getenv("TRENDS_MODE", "country").lower()
+# Google Trends (CI-friendly)
+TRENDS_MODE = os.getenv("TRENDS_MODE", "country").lower()   # 'country' | 'off'
 TRENDS_SLEEP_MS = int(os.getenv("TRENDS_SLEEP_MS", "400"))
 TRENDS_TERMS = [t.strip() for t in os.getenv("TRENDS_TERMS", "live music,concerts").split(",") if t.strip()]
 
@@ -91,12 +93,14 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         name = ev.get("name") or "Untitled"
         start = (ev.get("dates", {}) or {}).get("start", {}) or {}
         when = " / ".join(filter(None, [start.get("localDate"), start.get("localTime")]))
+
         price_min = price_max = currency = None
         for pr in ev.get("priceRanges", []) or []:
             price_min = pr.get("min", price_min)
             price_max = pr.get("max", price_max)
             currency = pr.get("currency", currency)
             break
+
         gen = None
         classifs = ev.get("classifications", []) or []
         if classifs:
@@ -115,13 +119,11 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         })
     return pts
 
-# === Genre canonicalization (so Hip-Hop/Rap matches "Hip-Hop") ===
+# === Genre canonicalization so UI & markers match ===
 def canonical_genre(g: str | None) -> str:
     if not g: return "Other"
     s = g.lower()
-    # Hip-Hop family
     if "hip" in s or "rap" in s: return "Hip-Hop"
-    # EDM / Dance / Electronic
     if "edm" in s or "electronic" in s or "dance" in s: return "EDM"
     if "rock" in s: return "Rock"
     if "country" in s: return "Country"
@@ -135,7 +137,7 @@ def canonical_genre(g: str | None) -> str:
     if "folk" in s or "americana" in s: return "Folk"
     if "reggae" in s or "dancehall" in s: return "Reggae"
     if "comedy" in s: return "Comedy"
-    return g  # default to original
+    return g
 
 # === Aggregation + Price Imputation ===
 def _country_median_prices(points: List[Dict[str, Any]]) -> Dict[str, float]:
@@ -150,8 +152,7 @@ def _country_median_prices(points: List[Dict[str, Any]]) -> Dict[str, float]:
 def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
     groups = defaultdict(list)
     for p in points:
-        key = f"{p['city']},{p['country']}"
-        groups[key].append(p)
+        groups[f"{p['city']},{p['country']}"].append(p)
 
     country_median = _country_median_prices(points)
 
@@ -178,7 +179,7 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
             cm = country_median.get(country)
             avg_price = float(cm) if cm == cm else float("nan")
 
-        # top genres (canonicalized for stability)
+        # canonicalized genres for stability
         genres = [canonical_genre(p.get("genre")) for p in plist if p.get("genre")]
         top_genres = pd.Series(genres).value_counts().head(3).index.tolist()
         top_genres_str = ", ".join(top_genres) if top_genres else "—"
@@ -188,7 +189,6 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
             "event_count": event_count, "avg_price": avg_price,
             "top_genres": top_genres_str, "lat": lat, "lng": lng
         })
-
     return pd.DataFrame(rows)
 
 # === Trends (country-level + fallback) ===
@@ -256,8 +256,10 @@ def compute_opportunity_scores(df: pd.DataFrame) -> pd.DataFrame:
 
 # === Color ===
 def hsl_hotcold_scaled(score: float, vmin: float, vmax: float) -> str:
-    if vmax <= vmin: t = 0.5
-    else: t = (score - vmin) / (vmax - vmin)
+    if vmax <= vmin:
+        t = 0.5
+    else:
+        t = (score - vmin) / (vmax - vmin)
     t = max(0.0, min(1.0, t))
     return f"hsl({240 - (240 * t):.0f},80%,50%)"
 
@@ -331,23 +333,24 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
             .add_child(folium.Popup(html, max_width=300)).add_to(fg_top)
     fg_top.add_to(m)
 
-    # Individual Venues (with canonical genre tags)
-    fg_venues = FeatureGroup(name="Individual Venues (Filtered)", show=False)
+    # Individual Venues (Filtered) — show=True by default
+    fg_venues = FeatureGroup(name="Individual Venues (Filtered)", show=True)
     m.add_child(fg_venues)
 
-    # Canonicalize genres and build options
+    # Canonical genre buckets for markers
     canon_genres = [canonical_genre(p.get("genre")) for p in points if p.get("genre")]
     top_canon = [g for g, _ in Counter(canon_genres).most_common(TOP_GENRE_COUNT)]
-    def bucket(g: str) -> str: return canonical_genre(g) if canonical_genre(g) in top_canon else "Other"
+    def bucket(g: str) -> str:
+        cg = canonical_genre(g)
+        return cg if cg in top_canon else "Other"
 
-    # Precompute city->score for venue coloring
+    # City->score map for venue coloring
     key2score = {(r.city, r.country): float(r.opportunity_score) for r in df_city.itertuples()}
 
     for p in points:
         score = key2score.get((p["city"], p["country"]), 0.0)
         color = hsl_hotcold_scaled(score, vmin, vmax)
         gtag = bucket(p.get("genre"))
-
         html = f"""
         <div style='font-size:12px;'>
           <b>{p['name']}</b><br/>
@@ -361,7 +364,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
                      radius=4, color=color, fillColor=color, fill=True, fill_opacity=0.85,
                      **{"feverGenre": gtag}).add_child(folium.Popup(html, max_width=300)).add_to(fg_venues)
 
-    # Dropdown + robust filtering (also auto-toggles layers for clarity)
+    # Dropdown + robust filtering with alias bridge + layer toggling
     options_html = "".join([f"<option value='{g}'>{g}</option>" for g in ["All"] + top_canon + ["Other"]])
     control_html = f"""
     {{% macro html(this, kwargs) %}}
@@ -376,22 +379,52 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
       <div style="margin-top:6px; opacity:.8;">(affects “Individual Venues” layer)</div>
     </div>
     <script>
-      var MAP = {fg_venues.get_name()}._map;
-      var VENUES = {fg_venues.get_name()};
-      var LAYER_CITY = {fg_city.get_name()};
-      var LAYER_TOP  = {fg_top.get_name()};
-      var LAYER_HEAT = {heat.get_name()};
+      var MAP       = {fg_venues.get_name()}._map;
+      var VENUES    = {fg_venues.get_name()};
+      var LAYER_CITY= {fg_city.get_name()};
+      var LAYER_TOP = {fg_top.get_name()};
+      var LAYER_HEAT= {heat.get_name()};
+
+      // UI → canonical alias map (so "Dance/Electronic" matches EDM)
+      var CANON = {{
+        "Hip-Hop": ["Hip-Hop","Hip-Hop/Rap","Hip Hop","Rap"],
+        "EDM": ["EDM","Dance/Electronic","Dance","Electronic","EDM/Dance"],
+        "Rock": ["Rock"],
+        "Country": ["Country"],
+        "Pop": ["Pop"],
+        "Latin": ["Latin","Reggaeton","Latin Urban"],
+        "R&B": ["R&B","Rnb","Soul"],
+        "Jazz": ["Jazz"],
+        "Classical": ["Classical","Symphony"],
+        "Metal": ["Metal"],
+        "Alternative": ["Alternative","Indie"],
+        "Folk": ["Folk","Americana"],
+        "Reggae": ["Reggae","Dancehall"],
+        "Comedy": ["Comedy"],
+        "Other": ["Other"]
+      }};
+
+      function toCanon(label) {{
+        if (CANON[label]) return label;
+        for (var k in CANON) if (CANON[k].indexOf(label) !== -1) return k;
+        return label;
+      }}
 
       function setLayerVisible(layer, show) {{
-        if (!MAP) return;
+        if (!MAP || !layer) return;
         if (show) {{ if (!MAP.hasLayer(layer)) MAP.addLayer(layer); }}
         else      {{ if (MAP.hasLayer(layer)) MAP.removeLayer(layer); }}
       }}
 
-      function applyGenreFilter(genre) {{
+      function applyGenreFilter(selected) {{
         if (!VENUES || !VENUES.eachLayer) return;
+        var genre = toCanon(selected);
+        var filtered = (genre !== "All");
 
-        // 1) Hide/show venue dots (DOM + vector)
+        // Ensure venues layer is visible when filtering
+        setLayerVisible(VENUES, true);
+
+        // Hide/show venue markers (both SVG and Icon)
         VENUES.eachLayer(function(m) {{
           try {{
             var g = (m && m.options && (m.options.feverGenre || m.options.genre)) || "Other";
@@ -404,9 +437,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
           }} catch (e) {{}}
         }});
 
-        // 2) Auto-toggle other layers for clarity
-        var filtered = (genre !== "All");
-        setLayerVisible(VENUES, true);                 // ensure venues layer is on
+        // Hide city/top/heat when filtering for clarity; restore on "All"
         setLayerVisible(LAYER_CITY, !filtered);
         setLayerVisible(LAYER_TOP,  !filtered);
         setLayerVisible(LAYER_HEAT, !filtered);

@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      TM_API_KEY: ${{ secrets.TM_API_KEY }}  # <-- make sure repo secret is named TM_API_KEY
+      TM_API_KEY: ${{ secrets.TM_API_KEY }}
 
     steps:
       - name: Checkout repository
@@ -32,8 +32,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt || true
           pip install nbformat nbconvert jupyter ipykernel
-          # safety net if requirements.txt is missing anything
+          # safety net if requirements.txt missed anything:
           pip install requests folium branca pandas numpy python-dateutil
+          python -m ipykernel install --user --name python3
 
       - name: Execute notebook to build map
         shell: bash
@@ -45,7 +46,8 @@ jobs:
           import nbformat
           from nbconvert.preprocessors import ExecutePreprocessor
 
-          repo = Path(__file__).resolve().parents[2]
+          # Use the workspace provided by GitHub Actions; __file__ is undefined for stdin
+          repo = Path(os.environ["GITHUB_WORKSPACE"]).resolve()
           nb_path = repo / "notebooks" / "fever_market_opportunity_map.ipynb"
           out_html = repo / "docs" / "fever_market_opportunity_map.html"
 
@@ -53,26 +55,23 @@ jobs:
           print("TM_API_KEY present:", bool(os.getenv("TM_API_KEY")))
           (repo / "docs").mkdir(parents=True, exist_ok=True)
 
-          # Execute the notebook at repo root so relative paths work
           with open(nb_path, "r", encoding="utf-8") as f:
               nb = nbformat.read(f, as_version=4)
 
           ep = ExecutePreprocessor(timeout=1800, kernel_name="python3")
           ep.preprocess(nb, {"metadata": {"path": str(repo)}})
 
-          # Save the executed notebook back (optional)
+          # Save executed notebook back (optional)
           with open(nb_path, "w", encoding="utf-8") as f:
               nbformat.write(nb, f)
 
-          # Fail if the notebook didn't create the expected HTML
-          if not out_html.exists():
+          if not out_html.exists() or out_html.stat().st_size == 0:
               raise SystemExit("ERROR: docs/fever_market_opportunity_map.html was not created by the notebook.")
           print("✅ Built:", out_html, "size:", out_html.stat().st_size, "bytes")
           PY
 
       - name: Ensure .nojekyll (one-time safety)
-        run: |
-          touch docs/.nojekyll
+        run: touch docs/.nojekyll
 
       - name: Commit and push updated HTML
         run: |
@@ -86,3 +85,11 @@ jobs:
           else
             echo "No changes to commit."
           fi
+
+      - name: Upload artifact (debug)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: fever-market-map
+          path: docs/fever_market_opportunity_map.html
+          if-no-files-found: warn

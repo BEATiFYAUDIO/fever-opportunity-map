@@ -1,5 +1,5 @@
 # scripts/build_map.py
-import os, sys, json, statistics, math
+import os, sys, json, statistics, math, time
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 from collections import defaultdict, Counter
@@ -19,7 +19,8 @@ WORK = Path(os.environ.get("GITHUB_WORKSPACE", ".")).resolve()
 DOCS = WORK / "docs"
 DOCS.mkdir(parents=True, exist_ok=True)
 OUT_HTML = DOCS / "fever_market_opportunity_map.html"
-OUT_GEOJSON = DOCS / "fever_events.geojson"  # city-level records (JSON)
+OUT_GEOJSON = DOCS / "fever_events.geojson"   # city-level records (JSON)
+OUT_TRENDS_CSV = DOCS / "trends_debug.csv"    # per-run debug
 
 # === Config ===
 API_KEY = os.getenv("TM_API_KEY")
@@ -36,8 +37,13 @@ SIZE      = int(os.getenv("TM_PAGE_SIZE", "200"))
 TOP_GENRE_COUNT = 8  # for the dropdown (+ "All" + "Other")
 
 # Percentile color scaling (for varied map)
-COLOR_PCT_LOW  = float(os.getenv("COLOR_PCT_LOW",  "20"))  # e.g., 20–30
-COLOR_PCT_HIGH = float(os.getenv("COLOR_PCT_HIGH", "95"))  # e.g., 90–99
+COLOR_PCT_LOW  = float(os.getenv("COLOR_PCT_LOW",  "25"))  # 10–30 typical
+COLOR_PCT_HIGH = float(os.getenv("COLOR_PCT_HIGH", "90"))  # 90–99 typical
+
+# Trends (CI-friendly)
+TRENDS_MODE = os.getenv("TRENDS_MODE", "country").lower()   # 'country' | 'off'
+TRENDS_SLEEP_MS = int(os.getenv("TRENDS_SLEEP_MS", "400"))  # ms between calls
+TRENDS_TERMS = [t.strip() for t in os.getenv("TRENDS_TERMS", "live music,concerts").split(",") if t.strip()]
 
 # === Ticketmaster API ===
 def tm_params(base: Dict[str, Any], page: int) -> Dict[str, Any]:
@@ -141,7 +147,7 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
         coords = [(p["lat"], p["lng"]) for p in plist]
         (lat, lng), _ = Counter(coords).most_common(1)[0]
 
-        # most common state & stateCode (for Trends region)
+        # most common state & stateCode (for labeling/Trends if we ever switch back)
         states = [p.get("state") for p in plist if p.get("state")]
         state = Counter(states).most_common(1)[0][0] if states else ""
         state_codes = [p.get("stateCode") for p in plist if p.get("stateCode")]
@@ -156,9 +162,9 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
             avg_price = float(statistics.mean(prices))
         else:
             cm = country_median.get(country)
-            avg_price = float(cm) if cm == cm else float("nan")  # keep NaN if unknown
+            avg_price = float(cm) if cm == cm else float("nan")  # leave NaN if unknown
 
-        # (genres only for popup)
+        # genres only for popup
         genres = [p.get("genre") for p in plist if p.get("genre")]
         top_genres = pd.Series(genres).value_counts().head(3).index.tolist()
         top_genres_str = ", ".join(top_genres) if top_genres else "—"
@@ -171,9 +177,9 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
 
     return pd.DataFrame(rows)
 
-# === Trends (Region → Country) ===
+# === Trends (CI-friendly: country only) ===
 def _trends_ts_mean(pytrends: TrendReq, terms: List[str], geo: str) -> float:
-    """Return mean of last ~12 weeks for any of the terms (max across terms)."""
+    """Return mean of last ~12 weeks across terms (max across terms)."""
     try:
         pytrends.build_payload(terms, geo=geo, timeframe="today 3-m")
         ts = pytrends.interest_over_time()
@@ -186,33 +192,52 @@ def _trends_ts_mean(pytrends: TrendReq, terms: List[str], geo: str) -> float:
 
 def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Demand proxy per city:
-      - Try ISO regional code 'COUNTRY-STATECODE' (e.g., 'US-CA', 'CA-ON') when available
-      - Else country code (e.g., 'US', 'CA')
-      - Terms: 'live music', 'concerts', and first top-genre token (if any)
-      - Use the maximum across terms (0–100)
+    Robust demand proxy for CI:
+      - If TRENDS_MODE='country': query country-level Trends only (more reliable than city/region)
+      - Build a small term set per country: base terms + up to a few genre tokens present in that country
+      - If Trends yields all zeros (blocked), fallback to an events-based proxy (normalized 0..100)
+      - Always write docs/trends_debug.csv for inspection
     """
-    if df.empty:
+    if df.empty or TRENDS_MODE == "off":
         return df.assign(search_interest=0.0)
 
-    pytrends = TrendReq(hl="en-US", tz=360)
+    pytrends = TrendReq(hl="en-US", tz=360, retries=2, backoff_factor=0.4, timeout=(10, 30))
     df = df.copy()
     df["search_interest"] = 0.0
 
-    for i, row in df.iterrows():
-        cc = (row.get("country") or "").strip()
-        sc_code = (row.get("stateCode") or "").strip()
-        terms = ["live music", "concerts"]
-        if isinstance(row.get("top_genres"), str) and row["top_genres"].strip():
-            terms.append(row["top_genres"].split(",")[0].strip())
+    def first_genre_token(s: str | None):
+        if not isinstance(s, str) or not s.strip():
+            return None
+        return (s.split(",")[0].strip() or None)
 
-        val = 0.0
-        if cc and sc_code:
-            val = _trends_ts_mean(pytrends, terms, f"{cc}-{sc_code}")
-        if val <= 0 and cc:
-            val = _trends_ts_mean(pytrends, terms, cc)
+    debug_rows = []
+    for cc in df["country"].dropna().unique():
+        # base terms + up to 3 genre tokens present in the country
+        terms = list(TRENDS_TERMS)
+        g_terms = [first_genre_token(r) for _, r in df[df["country"] == cc][["top_genres"]].itertuples()]
+        for g in g_terms:
+            if g and g not in terms and len(terms) < 5:
+                terms.append(g)
 
-        df.at[i, "search_interest"] = float(max(0.0, min(100.0, val)))
+        val = _trends_ts_mean(pytrends, terms, cc)
+        df.loc[df["country"] == cc, "search_interest"] = float(max(0.0, min(100.0, val)))
+        debug_rows.append({"country": cc, "terms": "|".join(terms), "search_interest": val})
+        time.sleep(TRENDS_SLEEP_MS / 1000.0)
+
+    # If every country came back zero (blocked/CAPTCHA), fallback to an event-based proxy
+    if float(df["search_interest"].max()) <= 0.0:
+        s = df["event_count"].astype(float)
+        if s.max() > s.min():
+            proxy = (s - s.min()) / (s.max() - s.min()) * 100.0
+        else:
+            proxy = pd.Series([50.0] * len(s), index=df.index)
+        df["search_interest"] = proxy
+
+    # Write debug CSV
+    try:
+        pd.DataFrame(debug_rows).to_csv(OUT_TRENDS_CSV, index=False)
+    except Exception:
+        pass
 
     return df
 
@@ -272,7 +297,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
     if vmax <= vmin:
         vmin, vmax = df_city["opportunity_score"].min(), df_city["opportunity_score"].max()
 
-    # 1) Heatmap (intensity scaled to 0..1 using vmin/vmax)
+    # 1) Heatmap
     HeatMap(
         [[r.lat, r.lng, max(0.0, min(1.0, (r.opportunity_score - vmin) / (vmax - vmin)))]
          for r in df_city.itertuples()],
@@ -468,12 +493,12 @@ def main():
     df_city = enrich_with_trends(df_city)
     df_city = compute_opportunity_scores(df_city)
 
-    # Export JSON for dashboards/publishing
     OUT_GEOJSON.write_text(df_city.to_json(orient="records"), encoding="utf-8")
-
     write_html_map(points, df_city, OUT_HTML)
     print(f"✅ Wrote {OUT_HTML}")
     print(f"✅ Wrote {OUT_GEOJSON}")
+    if OUT_TRENDS_CSV.exists():
+        print(f"🧪 Trends debug: {OUT_TRENDS_CSV}")
 
 if __name__ == "__main__":
     main()

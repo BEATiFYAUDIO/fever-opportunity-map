@@ -31,65 +31,35 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt || true
-          pip install nbformat nbconvert jupyter ipykernel
-          # safety net if requirements.txt missed anything:
-          pip install requests folium branca pandas numpy python-dateutil
-          python -m ipykernel install --user --name python3
+          pip install requests tenacity folium branca pandas numpy python-dateutil
 
-      - name: Execute notebook to build map
-        shell: bash
+      - name: Debug: verify paths
+        run: |
+          echo "WORKSPACE=$GITHUB_WORKSPACE"
+          ls -la
+          echo "--- scripts ---"
+          ls -la scripts || true
+          echo "--- docs ---"
+          ls -la docs || true
+
+      - name: Build map (pure Python)
         run: |
           set -euo pipefail
-          python - <<'PY'
-          import os
-          from pathlib import Path
-          import nbformat
-          from nbconvert.preprocessors import ExecutePreprocessor
+          test -f scripts/build_map.py || (echo "scripts/build_map.py missing" && exit 1)
+          python scripts/build_map.py
 
-          # Use the workspace provided by GitHub Actions; __file__ is undefined for stdin
-          repo = Path(os.environ["GITHUB_WORKSPACE"]).resolve()
-          nb_path = repo / "notebooks" / "fever_market_opportunity_map.ipynb"
-          out_html = repo / "docs" / "fever_market_opportunity_map.html"
-
-          print("Notebook exists:", nb_path.exists())
-          print("TM_API_KEY present:", bool(os.getenv("TM_API_KEY")))
-          (repo / "docs").mkdir(parents=True, exist_ok=True)
-
-          with open(nb_path, "r", encoding="utf-8") as f:
-              nb = nbformat.read(f, as_version=4)
-
-          ep = ExecutePreprocessor(timeout=1800, kernel_name="python3")
-          ep.preprocess(nb, {"metadata": {"path": str(repo)}})
-
-          # Save executed notebook back (optional)
-          with open(nb_path, "w", encoding="utf-8") as f:
-              nbformat.write(nb, f)
-
-          if not out_html.exists() or out_html.stat().st_size == 0:
-              raise SystemExit("ERROR: docs/fever_market_opportunity_map.html was not created by the notebook.")
-          print("✅ Built:", out_html, "size:", out_html.stat().st_size, "bytes")
-          PY
-
-      - name: Ensure .nojekyll (one-time safety)
+      - name: Ensure .nojekyll
         run: touch docs/.nojekyll
 
-      - name: Commit and push updated HTML
+      - name: Commit and push updated artifacts
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/fever_market_opportunity_map.html docs/.nojekyll || true
+          git add docs/fever_market_opportunity_map.html docs/fever_events.geojson docs/.nojekyll || true
           if ! git diff --cached --quiet; then
-            git commit -m "Auto-update map with latest Ticketmaster data"
+            git commit -m "Auto-update map (pure Python)"
             git push
           else
             echo "No changes to commit."
           fi
-
-      - name: Upload artifact (debug)
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: fever-market-map
-          path: docs/fever_market_opportunity_map.html
-          if-no-files-found: warn

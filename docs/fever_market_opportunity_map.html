@@ -14,147 +14,123 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
     
-            <meta name="viewport" content="width=device-width,
-                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-            <style>
-                #map_2f034a87b38ca967662adad5e440cdb0 {
-                    position: relative;
-                    width: 100.0%;
-                    height: 100.0%;
-                    left: 0.0%;
-                    top: 0.0%;
-                }
-                .leaflet-container { font-size: 1rem; }
-            </style>
+    <meta name="viewport" content="width=device-width,
+        initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <style>
+        #map_2f034a87b38ca967662adad5e440cdb0 {
+            position: relative;
+            width: 100.0%;
+            height: 100.0%;
+            left: 0.0%;
+            top: 0.0%;
+        }
+        .leaflet-container { font-size: 1rem; }
+    </style>
 
-            <style>html, body {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-            </style>
+    <style>html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }</style>
 
-            <style>#map {
-                position:absolute;
-                top:0;
-                bottom:0;
-                right:0;
-                left:0;
-                }
-            </style>
+    <style>#map {
+        position:absolute;
+        top:0;
+        bottom:0;
+        right:0;
+        left:0;
+    }</style>
 
-            <script>
-                L_NO_TOUCH = false;
-                L_DISABLE_3D = false;
-            </script>
+    <script>
+        L_NO_TOUCH = false;
+        L_DISABLE_3D = false;
+    </script>
 
-        
     <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
 </head>
 <body>
-    
-    
-            <div class="folium-map" id="map_2f034a87b38ca967662adad5e440cdb0" ></div>
-        
-    
-    <div id="genre-control" style="
-        position: fixed; top: 80px; left: 10px; z-index: 9999;
-        background: rgba(0,0,0,0.6); color: white; padding: 8px 10px;
-        border-radius: 8px; font-size: 13px;">
-      <label style="display:block; margin-bottom:4px;">Filter by Genre</label>
-      <select id="genreFilter" style="width:180px; padding:4px;">
-        <option value='All'>All</option><option value='Rock'>Rock</option><option value='Other'>Other</option><option value='Country'>Country</option><option value='EDM'>EDM</option><option value='Alternative'>Alternative</option><option value='Pop'>Pop</option><option value='Hip-Hop'>Hip-Hop</option><option value='R&B'>R&B</option><option value='Other'>Other</option>
-      </select>
-      <div style="margin-top:6px; opacity:.8;">(affects “Individual Venues” layer)</div>
-    </div>
+    <div class="folium-map" id="map_2f034a87b38ca967662adad5e440cdb0"></div>
+
+    <!-- ===== FEVER: Robust Genre Filter ===== -->
     <script>
-      var MAP       = feature_group_24a1297dc9c5c8f0a011b2ff7ac7bdd3._map;
-      var VENUES    = feature_group_24a1297dc9c5c8f0a011b2ff7ac7bdd3;
-      var LAYER_CITY= feature_group_e5adfa85a041f6e6288b8a9517035901;
-      var LAYER_TOP = feature_group_0c65782ddbb82dc5656dc0b58992bf20;
-      var LAYER_HEAT= heat_map_8cab0dc6c12384cb3b6e7ed2068f4354;
-
-      // UI → canonical alias map (so "Dance/Electronic" matches EDM)
-      var CANON = {
-        "Hip-Hop": ["Hip-Hop","Hip-Hop/Rap","Hip Hop","Rap"],
-        "EDM": ["EDM","Dance/Electronic","Dance","Electronic","EDM/Dance"],
-        "Rock": ["Rock"],
-        "Country": ["Country"],
-        "Pop": ["Pop"],
-        "Latin": ["Latin","Reggaeton","Latin Urban"],
-        "R&B": ["R&B","Rnb","Soul"],
-        "Jazz": ["Jazz"],
-        "Classical": ["Classical","Symphony"],
-        "Metal": ["Metal"],
-        "Alternative": ["Alternative","Indie"],
-        "Folk": ["Folk","Americana"],
-        "Reggae": ["Reggae","Dancehall"],
-        "Comedy": ["Comedy"],
-        "Other": ["Other"]
-      };
-
-      function toCanon(label) {
-        if (CANON[label]) return label;
-        for (var k in CANON) if (CANON[k].indexOf(label) !== -1) return k;
-        return label;
+    (function(){
+      function findMap(){for(const k in window){const v=window[k];if(v&&v.addLayer&&v.removeLayer&&v.getCenter&&v._layers)return v;}return null;}
+      function setMarkerVisible(m,show){try{
+        if(m._path)m._path.style.display=show?"":"none";
+        if(m._icon)m._icon.style.display=show?"":"none";
+        if(m._shadow)m._shadow.style.display=show?"":"none";
+        if(m.setStyle)m.setStyle({opacity:show?1:0,fillOpacity:show?0.85:0});
+        if(!show&&m._popup&&m._popup._container)m._popup._container.style.display="none";
+      }catch(e){}}
+      function getPopupGenre(m){
+        try{
+          const html=(m.getPopup&&m.getPopup().getContent&&m.getPopup().getContent())||"";
+          if(!html)return null;
+          const d=document.createElement("div");d.innerHTML=html;
+          const i=d.querySelector("i");
+          if(i&&i.textContent)return i.textContent.trim();
+          const txt=d.textContent||"";
+          const m1=txt.match(/Top Genres:\s*([\w\s,\/&-]+)/i);
+          if(m1&&m1[1])return m1[1].split(",")[0].trim();
+        }catch(e){}
+        return null;
       }
-
-      function setLayerVisible(layer, show) {
-        if (!MAP || !layer) return;
-        if (show) { if (!MAP.hasLayer(layer)) MAP.addLayer(layer); }
-        else      { if (MAP.hasLayer(layer)) MAP.removeLayer(layer); }
+      function canon(s){return s?s.split("/")[0].split("&")[0].trim():"Other";}
+      function collectLayers(layer,out){
+        if(!layer)return;
+        if(layer.getLayers)layer.getLayers().forEach(l=>collectLayers(l,out));
+        else if(layer.eachLayer)layer.eachLayer(l=>collectLayers(l,out));
+        else out.push(layer);
       }
-
-      function applyGenreFilter(selected) {
-        if (!VENUES || !VENUES.eachLayer) return;
-        var genre = toCanon(selected);
-        var filtered = (genre !== "All");
-
-        // Ensure venues layer is visible when filtering
-        setLayerVisible(VENUES, true);
-
-        // Hide/show venue markers (both SVG and Icon)
-        VENUES.eachLayer(function(m) {
-          try {
-            var g = (m && m.options && (m.options.feverGenre || m.options.genre)) || "Other";
-            var show = (genre === "All" || g === genre);
-            if (m._path)   m._path.style.display   = show ? "" : "none";
-            if (m._icon)   m._icon.style.display   = show ? "" : "none";
-            if (m._shadow) m._shadow.style.display = show ? "" : "none";
-            if (m.setStyle) m.setStyle({opacity: show ? 1 : 0, fillOpacity: show ? 0.85 : 0});
-            if (!show && m._popup && m._popup._container) m._popup._container.style.display = "none";
-          } catch (e) {}
-        });
-
-        // Hide city/top/heat when filtering for clarity; restore on "All"
-        setLayerVisible(LAYER_CITY, !filtered);
-        setLayerVisible(LAYER_TOP,  !filtered);
-        setLayerVisible(LAYER_HEAT, !filtered);
+      function discoverVenues(map){
+        const all=[],seen=new Set(),flat=[];
+        for(const id in map._layers)collectLayers(map._layers[id],all);
+        all.forEach(l=>{if(l&&l._leaflet_id&&!seen.has(l._leaflet_id)){seen.add(l._leaflet_id);flat.push(l);}});
+        return flat.map(m=>{
+          const g=(m.options&&(m.options.feverGenre||m.options.genre))||getPopupGenre(m);
+          if(g){m.__feverGenre=canon(g);return m;}
+        }).filter(Boolean);
       }
-
-      (function initGenreFilter() {
-        var sel = document.getElementById('genreFilter');
-        if (!sel) return setTimeout(initGenreFilter, 60);
-        L.DomEvent.disableClickPropagation(sel.parentElement);
-        applyGenreFilter("All");
-        sel.addEventListener('change', function() { applyGenreFilter(this.value); });
-      })();
+      function buildUI(genres){
+        let box=document.getElementById("fever-genre-box");
+        if(!box){box=document.createElement("div");
+          box.id="fever-genre-box";
+          box.style.cssText="position:fixed;top:80px;left:10px;z-index:9999;background:rgba(0,0,0,.6);color:#fff;padding:8px 10px;border-radius:8px;font-size:13px;";
+          document.body.appendChild(box);
+          if(window.L&&L.DomEvent)L.DomEvent.disableClickPropagation(box);
+        }
+        box.innerHTML='<label style="display:block;margin-bottom:4px;">Filter by Genre</label>';
+        const sel=document.createElement("select");
+        sel.id="genreFilter";
+        sel.style.cssText="width:180px;padding:4px;";
+        const opts=Array.from(new Set(["All"].concat(genres))).sort();
+        opts.forEach(g=>{const o=document.createElement("option");o.value=g;o.textContent=g;sel.appendChild(o);});
+        box.appendChild(sel);
+        const tip=document.createElement("div");tip.style.cssText="margin-top:6px;opacity:.8;";tip.textContent="(shows only matching venues)";box.appendChild(tip);
+        return sel;
+      }
+      function applyFilter(venues,val){
+        const vcanon=canon(val||"All");
+        venues.forEach(m=>{const g=m.__feverGenre||"Other";setMarkerVisible(m,vcanon==="All"||g===vcanon);});
+      }
+      function boot(){
+        const map=findMap();if(!map)return setTimeout(boot,500);
+        const venues=discoverVenues(map);
+        if(!venues.length)return setTimeout(boot,500);
+        const genres=venues.map(v=>v.__feverGenre||"Other");
+        const sel=buildUI(genres);
+        sel.addEventListener("change",()=>applyFilter(venues,sel.value));
+        applyFilter(venues,"All");
+        window.__feverListGenres=()=>Array.from(new Set(genres)).sort();
+        window.__feverShow=g=>{sel.value=g;sel.dispatchEvent(new Event("change"));};
+      }
+      if(document.readyState==="complete"||document.readyState==="interactive")boot();
+      else document.addEventListener("DOMContentLoaded",boot);
+    })();
     </script>
-    
-    
-    <div style="
-        position: fixed; bottom: 50px; right: 30px; width: 220px; height: 120px;
-        z-index:9999; font-size:13px; background: rgba(0,0,0,0.6);
-        color: white; padding: 10px; border-radius: 10px;">
-        <b>Opportunity Score</b><br>
-        <div style="height:10px; background:linear-gradient(to right, blue, lightblue, yellow, orange, red);
-            margin-top:5px; margin-bottom:5px;"></div>
-        <div style="display:flex; justify-content:space-between;">
-          <span>40.0</span><span>→</span><span>74.3</span>
-        </div>
-    </div>
-    
+    <!-- ===== /FEVER: Robust Genre Filter ===== -->
+
 </body>
 <script>
     

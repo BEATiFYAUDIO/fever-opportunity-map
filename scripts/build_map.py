@@ -67,21 +67,30 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     pts = []
     for ev in events:
         venues = (ev.get("_embedded", {}) or {}).get("venues", []) or []
-        if not venues: continue
-        v = venues[0]; loc = v.get("location") or {}
+        if not venues: 
+            continue
+        v = venues[0]
+        loc = v.get("location") or {}
         try:
             lat, lng = float(loc["latitude"]), float(loc["longitude"])
-        except: 
+        except Exception:
+            continue  # skip bad/missing coords
+
+        # quick sanity filter to drop obviously invalid coords
+        if not (-90.0 <= lat <= 90.0 and -180.0 <= lng <= 180.0):
             continue
+
         name = ev.get("name") or "Untitled"
         start = (ev.get("dates", {}) or {}).get("start", {}) or {}
         when = " / ".join(filter(None, [start.get("localDate"), start.get("localTime")]))
+
         price_min = price_max = currency = None
         for pr in ev.get("priceRanges", []) or []:
             price_min = pr.get("min", price_min)
             price_max = pr.get("max", price_max)
             currency = pr.get("currency", currency)
             break
+
         classifs = ev.get("classifications", []) or []
         seg = gen = sub = None
         if classifs:
@@ -89,6 +98,7 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             seg = (c0.get("segment") or {}).get("name")
             gen = (c0.get("genre") or {}).get("name")
             sub = (c0.get("subGenre") or {}).get("name")
+
         pts.append({
             "name": name, "date": when, "venue": v.get("name") or "",
             "city": (v.get("city") or {}).get("name") or "",
@@ -101,7 +111,7 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return pts
 
 # === Aggregation + Scoring ===
-def aggregate_city_stats(points: list[dict]) -> pd.DataFrame:
+def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
     groups = defaultdict(list)
     for p in points:
         key = f"{p['city']},{p['country']}"
@@ -110,25 +120,38 @@ def aggregate_city_stats(points: list[dict]) -> pd.DataFrame:
     rows = []
     for key, plist in groups.items():
         city, country = key.split(",", 1)
+
+        # --- coordinate snapping: use the most common (lat,lng) to avoid drift ---
+        coords = [(p["lat"], p["lng"]) for p in plist]
+        (lat, lng), _ = Counter(coords).most_common(1)[0]
+
         event_count = len(plist)
         genres = [p.get("genre") for p in plist if p.get("genre")]
         top_genres = pd.Series(genres).value_counts().head(3).index.tolist()
         genre_div = len(set(genres))
         prices = [p["price_min"] or p["price_max"] for p in plist if p.get("price_min") or p.get("price_max")]
         avg_price = statistics.mean(prices) if prices else 0
-        lat = statistics.mean(p["lat"] for p in plist)
-        lng = statistics.mean(p["lng"] for p in plist)
+
         rows.append({
-            "city": city, "country": country, "event_count": event_count,
-            "genre_div": genre_div, "avg_price": avg_price,
-            "top_genres": ", ".join(top_genres), "lat": lat, "lng": lng
+            "city": city, "country": country,
+            "event_count": event_count,
+            "genre_div": genre_div,
+            "avg_price": avg_price,
+            "top_genres": ", ".join(top_genres) if top_genres else "—",
+            "lat": lat, "lng": lng
         })
     return pd.DataFrame(rows)
 
 def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
+    """Add Google Trends interest per city for 'live music' (limited for runtime)."""
+    if df.empty:
+        return df.assign(search_interest=0)
+
     pytrends = TrendReq(hl="en-US", tz=360)
     interests = []
-    for city in df["city"].head(30):  # limit for runtime
+    # limit to first 30 cities to keep workflow fast
+    cities = df["city"].tolist()
+    for city in cities[:30]:
         try:
             pytrends.build_payload(["live music"], geo="", timeframe="today 3-m")
             data = pytrends.interest_by_region(resolution="CITY", inc_low_vol=True)
@@ -136,16 +159,19 @@ def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
         except Exception:
             val = 0
         interests.append(val)
+    # pad remaining with zeros
     df["search_interest"] = interests + [0]*(len(df)-len(interests))
     return df
 
 def compute_opportunity_scores(df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty: return df.assign(opportunity_score=0)
+    """Weighted Fever model: Events + Price (inverse) + Genre Diversity + Search Interest."""
+    if df.empty:
+        return df.assign(opportunity_score=0)
 
     def norm(series, invert=False):
         smin, smax = series.min(), series.max() or 1
         if smax == smin:
-            return pd.Series([0.5]*len(series))
+            return pd.Series([0.5] * len(series))
         v = (series - smin) / (smax - smin)
         return 1 - v if invert else v
 
@@ -155,10 +181,10 @@ def compute_opportunity_scores(df: pd.DataFrame) -> pd.DataFrame:
     df["trend_norm"] = norm(df["search_interest"])
 
     df["opportunity_score"] = (
-        df["event_norm"]*0.35 +
-        df["price_norm"]*0.15 +
-        df["genre_norm"]*0.20 +
-        df["trend_norm"]*0.30
+        df["event_norm"] * 0.35 +
+        df["price_norm"] * 0.15 +
+        df["genre_norm"] * 0.20 +
+        df["trend_norm"] * 0.30
     ) * 100
     return df
 
@@ -167,7 +193,7 @@ def hsl_hotcold(score: float) -> str:
     # 0 → blue (240deg), 100 → red (0deg)
     return f"hsl({240 - (240 * (score / 100)):.0f},80%,50%)"
 
-def write_html_map(points: list[dict], df_city: pd.DataFrame, path: Path):
+def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Path):
     if df_city.empty:
         raise SystemExit("No city data to plot.")
 
@@ -181,7 +207,7 @@ def write_html_map(points: list[dict], df_city: pd.DataFrame, path: Path):
         name="Opportunity Heatmap", radius=25, blur=20, min_opacity=0.4
     ).add_to(m)
 
-    # 2) City bubbles
+    # 2) City bubbles (summary)
     fg_city = FeatureGroup(name="City Opportunity Scores", show=True)
     for r in df_city.itertuples():
         color = hsl_hotcold(r.opportunity_score)
@@ -200,7 +226,7 @@ def write_html_map(points: list[dict], df_city: pd.DataFrame, path: Path):
             .add_child(folium.Popup(html, max_width=320)).add_to(fg_city)
     fg_city.add_to(m)
 
-    # 3) Top 10 Hot Markets overlay (numbered markers)
+    # 3) Top 10 Hot Markets overlay (numbered)
     top10 = df_city.sort_values("opportunity_score", ascending=False).head(10).reset_index(drop=True)
     fg_top = FeatureGroup(name="Top 10 Hot Markets", show=True)
     for idx, r in top10.iterrows():
@@ -214,28 +240,25 @@ def write_html_map(points: list[dict], df_city: pd.DataFrame, path: Path):
           Top Genres: {r['top_genres']}
         </div>
         """
-        # Numbered badge via DivIcon
         badge = folium.DivIcon(html=f"""
           <div style="
               background:{color};
               color:white; border-radius:16px; width:28px; height:28px;
               display:flex; align-items:center; justify-content:center;
-              font-weight:700; font-size:12px; border:2px solid rgba(255,255,255,.8);
-              box-shadow:0 0 8px rgba(0,0,0,.4);
-          ">{rank}</div>
+              font-weight:700; font-size:12px; border:2px solid rgba(255,255,255,.85);
+              box-shadow:0 0 8px rgba(0,0,0,.4);">{rank}</div>
         """, icon_size=(28,28), icon_anchor=(14,14))
         Marker([r["lat"], r["lng"]], icon=badge)\
             .add_child(folium.Popup(html, max_width=300)).add_to(fg_top)
     fg_top.add_to(m)
 
-    # 4) Individual Venues + Genre filter (client-side dropdown)
-    #    We keep one FeatureGroup and inject JS to hide/show markers by genre.
+    # 4) Individual Venues (with genre filter)
     fg_venues = FeatureGroup(name="Individual Venues (Filtered)", show=False)
     m.add_child(fg_venues)
 
-    # Build markers and collect JS handles -> genre
-    venue_js_entries = []   # [(marker_var_name, genre)]
-    # Decide which genres to expose in dropdown (global top N)
+    # Build markers + collect JS handles for filtering
+    venue_js_entries = []   # [(marker_var_name, genreBucket)]
+    # dropdown genres = global top N (+ Other)
     genre_counts = Counter([p["genre"] for p in points if p.get("genre")])
     top_genres = [g for g,_ in genre_counts.most_common(TOP_GENRE_COUNT)]
     def genre_bucket(g):
@@ -243,7 +266,6 @@ def write_html_map(points: list[dict], df_city: pd.DataFrame, path: Path):
         return g if g in top_genres else "Other"
 
     for p in points:
-        # score for the city (for color)
         score = float(df_city.loc[df_city["city"] == p["city"], "opportunity_score"].mean()) \
                 if p["city"] in df_city["city"].values else 0.0
         color = hsl_hotcold(score)
@@ -260,10 +282,9 @@ def write_html_map(points: list[dict], df_city: pd.DataFrame, path: Path):
                           color=color, fillColor=color, fill=True, fill_opacity=0.85)
         mk.add_child(folium.Popup(html, max_width=300))
         mk.add_to(fg_venues)
-        # Capture the JS variable name Folium assigns (e.g., circle_marker_xxxxx)
         venue_js_entries.append((mk.get_name(), genre_bucket(p.get("genre"))))
 
-    # Inject a custom control with a dropdown and the filtering logic
+    # Inject dropdown + filtering JS
     fg_venues_js = fg_venues.get_name()
     options_html = "".join([f"<option value='{g}'>{g}</option>" for g in ["All"] + top_genres + ["Other"]])
     mapping_js = ",\n      ".join([f"'{name}':'{genre.replace('\"','\\\"')}'" for name, genre in venue_js_entries])
@@ -282,7 +303,6 @@ def write_html_map(points: list[dict], df_city: pd.DataFrame, path: Path):
       <div style="margin-top:6px; opacity:.8;">(affects “Individual Venues” layer)</div>
     </div>
     <script>
-      // Map layer/marker references
       var GENRE_OF = {{
         {mapping_js}
       }};
@@ -304,9 +324,8 @@ def write_html_map(points: list[dict], df_city: pd.DataFrame, path: Path):
         }});
       }}
 
-      // Initialize
+      // init
       applyGenreFilter("All");
-      // Wire dropdown (and stop map drag while interacting)
       var sel = document.getElementById('genreFilter');
       L.DomEvent.disableClickPropagation(sel);
       sel.addEventListener('change', function() {{ applyGenreFilter(this.value); }});
@@ -360,7 +379,6 @@ def main():
     df_city = aggregate_city_stats(points)
     df_city = enrich_with_trends(df_city)
     df_city = compute_opportunity_scores(df_city)
-    # Export city-level JSON for dashboards
     OUT_GEOJSON.write_text(df_city.to_json(orient="records"), encoding="utf-8")
     write_html_map(points, df_city, OUT_HTML)
     print(f"✅ Wrote {OUT_HTML}")

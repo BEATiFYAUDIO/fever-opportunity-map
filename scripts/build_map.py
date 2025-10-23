@@ -2,13 +2,13 @@
 import os, sys, json, statistics
 from pathlib import Path
 from typing import Dict, Any, List
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 import requests
 import pandas as pd
 from tenacity import retry, stop_after_attempt, wait_exponential
 import folium
-from folium import FeatureGroup, CircleMarker, LayerControl
+from folium import FeatureGroup, CircleMarker, LayerControl, Marker
 from folium.plugins import HeatMap
 from branca.element import Template, MacroElement
 from pytrends.request import TrendReq
@@ -18,7 +18,7 @@ WORK = Path(os.environ.get("GITHUB_WORKSPACE", ".")).resolve()
 DOCS = WORK / "docs"
 DOCS.mkdir(parents=True, exist_ok=True)
 OUT_HTML = DOCS / "fever_market_opportunity_map.html"
-OUT_GEOJSON = DOCS / "fever_events.geojson"
+OUT_GEOJSON = DOCS / "fever_events.geojson"  # city-level table for dashboards
 
 # === Config ===
 API_KEY = os.getenv("TM_API_KEY")
@@ -27,10 +27,11 @@ if not API_KEY:
     sys.exit(1)
 
 COUNTRIES = [s.strip() for s in os.getenv("TM_COUNTRIES", "US,CA").split(",") if s.strip()]
-KEYWORD   = os.getenv("TM_KEYWORD", "")
+KEYWORD   = os.getenv("TM_KEYWORD", "")      # e.g. "hip hop" or artist name
 SEGMENT   = os.getenv("TM_SEGMENT", "Music")
 PAGES_MAX = int(os.getenv("TM_PAGES_MAX", "3"))
 SIZE      = int(os.getenv("TM_PAGE_SIZE", "200"))
+TOP_GENRE_COUNT = 8  # number of genres to expose in the dropdown (+ "All" + "Other")
 
 # === Ticketmaster API ===
 def tm_params(base: Dict[str, Any], page: int) -> Dict[str, Any]:
@@ -47,10 +48,8 @@ def tm_get(url: str, params: Dict[str, Any]) -> Dict[str, Any]:
 def fetch_events() -> List[Dict[str, Any]]:
     url = "https://app.ticketmaster.com/discovery/v2/events.json"
     base = {}
-    if SEGMENT:
-        base["segmentName"] = SEGMENT
-    if KEYWORD:
-        base["keyword"] = KEYWORD
+    if SEGMENT: base["segmentName"] = SEGMENT
+    if KEYWORD: base["keyword"] = KEYWORD
 
     all_events = []
     for cc in COUNTRIES:
@@ -72,7 +71,8 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         v = venues[0]; loc = v.get("location") or {}
         try:
             lat, lng = float(loc["latitude"]), float(loc["longitude"])
-        except: continue
+        except: 
+            continue
         name = ev.get("name") or "Untitled"
         start = (ev.get("dates", {}) or {}).get("start", {}) or {}
         when = " / ".join(filter(None, [start.get("localDate"), start.get("localTime")]))
@@ -93,8 +93,9 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             "name": name, "date": when, "venue": v.get("name") or "",
             "city": (v.get("city") or {}).get("name") or "",
             "country": (v.get("country") or {}).get("countryCode") or "",
-            "genre": gen, "price_min": price_min, "price_max": price_max,
-            "currency": currency, "url": ev.get("url") or "",
+            "genre": gen or "Other",
+            "price_min": price_min, "price_max": price_max, "currency": currency,
+            "url": ev.get("url") or "",
             "lat": lat, "lng": lng
         })
     return pts
@@ -162,68 +163,168 @@ def compute_opportunity_scores(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 # === Mapping ===
+def hsl_hotcold(score: float) -> str:
+    # 0 → blue (240deg), 100 → red (0deg)
+    return f"hsl({240 - (240 * (score / 100)):.0f},80%,50%)"
+
 def write_html_map(points: list[dict], df_city: pd.DataFrame, path: Path):
     if df_city.empty:
         raise SystemExit("No city data to plot.")
 
-    avg_lat = df_city["lat"].mean()
-    avg_lng = df_city["lng"].mean()
-    m = folium.Map(location=[avg_lat, avg_lng], zoom_start=3, tiles="CartoDB dark_matter")
+    # center
+    m = folium.Map(location=[df_city["lat"].mean(), df_city["lng"].mean()],
+                   zoom_start=3, tiles="CartoDB dark_matter")
 
-    # 1️⃣ Heatmap
-    heat_data = df_city[["lat", "lng", "opportunity_score"]].dropna().values.tolist()
-    HeatMap([[r[0], r[1], r[2] / 100] for r in heat_data],
-            name="Opportunity Heatmap", radius=25, blur=20, min_opacity=0.4).add_to(m)
+    # 1) Heatmap (by city score)
+    HeatMap(
+        [[r.lat, r.lng, r.opportunity_score/100] for r in df_city.itertuples()],
+        name="Opportunity Heatmap", radius=25, blur=20, min_opacity=0.4
+    ).add_to(m)
 
-    # 2️⃣ City Bubbles
+    # 2) City bubbles
     fg_city = FeatureGroup(name="City Opportunity Scores", show=True)
-    for row in df_city.itertuples():
-        # blue (240°) → red (0°)
-        color = f"hsl({240 - (240 * (row.opportunity_score / 100)):.0f},80%,50%)"
+    for r in df_city.itertuples():
+        color = hsl_hotcold(r.opportunity_score)
         html = f"""
         <div style='font-size:13px;'>
-        <b>{row.city}, {row.country}</b><br/>
-        🔥 <b>Opportunity Score:</b> {row.opportunity_score:.1f}<br/>
-        🎟️ Events: {row.event_count}<br/>
-        💰 Avg Ticket Price: ${row.avg_price:.0f}<br/>
-        📈 Search Interest: {row.search_interest:.0f}<br/>
-        🎶 Top Genres: {row.top_genres}<br/>
+          <b>{r.city}, {r.country}</b><br/>
+          🔥 <b>Opportunity Score:</b> {r.opportunity_score:.1f}<br/>
+          🎟️ Events: {r.event_count}<br/>
+          💰 Avg Ticket Price: ${r.avg_price:.0f}<br/>
+          📈 Search Interest: {r.search_interest:.0f}<br/>
+          🎶 Top Genres: {r.top_genres}<br/>
         </div>
         """
-        CircleMarker(location=[row.lat, row.lng], radius=8, color=color,
-                     fillColor=color, fill=True, fill_opacity=0.9)\
-                     .add_child(folium.Popup(html, max_width=320)).add_to(fg_city)
+        CircleMarker([r.lat, r.lng], radius=8, color=color, fillColor=color,
+                     fill=True, fill_opacity=0.9)\
+            .add_child(folium.Popup(html, max_width=320)).add_to(fg_city)
     fg_city.add_to(m)
 
-    # 3️⃣ Venues
-    fg_venues = FeatureGroup(name="Individual Venues", show=False)
-    for p in points:
-        score = df_city.loc[df_city["city"] == p["city"], "opportunity_score"].mean() \
-                 if p["city"] in df_city["city"].values else 0
-        color = f"hsl({240 - (240 * (score / 100)):.0f},80%,50%)"
+    # 3) Top 10 Hot Markets overlay (numbered markers)
+    top10 = df_city.sort_values("opportunity_score", ascending=False).head(10).reset_index(drop=True)
+    fg_top = FeatureGroup(name="Top 10 Hot Markets", show=True)
+    for idx, r in top10.iterrows():
+        rank = idx + 1
+        color = hsl_hotcold(r["opportunity_score"])
         html = f"""
-        <div style='font-size:12px;'>
-        <b>{p['name']}</b><br/>
-        {p['venue']} — {p['city']} {p['country']}<br/>
-        <i>{p.get('genre','')}</i><br/>
-        <a href='{p['url']}' target='_blank'>Tickets</a><br/>
-        Score: {score:.1f}
+        <div style='font-size:13px;'>
+          <b>#{rank} — {r['city']}, {r['country']}</b><br/>
+          Opportunity Score: {r['opportunity_score']:.1f}<br/>
+          Events: {r['event_count']} · Avg ${r['avg_price']:.0f}<br/>
+          Top Genres: {r['top_genres']}
         </div>
         """
-        CircleMarker(location=[p["lat"], p["lng"]], radius=4, color=color,
-                     fillColor=color, fill=True, fill_opacity=0.8)\
-                     .add_child(folium.Popup(html, max_width=300)).add_to(fg_venues)
-    fg_venues.add_to(m)
+        # Numbered badge via DivIcon
+        badge = folium.DivIcon(html=f"""
+          <div style="
+              background:{color};
+              color:white; border-radius:16px; width:28px; height:28px;
+              display:flex; align-items:center; justify-content:center;
+              font-weight:700; font-size:12px; border:2px solid rgba(255,255,255,.8);
+              box-shadow:0 0 8px rgba(0,0,0,.4);
+          ">{rank}</div>
+        """, icon_size=(28,28), icon_anchor=(14,14))
+        Marker([r["lat"], r["lng"]], icon=badge)\
+            .add_child(folium.Popup(html, max_width=300)).add_to(fg_top)
+    fg_top.add_to(m)
 
-    # 🔑 Legend
+    # 4) Individual Venues + Genre filter (client-side dropdown)
+    #    We keep one FeatureGroup and inject JS to hide/show markers by genre.
+    fg_venues = FeatureGroup(name="Individual Venues (Filtered)", show=False)
+    m.add_child(fg_venues)
+
+    # Build markers and collect JS handles -> genre
+    venue_js_entries = []   # [(marker_var_name, genre)]
+    # Decide which genres to expose in dropdown (global top N)
+    genre_counts = Counter([p["genre"] for p in points if p.get("genre")])
+    top_genres = [g for g,_ in genre_counts.most_common(TOP_GENRE_COUNT)]
+    def genre_bucket(g):
+        if not g: return "Other"
+        return g if g in top_genres else "Other"
+
+    for p in points:
+        # score for the city (for color)
+        score = float(df_city.loc[df_city["city"] == p["city"], "opportunity_score"].mean()) \
+                if p["city"] in df_city["city"].values else 0.0
+        color = hsl_hotcold(score)
+        html = f"""
+        <div style='font-size:12px;'>
+          <b>{p['name']}</b><br/>
+          {p['venue']} — {p['city']} {p['country']}<br/>
+          <i>{p.get('genre','')}</i><br/>
+          <a href='{p['url']}' target='_blank'>Tickets</a><br/>
+          Score: {score:.1f}
+        </div>
+        """
+        mk = CircleMarker([p["lat"], p["lng"]], radius=4,
+                          color=color, fillColor=color, fill=True, fill_opacity=0.85)
+        mk.add_child(folium.Popup(html, max_width=300))
+        mk.add_to(fg_venues)
+        # Capture the JS variable name Folium assigns (e.g., circle_marker_xxxxx)
+        venue_js_entries.append((mk.get_name(), genre_bucket(p.get("genre"))))
+
+    # Inject a custom control with a dropdown and the filtering logic
+    fg_venues_js = fg_venues.get_name()
+    options_html = "".join([f"<option value='{g}'>{g}</option>" for g in ["All"] + top_genres + ["Other"]])
+    mapping_js = ",\n      ".join([f"'{name}':'{genre.replace('\"','\\\"')}'" for name, genre in venue_js_entries])
+    markers_js = ",\n      ".join([f"'{name}': {name}" for name, _ in venue_js_entries])
+
+    control_html = f"""
+    {% macro html(this, kwargs) %}
+    <div id="genre-control" style="
+        position: fixed; top: 80px; left: 10px; z-index: 9999;
+        background: rgba(0,0,0,0.6); color: white; padding: 8px 10px;
+        border-radius: 8px; font-size: 13px;">
+      <label style="display:block; margin-bottom:4px;">Filter by Genre</label>
+      <select id="genreFilter" style="width:180px; padding:4px;">
+        {options_html}
+      </select>
+      <div style="margin-top:6px; opacity:.8;">(affects “Individual Venues” layer)</div>
+    </div>
+    <script>
+      // Map layer/marker references
+      var GENRE_OF = {{
+        {mapping_js}
+      }};
+      var VENUE_MARKER = {{
+        {markers_js}
+      }};
+      var VENUES_GROUP = {fg_venues_js};
+
+      function applyGenreFilter(genre) {{
+        Object.keys(VENUE_MARKER).forEach(function(k) {{
+          var m = VENUE_MARKER[k];
+          var g = GENRE_OF[k] || "Other";
+          var show = (genre === "All" || g === genre);
+          if (show) {{
+            if (!VENUES_GROUP.hasLayer(m)) {{ VENUES_GROUP.addLayer(m); }}
+          }} else {{
+            if (VENUES_GROUP.hasLayer(m)) {{ VENUES_GROUP.removeLayer(m); }}
+          }}
+        }});
+      }}
+
+      // Initialize
+      applyGenreFilter("All");
+      // Wire dropdown (and stop map drag while interacting)
+      var sel = document.getElementById('genreFilter');
+      L.DomEvent.disableClickPropagation(sel);
+      sel.addEventListener('change', function() {{ applyGenreFilter(this.value); }});
+    </script>
+    {% endmacro %}
+    """
+    ctl = MacroElement(); ctl._template = Template(control_html)
+    m.get_root().add_child(ctl)
+
+    # Legend
     legend_html = """
     {% macro html(this, kwargs) %}
     <div style="
         position: fixed;
         bottom: 50px;
         right: 30px;
-        width: 180px;
-        height: 110px;
+        width: 200px;
+        height: 120px;
         z-index:9999;
         font-size:13px;
         background: rgba(0,0,0,0.6);
@@ -241,12 +342,12 @@ def write_html_map(points: list[dict], df_city: pd.DataFrame, path: Path):
         <b>Layers:</b><br>
         - Opportunity Heatmap<br>
         - City Scores<br>
-        - Venues
+        - Top 10 Hot Markets<br>
+        - Individual Venues (Filtered)
     </div>
     {% endmacro %}
     """
-    legend = MacroElement()
-    legend._template = Template(legend_html)
+    legend = MacroElement(); legend._template = Template(legend_html)
     m.get_root().add_child(legend)
 
     LayerControl(collapsed=False).add_to(m)
@@ -259,9 +360,11 @@ def main():
     df_city = aggregate_city_stats(points)
     df_city = enrich_with_trends(df_city)
     df_city = compute_opportunity_scores(df_city)
+    # Export city-level JSON for dashboards
     OUT_GEOJSON.write_text(df_city.to_json(orient="records"), encoding="utf-8")
     write_html_map(points, df_city, OUT_HTML)
     print(f"✅ Wrote {OUT_HTML}")
+    print(f"✅ Wrote {OUT_GEOJSON}")
 
 if __name__ == "__main__":
     main()

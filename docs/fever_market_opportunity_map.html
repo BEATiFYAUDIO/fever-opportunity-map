@@ -154,6 +154,88 @@
           <span>40.0</span><span>→</span><span>74.3</span>
         </div>
     </div>
+<!-- ===== Genre Filter (drop-in) ===== -->
+<script>
+(function(){
+  function findMap(){
+    for (var k in window){
+      try {
+        var v = window[k];
+        if (v && v.addLayer && v.removeLayer && v.getCenter && v._layers) return v;
+      } catch(e){}
+    }
+    return null;
+  }
+
+  function setMarkerVisible(m, show){
+    // Works for vector CircleMarkers AND icon markers
+    if (m._path)   m._path.style.display   = show ? "" : "none";
+    if (m._icon)   m._icon.style.display   = show ? "" : "none";
+    if (m._shadow) m._shadow.style.display = show ? "" : "none";
+    if (m.setStyle) m.setStyle({opacity: show ? 1 : 0, fillOpacity: show ? 0.85 : 0});
+    if (!show && m._popup && m._popup._container) m._popup._container.style.display = "none";
+  }
+
+  function init(){
+    var map = findMap();
+    if (!map) return setTimeout(init, 120);
+
+    // Collect all markers that have a genre tag
+    var venues = [];
+    Object.values(map._layers).forEach(function(layer){
+      try {
+        if (layer && layer.options && (layer.options.feverGenre || layer.options.genre)) {
+          venues.push(layer);
+        }
+      } catch(e){}
+    });
+
+    if (!venues.length) return setTimeout(init, 200); // wait for markers to finish rendering
+
+    // Build genre list from actual markers
+    var genresSet = new Set(["All"]);
+    venues.forEach(function(m){
+      genresSet.add(m.options.feverGenre || m.options.genre || "Other");
+    });
+    var genres = Array.from(genresSet);
+
+    // Create UI box
+    var box = document.createElement('div');
+    box.style.cssText = 'position:fixed;top:80px;left:10px;z-index:9999;background:rgba(0,0,0,.6);color:#fff;padding:8px 10px;border-radius:8px;font-size:13px;';
+    box.innerHTML = '<label style="display:block;margin-bottom:4px;">Filter by Genre</label>';
+
+    var sel = document.createElement('select');
+    sel.id = 'genreFilter';
+    sel.style.cssText = 'width:180px;padding:4px;';
+    genres.forEach(function(g){
+      var opt = document.createElement('option');
+      opt.value = g; opt.textContent = g;
+      sel.appendChild(opt);
+    });
+    box.appendChild(sel);
+    var small = document.createElement('div');
+    small.style.cssText = 'margin-top:6px;opacity:.8;';
+    small.textContent = '(shows only matching venues)';
+    box.appendChild(small);
+
+    document.body.appendChild(box);
+    if (window.L && L.DomEvent) L.DomEvent.disableClickPropagation(box);
+
+    function applyFilter(val){
+      venues.forEach(function(m){
+        var g = m.options.feverGenre || m.options.genre || "Other";
+        setMarkerVisible(m, val === "All" || g === val);
+      });
+    }
+
+    sel.addEventListener('change', function(){ applyFilter(this.value); });
+    applyFilter('All');
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<!-- ===== /Genre Filter ===== -->
     
 </body>
 <script>

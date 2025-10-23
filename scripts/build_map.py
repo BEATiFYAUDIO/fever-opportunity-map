@@ -19,8 +19,8 @@ WORK = Path(os.environ.get("GITHUB_WORKSPACE", ".")).resolve()
 DOCS = WORK / "docs"
 DOCS.mkdir(parents=True, exist_ok=True)
 OUT_HTML = DOCS / "fever_market_opportunity_map.html"
-OUT_GEOJSON = DOCS / "fever_events.geojson"   # city-level records (JSON)
-OUT_TRENDS_CSV = DOCS / "trends_debug.csv"    # per-run debug
+OUT_GEOJSON = DOCS / "fever_events.geojson"
+OUT_TRENDS_CSV = DOCS / "trends_debug.csv"
 
 # === Config ===
 API_KEY = os.getenv("TM_API_KEY")
@@ -29,20 +29,18 @@ if not API_KEY:
     sys.exit(1)
 
 COUNTRIES = [s.strip() for s in os.getenv("TM_COUNTRIES", "US,CA").split(",") if s.strip()]
-KEYWORD   = os.getenv("TM_KEYWORD", "")      # e.g., "hip hop"
+KEYWORD   = os.getenv("TM_KEYWORD", "")
 SEGMENT   = os.getenv("TM_SEGMENT", "Music")
 PAGES_MAX = int(os.getenv("TM_PAGES_MAX", "3"))
 SIZE      = int(os.getenv("TM_PAGE_SIZE", "200"))
 
-TOP_GENRE_COUNT = 8  # for the dropdown (+ "All" + "Other")
+TOP_GENRE_COUNT = 8
 
-# Percentile color scaling (for varied map)
-COLOR_PCT_LOW  = float(os.getenv("COLOR_PCT_LOW",  "25"))  # 10–30 typical
-COLOR_PCT_HIGH = float(os.getenv("COLOR_PCT_HIGH", "90"))  # 90–99 typical
+COLOR_PCT_LOW  = float(os.getenv("COLOR_PCT_LOW",  "25"))
+COLOR_PCT_HIGH = float(os.getenv("COLOR_PCT_HIGH", "90"))
 
-# Trends (CI-friendly)
-TRENDS_MODE = os.getenv("TRENDS_MODE", "country").lower()   # 'country' | 'off'
-TRENDS_SLEEP_MS = int(os.getenv("TRENDS_SLEEP_MS", "400"))  # ms between calls
+TRENDS_MODE = os.getenv("TRENDS_MODE", "country").lower()
+TRENDS_SLEEP_MS = int(os.getenv("TRENDS_SLEEP_MS", "400"))
 TRENDS_TERMS = [t.strip() for t in os.getenv("TRENDS_TERMS", "live music,concerts").split(",") if t.strip()]
 
 # === Ticketmaster API ===
@@ -76,7 +74,6 @@ def fetch_events() -> List[Dict[str, Any]]:
     return all_events
 
 def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """Flatten TM events; capture city/state/stateCode/country, genre & prices."""
     pts = []
     for ev in events:
         venues = (ev.get("_embedded", {}) or {}).get("venues", []) or []
@@ -94,19 +91,16 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         name = ev.get("name") or "Untitled"
         start = (ev.get("dates", {}) or {}).get("start", {}) or {}
         when = " / ".join(filter(None, [start.get("localDate"), start.get("localTime")]))
-
         price_min = price_max = currency = None
         for pr in ev.get("priceRanges", []) or []:
             price_min = pr.get("min", price_min)
             price_max = pr.get("max", price_max)
             currency = pr.get("currency", currency)
             break
-
-        classifs = ev.get("classifications", []) or []
         gen = None
+        classifs = ev.get("classifications", []) or []
         if classifs:
-            c0 = classifs[0]
-            gen = (c0.get("genre") or {}).get("name")
+            gen = (classifs[0].get("genre") or {}).get("name")
 
         pts.append({
             "name": name, "date": when, "venue": v.get("name") or "",
@@ -120,6 +114,28 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             "lat": lat, "lng": lng
         })
     return pts
+
+# === Genre canonicalization (so Hip-Hop/Rap matches "Hip-Hop") ===
+def canonical_genre(g: str | None) -> str:
+    if not g: return "Other"
+    s = g.lower()
+    # Hip-Hop family
+    if "hip" in s or "rap" in s: return "Hip-Hop"
+    # EDM / Dance / Electronic
+    if "edm" in s or "electronic" in s or "dance" in s: return "EDM"
+    if "rock" in s: return "Rock"
+    if "country" in s: return "Country"
+    if "pop" in s: return "Pop"
+    if "latin" in s or "reggaeton" in s: return "Latin"
+    if "r&b" in s or "rnb" in s or "soul" in s: return "R&B"
+    if "jazz" in s: return "Jazz"
+    if "classical" in s or "symphony" in s: return "Classical"
+    if "metal" in s: return "Metal"
+    if "alternative" in s or "indie" in s: return "Alternative"
+    if "folk" in s or "americana" in s: return "Folk"
+    if "reggae" in s or "dancehall" in s: return "Reggae"
+    if "comedy" in s: return "Comedy"
+    return g  # default to original
 
 # === Aggregation + Price Imputation ===
 def _country_median_prices(points: List[Dict[str, Any]]) -> Dict[str, float]:
@@ -143,11 +159,9 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
     for key, plist in groups.items():
         city, country = key.split(",", 1)
 
-        # coordinate snap: most common (lat,lng)
         coords = [(p["lat"], p["lng"]) for p in plist]
         (lat, lng), _ = Counter(coords).most_common(1)[0]
 
-        # most common state & stateCode (for labeling/debug)
         states = [p.get("state") for p in plist if p.get("state")]
         state = Counter(states).most_common(1)[0][0] if states else ""
         state_codes = [p.get("stateCode") for p in plist if p.get("stateCode")]
@@ -162,10 +176,10 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
             avg_price = float(statistics.mean(prices))
         else:
             cm = country_median.get(country)
-            avg_price = float(cm) if cm == cm else float("nan")  # leave NaN if unknown
+            avg_price = float(cm) if cm == cm else float("nan")
 
-        # genres (for popup only)
-        genres = [p.get("genre") for p in plist if p.get("genre")]
+        # top genres (canonicalized for stability)
+        genres = [canonical_genre(p.get("genre")) for p in plist if p.get("genre")]
         top_genres = pd.Series(genres).value_counts().head(3).index.tolist()
         top_genres_str = ", ".join(top_genres) if top_genres else "—"
 
@@ -177,9 +191,8 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
 
     return pd.DataFrame(rows)
 
-# === Trends (CI-friendly: country only + fallback) ===
+# === Trends (country-level + fallback) ===
 def _trends_ts_mean(pytrends: TrendReq, terms: List[str], geo: str) -> float:
-    """Return mean of last ~12 weeks across terms (max across terms)."""
     try:
         pytrends.build_payload(terms, geo=geo, timeframe="today 3-m")
         ts = pytrends.interest_over_time()
@@ -191,13 +204,6 @@ def _trends_ts_mean(pytrends: TrendReq, terms: List[str], geo: str) -> float:
         return 0.0
 
 def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Robust demand proxy for CI:
-      - If TRENDS_MODE='country': country-level Trends only (reliable)
-      - Build small term set per country: base terms + up to a few genre tokens present in that country
-      - If Trends yields all zeros (blocked), fallback to event_count proxy (0..100)
-      - Write docs/trends_debug.csv for inspection
-    """
     if df.empty or TRENDS_MODE == "off":
         return df.assign(search_interest=0.0)
 
@@ -205,19 +211,9 @@ def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df["search_interest"] = 0.0
 
-    def first_genre_token(s: str | None):
-        if not isinstance(s, str) or not s.strip():
-            return None
-        return (s.split(",")[0].strip() or None)
-
     debug_rows = []
     for cc in df["country"].dropna().unique():
         terms = list(TRENDS_TERMS)
-        g_terms = [first_genre_token(r) for _, r in df[df["country"] == cc][["top_genres"]].itertuples()]
-        for g in g_terms:
-            if g and g not in terms and len(terms) < 5:
-                terms.append(g)
-
         val = _trends_ts_mean(pytrends, terms, cc)
         df.loc[df["country"] == cc, "search_interest"] = float(max(0.0, min(100.0, val)))
         debug_rows.append({"country": cc, "terms": "|".join(terms), "search_interest": val})
@@ -225,10 +221,7 @@ def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
 
     if float(df["search_interest"].max()) <= 0.0:
         s = df["event_count"].astype(float)
-        if s.max() > s.min():
-            proxy = (s - s.min()) / (s.max() - s.min()) * 100.0
-        else:
-            proxy = pd.Series([50.0] * len(s), index=df.index)
+        proxy = (s - s.min()) / (s.max() - s.min()) * 100.0 if s.max() > s.min() else pd.Series([50.0]*len(s), index=df.index)
         df["search_interest"] = proxy
 
     try:
@@ -238,49 +231,37 @@ def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-# === Scoring: events + price + demand (no diversity) ===
+# === Scoring: events + price + demand ===
 def _robust_scale(s: pd.Series) -> pd.Series:
     med = s.median()
     iqr = (s.quantile(0.75) - s.quantile(0.25)) or 1.0
     z = (s - med) / iqr
-    return (1 / (1 + np.exp(-z))).clip(0, 1)  # logistic squashing to 0..1
+    return (1 / (1 + np.exp(-z))).clip(0, 1)
 
 def compute_opportunity_scores(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty:
         return df.assign(opportunity_score=0.0)
-
     df = df.copy()
     df["event_term"] = np.log1p(df["event_count"].clip(lower=0))
-    # price: fill NaNs with country median, then column median
     df["price_term"] = pd.to_numeric(df["avg_price"], errors="coerce")
     df["price_term"] = df.groupby("country")["price_term"].transform(lambda s: s.fillna(s.median()))
     df["price_term"] = df["price_term"].fillna(df["price_term"].median())
     df["trend_term"] = df["search_interest"].fillna(0)
-
     df["event_s"] = _robust_scale(df["event_term"])
     df["price_s"] = _robust_scale(df["price_term"])
     df["trend_s"] = _robust_scale(df["trend_term"])
-
-    # Opportunity: affordable + active + trending
-    df["opportunity_score"] = (
-        df["event_s"] * 0.40 +
-        (1 - df["price_s"]) * 0.25 +
-        df["trend_s"] * 0.35
-    ) * 100
-
+    df["opportunity_score"] = (df["event_s"]*0.40 + (1-df["price_s"])*0.25 + df["trend_s"]*0.35) * 100
     df["opportunity_score"] = df["opportunity_score"].round(1)
     return df
 
-# === Color helpers (percentile-scaled) ===
+# === Color ===
 def hsl_hotcold_scaled(score: float, vmin: float, vmax: float) -> str:
-    if vmax <= vmin:
-        t = 0.5
-    else:
-        t = (score - vmin) / (vmax - vmin)
+    if vmax <= vmin: t = 0.5
+    else: t = (score - vmin) / (vmax - vmin)
     t = max(0.0, min(1.0, t))
-    return f"hsl({240 - (240 * t):.0f},80%,50%)"  # 0→blue, 1→red
+    return f"hsl({240 - (240 * t):.0f},80%,50%)"
 
-# === Mapping ===
+# === Map ===
 def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Path):
     if df_city.empty:
         raise SystemExit("No city data to plot.")
@@ -288,20 +269,20 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
     m = folium.Map(location=[df_city["lat"].mean(), df_city["lng"].mean()],
                    zoom_start=3, tiles="CartoDB dark_matter")
 
-    # robust percentile bounds for coloring
     vmin = float(np.percentile(df_city["opportunity_score"], COLOR_PCT_LOW))
     vmax = float(np.percentile(df_city["opportunity_score"], COLOR_PCT_HIGH))
     if vmax <= vmin:
         vmin, vmax = df_city["opportunity_score"].min(), df_city["opportunity_score"].max()
 
-    # 1) Heatmap (intensity scaled to 0..1 using vmin/vmax)
-    HeatMap(
+    # Heatmap
+    heat = HeatMap(
         [[r.lat, r.lng, max(0.0, min(1.0, (r.opportunity_score - vmin) / (vmax - vmin)))]
          for r in df_city.itertuples()],
         name="Opportunity Heatmap", radius=25, blur=20, min_opacity=0.4
-    ).add_to(m)
+    )
+    heat.add_to(m)
 
-    # 2) City bubbles (summary with detailed popups)
+    # City bubbles
     fg_city = FeatureGroup(name="City Opportunity Scores", show=True)
     for r in df_city.itertuples():
         color = hsl_hotcold_scaled(r.opportunity_score, vmin, vmax)
@@ -322,7 +303,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
             .add_child(folium.Popup(html, max_width=320)).add_to(fg_city)
     fg_city.add_to(m)
 
-    # 3) Top 10 Hot Markets overlay (numbered badges)
+    # Top 10 overlay
     top10 = df_city.sort_values("opportunity_score", ascending=False).head(10).reset_index(drop=True)
     fg_top = FeatureGroup(name="Top 10 Hot Markets", show=True)
     for idx, r in top10.iterrows():
@@ -350,50 +331,38 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
             .add_child(folium.Popup(html, max_width=300)).add_to(fg_top)
     fg_top.add_to(m)
 
-    # 4) Individual Venues (with reliable genre filter)
+    # Individual Venues (with canonical genre tags)
     fg_venues = FeatureGroup(name="Individual Venues (Filtered)", show=False)
     m.add_child(fg_venues)
 
-    # Build markers; tag each with feverGenre for filtering; include popups with links
-    genre_counts = Counter([p["genre"] for p in points if p.get("genre")])
-    top_genres = [g for g, _ in genre_counts.most_common(TOP_GENRE_COUNT)]
-    def genre_bucket(g: str) -> str:
-        if not g: return "Other"
-        return g if g in top_genres else "Other"
+    # Canonicalize genres and build options
+    canon_genres = [canonical_genre(p.get("genre")) for p in points if p.get("genre")]
+    top_canon = [g for g, _ in Counter(canon_genres).most_common(TOP_GENRE_COUNT)]
+    def bucket(g: str) -> str: return canonical_genre(g) if canonical_genre(g) in top_canon else "Other"
 
-    # Precompute a quick city->score map for venue color
-    city_key = df_city[["city","country","opportunity_score"]].copy()
-    key2score = {(r.city, r.country): float(r.opportunity_score) for r in city_key.itertuples()}
+    # Precompute city->score for venue coloring
+    key2score = {(r.city, r.country): float(r.opportunity_score) for r in df_city.itertuples()}
 
     for p in points:
         score = key2score.get((p["city"], p["country"]), 0.0)
         color = hsl_hotcold_scaled(score, vmin, vmax)
-        gtag = genre_bucket(p.get("genre"))
+        gtag = bucket(p.get("genre"))
 
         html = f"""
         <div style='font-size:12px;'>
           <b>{p['name']}</b><br/>
           {p['venue']} — {p['city']}, {p['country']}<br/>
-          <i>{p.get('genre','')}</i><br/>
+          <i>{canonical_genre(p.get('genre'))}</i><br/>
           <a href='{p['url']}' target='_blank'>Tickets</a><br/>
           Score: {score:.1f}
         </div>
         """
+        CircleMarker([p["lat"], p["lng"]],
+                     radius=4, color=color, fillColor=color, fill=True, fill_opacity=0.85,
+                     **{"feverGenre": gtag}).add_child(folium.Popup(html, max_width=300)).add_to(fg_venues)
 
-        mk = CircleMarker(
-            [p["lat"], p["lng"]],
-            radius=4,
-            color=color,
-            fillColor=color,
-            fill=True,
-            fill_opacity=0.85,
-            **{"feverGenre": gtag}  # tag for filtering
-        )
-        mk.add_child(folium.Popup(html, max_width=300))
-        mk.add_to(fg_venues)
-
-    # Dropdown + filtering UI (DOM-based hide/show so it's robust)
-    options_html = "".join([f"<option value='{g}'>{g}</option>" for g in ["All"] + top_genres + ["Other"]])
+    # Dropdown + robust filtering (also auto-toggles layers for clarity)
+    options_html = "".join([f"<option value='{g}'>{g}</option>" for g in ["All"] + top_canon + ["Other"]])
     control_html = f"""
     {{% macro html(this, kwargs) %}}
     <div id="genre-control" style="
@@ -407,23 +376,40 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
       <div style="margin-top:6px; opacity:.8;">(affects “Individual Venues” layer)</div>
     </div>
     <script>
-      var VENUES_GROUP = {fg_venues.get_name()};
+      var MAP = {fg_venues.get_name()}._map;
+      var VENUES = {fg_venues.get_name()};
+      var LAYER_CITY = {fg_city.get_name()};
+      var LAYER_TOP  = {fg_top.get_name()};
+      var LAYER_HEAT = {heat.get_name()};
+
+      function setLayerVisible(layer, show) {{
+        if (!MAP) return;
+        if (show) {{ if (!MAP.hasLayer(layer)) MAP.addLayer(layer); }}
+        else      {{ if (MAP.hasLayer(layer)) MAP.removeLayer(layer); }}
+      }}
 
       function applyGenreFilter(genre) {{
-        if (!VENUES_GROUP || !VENUES_GROUP.eachLayer) return;
-        VENUES_GROUP.eachLayer(function(m) {{
+        if (!VENUES || !VENUES.eachLayer) return;
+
+        // 1) Hide/show venue dots (DOM + vector)
+        VENUES.eachLayer(function(m) {{
           try {{
             var g = (m && m.options && (m.options.feverGenre || m.options.genre)) || "Other";
             var show = (genre === "All" || g === genre);
-
-            // Hide/show built marker icons directly (works across Leaflet layers)
-            if (m._icon) m._icon.style.display = show ? "" : "none";
+            if (m._path)   m._path.style.display   = show ? "" : "none";
+            if (m._icon)   m._icon.style.display   = show ? "" : "none";
             if (m._shadow) m._shadow.style.display = show ? "" : "none";
-
-            // For vector layers, also adjust style for good measure
             if (m.setStyle) m.setStyle({{opacity: show ? 1 : 0, fillOpacity: show ? 0.85 : 0}});
+            if (!show && m._popup && m._popup._container) m._popup._container.style.display = "none";
           }} catch (e) {{}}
         }});
+
+        // 2) Auto-toggle other layers for clarity
+        var filtered = (genre !== "All");
+        setLayerVisible(VENUES, true);                 // ensure venues layer is on
+        setLayerVisible(LAYER_CITY, !filtered);
+        setLayerVisible(LAYER_TOP,  !filtered);
+        setLayerVisible(LAYER_HEAT, !filtered);
       }}
 
       (function initGenreFilter() {{
@@ -439,34 +425,19 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
     ctl = MacroElement(); ctl._template = Template(control_html)
     m.get_root().add_child(ctl)
 
-    # Legend with numeric bounds
+    # Legend
     legend_html = f"""
     {{% macro html(this, kwargs) %}}
     <div style="
-        position: fixed;
-        bottom: 50px;
-        right: 30px;
-        width: 220px;
-        height: 120px;
-        z-index:9999;
-        font-size:13px;
-        background: rgba(0,0,0,0.6);
-        color: white;
-        padding: 10px;
-        border-radius: 10px;">
+        position: fixed; bottom: 50px; right: 30px; width: 220px; height: 120px;
+        z-index:9999; font-size:13px; background: rgba(0,0,0,0.6);
+        color: white; padding: 10px; border-radius: 10px;">
         <b>Opportunity Score</b><br>
-        <div style="height:10px;
-            background:linear-gradient(to right, blue, lightblue, yellow, orange, red);
+        <div style="height:10px; background:linear-gradient(to right, blue, lightblue, yellow, orange, red);
             margin-top:5px; margin-bottom:5px;"></div>
         <div style="display:flex; justify-content:space-between;">
           <span>{vmin:.1f}</span><span>→</span><span>{vmax:.1f}</span>
         </div>
-        <hr style="border-color:rgba(255,255,255,0.3); margin:6px 0;">
-        <b>Layers:</b><br>
-        - Opportunity Heatmap<br>
-        - City Scores<br>
-        - Top 10 Hot Markets<br>
-        - Individual Venues (Filtered)
     </div>
     {{% endmacro %}}
     """

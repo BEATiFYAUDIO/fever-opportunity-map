@@ -34,7 +34,7 @@ SEGMENT   = os.getenv("TM_SEGMENT", "Music")
 PAGES_MAX = int(os.getenv("TM_PAGES_MAX", "3"))
 SIZE      = int(os.getenv("TM_PAGE_SIZE", "200"))
 
-TOP_GENRE_COUNT = 8  # for the dropdown (+ "All" + "Other")
+TOP_GENRE_COUNT = 8  # for dropdown (+ "All" + "Other")
 
 # Percentile color scaling (for varied map)
 COLOR_PCT_LOW  = float(os.getenv("COLOR_PCT_LOW",  "25"))  # 10–30 typical
@@ -147,7 +147,7 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
         coords = [(p["lat"], p["lng"]) for p in plist]
         (lat, lng), _ = Counter(coords).most_common(1)[0]
 
-        # most common state & stateCode (for labeling/Trends if we ever switch back)
+        # most common state & stateCode (for labeling/debug)
         states = [p.get("state") for p in plist if p.get("state")]
         state = Counter(states).most_common(1)[0][0] if states else ""
         state_codes = [p.get("stateCode") for p in plist if p.get("stateCode")]
@@ -164,7 +164,7 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
             cm = country_median.get(country)
             avg_price = float(cm) if cm == cm else float("nan")  # leave NaN if unknown
 
-        # genres only for popup
+        # genres (for popup only)
         genres = [p.get("genre") for p in plist if p.get("genre")]
         top_genres = pd.Series(genres).value_counts().head(3).index.tolist()
         top_genres_str = ", ".join(top_genres) if top_genres else "—"
@@ -177,7 +177,7 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
 
     return pd.DataFrame(rows)
 
-# === Trends (CI-friendly: country only) ===
+# === Trends (CI-friendly: country only + fallback) ===
 def _trends_ts_mean(pytrends: TrendReq, terms: List[str], geo: str) -> float:
     """Return mean of last ~12 weeks across terms (max across terms)."""
     try:
@@ -193,10 +193,10 @@ def _trends_ts_mean(pytrends: TrendReq, terms: List[str], geo: str) -> float:
 def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
     """
     Robust demand proxy for CI:
-      - If TRENDS_MODE='country': query country-level Trends only (more reliable than city/region)
-      - Build a small term set per country: base terms + up to a few genre tokens present in that country
-      - If Trends yields all zeros (blocked), fallback to an events-based proxy (normalized 0..100)
-      - Always write docs/trends_debug.csv for inspection
+      - If TRENDS_MODE='country': country-level Trends only (reliable)
+      - Build small term set per country: base terms + up to a few genre tokens present in that country
+      - If Trends yields all zeros (blocked), fallback to event_count proxy (0..100)
+      - Write docs/trends_debug.csv for inspection
     """
     if df.empty or TRENDS_MODE == "off":
         return df.assign(search_interest=0.0)
@@ -212,7 +212,6 @@ def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
 
     debug_rows = []
     for cc in df["country"].dropna().unique():
-        # base terms + up to 3 genre tokens present in the country
         terms = list(TRENDS_TERMS)
         g_terms = [first_genre_token(r) for _, r in df[df["country"] == cc][["top_genres"]].itertuples()]
         for g in g_terms:
@@ -224,7 +223,6 @@ def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
         debug_rows.append({"country": cc, "terms": "|".join(terms), "search_interest": val})
         time.sleep(TRENDS_SLEEP_MS / 1000.0)
 
-    # If every country came back zero (blocked/CAPTCHA), fallback to an event-based proxy
     if float(df["search_interest"].max()) <= 0.0:
         s = df["event_count"].astype(float)
         if s.max() > s.min():
@@ -233,7 +231,6 @@ def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
             proxy = pd.Series([50.0] * len(s), index=df.index)
         df["search_interest"] = proxy
 
-    # Write debug CSV
     try:
         pd.DataFrame(debug_rows).to_csv(OUT_TRENDS_CSV, index=False)
     except Exception:
@@ -353,12 +350,12 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
             .add_child(folium.Popup(html, max_width=300)).add_to(fg_top)
     fg_top.add_to(m)
 
-    # 4) Individual Venues (with genre filter)
+    # 4) Individual Venues (with reliable genre filter)
     fg_venues = FeatureGroup(name="Individual Venues (Filtered)", show=False)
     m.add_child(fg_venues)
 
-    # Build markers + JS handles for filtering
-    venue_js_entries: List[Tuple[str, str]] = []
+    # Build markers; tag each with feverGenre for filtering
+    venue_genres: List[str] = []
     genre_counts = Counter([p["genre"] for p in points if p.get("genre")])
     top_genres = [g for g, _ in genre_counts.most_common(TOP_GENRE_COUNT)]
 
@@ -370,6 +367,8 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
         mask = (df_city["city"] == p["city"]) & (df_city["country"] == p["country"])
         score = float(df_city.loc[mask, "opportunity_score"].mean()) if mask.any() else 0.0
         color = hsl_hotcold_scaled(score, vmin, vmax)
+        gtag = genre_bucket(p.get("genre"))
+
         html = f"""
         <div style='font-size:12px;'>
           <b>{p['name']}</b><br/>
@@ -379,23 +378,21 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
           Score: {score:.1f}
         </div>
         """
-        mk = CircleMarker([p["lat"], p["lng"]], radius=4,
-                          color=color, fillColor=color, fill=True, fill_opacity=0.85)
+        mk = CircleMarker(
+            [p["lat"], p["lng"]],
+            radius=4,
+            color=color,
+            fillColor=color,
+            fill=True,
+            fill_opacity=0.85,
+            **{"feverGenre": gtag}  # <-- attach genre tag to marker options
+        )
         mk.add_child(folium.Popup(html, max_width=300))
         mk.add_to(fg_venues)
-        venue_js_entries.append((mk.get_name(), genre_bucket(p.get("genre"))))
+        venue_genres.append(gtag)
 
-    # Dropdown + filtering JS (robust init)
-    fg_venues_js = fg_venues.get_name()
+    # Dropdown + filtering UI (style-based filtering)
     options_html = "".join([f"<option value='{g}'>{g}</option>" for g in ["All"] + top_genres + ["Other"]])
-
-    mapping_pairs = []
-    for name, genre in venue_js_entries:
-        safe_genre = (genre or "Other").replace('"', '\\"')
-        mapping_pairs.append(f"'{name}':'{safe_genre}'")
-    mapping_js = ",\n      ".join(mapping_pairs)
-
-    markers_js = ",\n      ".join([f"'{name}': {name}" for name, _ in venue_js_entries])
 
     control_html = f"""
     {{% macro html(this, kwargs) %}}
@@ -410,34 +407,24 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
       <div style="margin-top:6px; opacity:.8;">(affects “Individual Venues” layer)</div>
     </div>
     <script>
-      var GENRE_OF = {{
-        {mapping_js}
-      }};
-      var VENUE_MARKER = {{
-        {markers_js}
-      }};
-      var VENUES_GROUP = {fg_venues_js};
+      var VENUES_GROUP = {fg_venues.get_name()};
 
       function applyGenreFilter(genre) {{
-        Object.keys(VENUE_MARKER).forEach(function(k) {{
-          var m = VENUE_MARKER[k];
-          var g = GENRE_OF[k] || "Other";
-          var show = (genre === "All" || g === genre);
-          if (show) {{
-            if (!VENUES_GROUP.hasLayer(m)) {{ VENUES_GROUP.addLayer(m); }}
-          }} else {{
-            if (VENUES_GROUP.hasLayer(m)) {{ VENUES_GROUP.removeLayer(m); }}
-          }}
+        if (!VENUES_GROUP || !VENUES_GROUP.eachLayer) return;
+        VENUES_GROUP.eachLayer(function(m) {{
+          try {{
+            var g = (m && m.options && (m.options.feverGenre || m.options.genre)) || "Other";
+            var show = (genre === "All" || g === genre);
+            if (m.setStyle) {{
+              m.setStyle({{opacity: show ? 1 : 0, fillOpacity: show ? 0.85 : 0}});
+            }}
+          }} catch (e) {{}}
         }});
       }}
 
       (function initGenreFilter() {{
         var sel = document.getElementById('genreFilter');
-        if (!sel || typeof VENUES_GROUP === 'undefined') {{ return setTimeout(initGenreFilter, 60); }}
-        var keys = Object.keys(VENUE_MARKER);
-        for (var i=0;i<keys.length;i++) {{
-          if (typeof VENUE_MARKER[keys[i]] === 'undefined') {{ return setTimeout(initGenreFilter, 60); }}
-        }}
+        if (!sel) return setTimeout(initGenreFilter, 60);
         L.DomEvent.disableClickPropagation(sel.parentElement);
         applyGenreFilter("All");
         sel.addEventListener('change', function() {{ applyGenreFilter(this.value); }});

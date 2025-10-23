@@ -6,6 +6,7 @@ from collections import defaultdict, Counter
 
 import requests
 import pandas as pd
+import numpy as np
 from tenacity import retry, stop_after_attempt, wait_exponential
 import folium
 from folium import FeatureGroup, CircleMarker, LayerControl, Marker
@@ -32,6 +33,10 @@ SEGMENT   = os.getenv("TM_SEGMENT", "Music")
 PAGES_MAX = int(os.getenv("TM_PAGES_MAX", "3"))
 SIZE      = int(os.getenv("TM_PAGE_SIZE", "200"))
 TOP_GENRE_COUNT = 8  # number of genres to expose in the dropdown (+ "All" + "Other")
+
+# Percentile color scaling (so the map isn't all blue)
+COLOR_PCT_LOW  = float(os.getenv("COLOR_PCT_LOW",  "20"))  # try 10–30
+COLOR_PCT_HIGH = float(os.getenv("COLOR_PCT_HIGH", "95"))  # try 90–99
 
 # === Ticketmaster API ===
 def tm_params(base: Dict[str, Any], page: int) -> Dict[str, Any]:
@@ -131,16 +136,19 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
         state = Counter(states).most_common(1)[0][0] if states else ""
 
         event_count = len(plist)
-        genres = [p.get("genre") for p in plist if p.get("genre")]
-        top_genres = pd.Series(genres).value_counts().head(3).index.tolist()
-        genre_div = len(set(genres))
         prices = [p["price_min"] or p["price_max"] for p in plist if p.get("price_min") or p.get("price_max")]
         avg_price = statistics.mean(prices) if prices else 0
 
+        # (genres still shown in popups, but not used in scoring)
+        genres = [p.get("genre") for p in plist if p.get("genre")]
+        top_genres = pd.Series(genres).value_counts().head(3).index.tolist()
+        top_genres_str = ", ".join(top_genres) if top_genres else "—"
+
         rows.append({
             "city": city, "state": state, "country": country,
-            "event_count": event_count, "genre_div": genre_div,
-            "avg_price": avg_price, "top_genres": ", ".join(top_genres) if top_genres else "—",
+            "event_count": event_count,
+            "avg_price": avg_price,
+            "top_genres": top_genres_str,
             "lat": lat, "lng": lng
         })
     return pd.DataFrame(rows)
@@ -231,36 +239,51 @@ def enrich_with_trends(df: pd.DataFrame) -> pd.DataFrame:
     df["search_interest"] = df["search_interest"].clip(lower=0, upper=100)
     return df
 
+# ---- Scoring (NO genre diversity) ----
+def _robust_scale(s: pd.Series) -> pd.Series:
+    med = s.median()
+    iqr = (s.quantile(0.75) - s.quantile(0.25)) or 1.0
+    z = (s - med) / iqr
+    # squash with logistic so tails don't dominate
+    return (1 / (1 + np.exp(-z))).clip(0, 1)
+
 def compute_opportunity_scores(df: pd.DataFrame) -> pd.DataFrame:
-    """Weighted Fever model: Events + Price (inverse) + Genre Diversity + Search Interest."""
+    """Simplified: only events, price, and demand — no genre factor."""
     if df.empty:
         return df.assign(opportunity_score=0.0)
 
-    def norm(series, invert=False):
-        smin, smax = series.min(), series.max() or 1
-        if smax == smin:
-            return pd.Series([0.5] * len(series))
-        v = (series - smin) / (smax - smin)
-        return 1 - v if invert else v
+    df = df.copy()
+    df["event_term"] = np.log1p(df["event_count"].clip(lower=0))
+    df["price_term"] = df["avg_price"].fillna(0)
+    df["trend_term"] = df["search_interest"].fillna(0)
 
-    df["event_norm"] = norm(df["event_count"])
-    df["genre_norm"] = norm(df["genre_div"])
-    df["price_norm"] = norm(df["avg_price"], invert=True)  # lower price -> higher score
-    df["trend_norm"] = norm(df["search_interest"])
+    df["event_s"] = _robust_scale(df["event_term"])
+    df["price_s"] = _robust_scale(df["price_term"])
+    df["trend_s"] = _robust_scale(df["trend_term"])
 
+    # Opportunity: affordable + active + trending
     df["opportunity_score"] = (
-        df["event_norm"] * 0.35 +
-        df["price_norm"] * 0.15 +
-        df["genre_norm"] * 0.20 +
-        df["trend_norm"] * 0.30
+        df["event_s"] * 0.40 +
+        (1 - df["price_s"]) * 0.25 +
+        df["trend_s"] * 0.35
     ) * 100
+
+    # Final rounding
+    df["opportunity_score"] = df["opportunity_score"].round(1)
     return df
 
-# === Mapping ===
-def hsl_hotcold(score: float) -> str:
-    # 0 → blue (240deg), 100 → red (0deg)
-    return f"hsl({240 - (240 * (score / 100)):.0f},80%,50%)"
+# === Coloring helpers (percentile-scaled so map uses full palette) ===
+def hsl_hotcold_scaled(score: float, vmin: float, vmax: float) -> str:
+    # normalize score to 0..1 based on provided bounds
+    if vmax <= vmin:
+        t = 0.5
+    else:
+        t = (score - vmin) / (vmax - vmin)
+    t = max(0.0, min(1.0, t))
+    # 0 → blue (240deg), 1 → red (0deg)
+    return f"hsl({240 - (240 * t):.0f},80%,50%)"
 
+# === Mapping ===
 def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Path):
     if df_city.empty:
         raise SystemExit("No city data to plot.")
@@ -269,16 +292,23 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
     m = folium.Map(location=[df_city["lat"].mean(), df_city["lng"].mean()],
                    zoom_start=3, tiles="CartoDB dark_matter")
 
-    # 1) Heatmap (by city score)
+    # robust percentile bounds for coloring (varied map)
+    vmin = float(np.percentile(df_city["opportunity_score"], COLOR_PCT_LOW))
+    vmax = float(np.percentile(df_city["opportunity_score"], COLOR_PCT_HIGH))
+    if vmax <= vmin:
+        vmin, vmax = df_city["opportunity_score"].min(), df_city["opportunity_score"].max()
+
+    # 1) Heatmap (by city score, scaled to 0..1 using vmin/vmax)
     HeatMap(
-        [[r.lat, r.lng, r.opportunity_score/100] for r in df_city.itertuples()],
+        [[r.lat, r.lng, max(0.0, min(1.0, (r.opportunity_score - vmin) / (vmax - vmin)))]
+         for r in df_city.itertuples()],
         name="Opportunity Heatmap", radius=25, blur=20, min_opacity=0.4
     ).add_to(m)
 
     # 2) City bubbles (summary)
     fg_city = FeatureGroup(name="City Opportunity Scores", show=True)
     for r in df_city.itertuples():
-        color = hsl_hotcold(r.opportunity_score)
+        color = hsl_hotcold_scaled(r.opportunity_score, vmin, vmax)
         state_label = f", {r.state}" if isinstance(r.state, str) and r.state else ""
         html = f"""
         <div style='font-size:13px;'>
@@ -300,7 +330,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
     fg_top = FeatureGroup(name="Top 10 Hot Markets", show=True)
     for idx, r in top10.iterrows():
         rank = idx + 1
-        color = hsl_hotcold(r["opportunity_score"])
+        color = hsl_hotcold_scaled(r["opportunity_score"], vmin, vmax)
         state_label = f", {r['state']}" if isinstance(r["state"], str) and r["state"] else ""
         html = f"""
         <div style='font-size:13px;'>
@@ -338,7 +368,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
         # score: city average
         mask = (df_city["city"] == p["city"]) & (df_city["country"] == p["country"])
         score = float(df_city.loc[mask, "opportunity_score"].mean()) if mask.any() else 0.0
-        color = hsl_hotcold(score)
+        color = hsl_hotcold_scaled(score, vmin, vmax)
         html = f"""
         <div style='font-size:12px;'>
           <b>{p['name']}</b><br/>
@@ -354,10 +384,11 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
         mk.add_to(fg_venues)
         venue_js_entries.append((mk.get_name(), genre_bucket(p.get("genre"))))
 
-    # Inject dropdown + filtering JS (correctly escaped)
+    # Inject dropdown + filtering JS (robust: waits for markers, stops map clicks)
     fg_venues_js = fg_venues.get_name()
     options_html = "".join([f"<option value='{g}'>{g}</option>" for g in ["All"] + top_genres + ["Other"]])
 
+    # Safely build the JS object mapping without backslashes in f-strings
     mapping_pairs = []
     for name, genre in venue_js_entries:
         safe_genre = genre.replace('"', '\\"')  # escape quotes manually
@@ -400,25 +431,34 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
         }});
       }}
 
-      // init
-      applyGenreFilter("All");
-      var sel = document.getElementById('genreFilter');
-      L.DomEvent.disableClickPropagation(sel);
-      sel.addEventListener('change', function() {{ applyGenreFilter(this.value); }});
+      // Robust init: wait for Leaflet objects to exist
+      (function initGenreFilter() {{
+        var sel = document.getElementById('genreFilter');
+        if (!sel || typeof VENUES_GROUP === 'undefined') {{ return setTimeout(initGenreFilter, 60); }}
+        // ensure markers are defined
+        var keys = Object.keys(VENUE_MARKER);
+        for (var i=0;i<keys.length;i++) {{
+          if (typeof VENUE_MARKER[keys[i]] === 'undefined') {{ return setTimeout(initGenreFilter, 60); }}
+        }}
+        // stop clicks from dragging the map
+        L.DomEvent.disableClickPropagation(sel.parentElement);
+        applyGenreFilter("All");
+        sel.addEventListener('change', function() {{ applyGenreFilter(this.value); }});
+      }})();
     </script>
     {{% endmacro %}}
     """
     ctl = MacroElement(); ctl._template = Template(control_html)
     m.get_root().add_child(ctl)
 
-    # Legend
-    legend_html = """
-    {% macro html(this, kwargs) %}
+    # Legend with numeric bounds
+    legend_html = f"""
+    {{% macro html(this, kwargs) %}}
     <div style="
         position: fixed;
         bottom: 50px;
         right: 30px;
-        width: 200px;
+        width: 220px;
         height: 120px;
         z-index:9999;
         font-size:13px;
@@ -431,7 +471,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
             background:linear-gradient(to right, blue, lightblue, yellow, orange, red);
             margin-top:5px; margin-bottom:5px;"></div>
         <div style="display:flex; justify-content:space-between;">
-          <span>Cold</span><span>Warm</span><span>Hot</span>
+          <span>{vmin:.1f}</span><span>→</span><span>{vmax:.1f}</span>
         </div>
         <hr style="border-color:rgba(255,255,255,0.3); margin:6px 0;">
         <b>Layers:</b><br>
@@ -440,7 +480,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
         - Top 10 Hot Markets<br>
         - Individual Venues (Filtered)
     </div>
-    {% endmacro %}
+    {{% endmacro %}}
     """
     legend = MacroElement(); legend._template = Template(legend_html)
     m.get_root().add_child(legend)

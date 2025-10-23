@@ -1,7 +1,8 @@
-﻿requests
+pytrends
+requests
+tenacity
 folium
 branca
 pandas
 numpy
-python-dotenv
-pytrends
+python-dateutil

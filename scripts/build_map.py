@@ -8,36 +8,29 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 import folium
 from folium import FeatureGroup, CircleMarker, LayerControl
 
+# === Paths ===
 WORK = Path(os.environ.get("GITHUB_WORKSPACE", ".")).resolve()
 DOCS = WORK / "docs"
 DOCS.mkdir(parents=True, exist_ok=True)
-
 OUT_HTML = DOCS / "fever_market_opportunity_map.html"
 OUT_GEOJSON = DOCS / "fever_events.geojson"
 
+# === API Key ===
 API_KEY = os.getenv("TM_API_KEY")
 if not API_KEY:
-    print("ERROR: TM_API_KEY is not set.", file=sys.stderr)
+    print("❌ ERROR: TM_API_KEY is not set in your repo secrets.", file=sys.stderr)
     sys.exit(1)
 
-# ---- Filters (tune via repo Variables or inline) ----
-# Examples:
-#   TM_COUNTRIES=US,CA
-#   TM_KEYWORD=rap OR hip hop
-#   TM_MARKET_ID=27 (DMA/market, optional)
+# === Optional filters ===
 COUNTRIES = [s.strip() for s in os.getenv("TM_COUNTRIES", "US,CA").split(",") if s.strip()]
-KEYWORD   = os.getenv("TM_KEYWORD", "")             # e.g., "rap OR hip hop" or artist name
-SEGMENT   = os.getenv("TM_SEGMENT", "Music")        # keep as "Music" for music-only
-PAGES_MAX = int(os.getenv("TM_PAGES_MAX", "5"))     # cap for runtime
-SIZE      = int(os.getenv("TM_PAGE_SIZE", "200"))   # max 200
+KEYWORD   = os.getenv("TM_KEYWORD", "")             # e.g. "rap OR hip hop"
+SEGMENT   = os.getenv("TM_SEGMENT", "Music")        # usually "Music"
+PAGES_MAX = int(os.getenv("TM_PAGES_MAX", "3"))     # limit for runtime
+SIZE      = int(os.getenv("TM_PAGE_SIZE", "200"))
 
+# === Ticketmaster helper ===
 def tm_params(base: Dict[str, Any], page: int) -> Dict[str, Any]:
-    p = {
-        "apikey": API_KEY,
-        "size": SIZE,
-        "sort": "date,asc",
-        "page": page,
-    }
+    p = {"apikey": API_KEY, "size": SIZE, "sort": "date,asc", "page": page}
     p.update(base)
     return p
 
@@ -54,24 +47,19 @@ def fetch_events() -> List[Dict[str, Any]]:
         base["segmentName"] = SEGMENT
     if KEYWORD:
         base["keyword"] = KEYWORD
-    if COUNTRIES:
-        # Ticketmaster takes one countryCode at a time; we’ll loop
-        pass
 
     all_events: List[Dict[str, Any]] = []
-    country_list = COUNTRIES or [None]
-    for cc in country_list:
-        page0_params = tm_params(base | ({"countryCode": cc} if cc else {}), 0)
-        data0 = tm_get(url, page0_params)
-        page = data0.get("page", {}) or {}
-        total_pages = min(page.get("totalPages", 1), PAGES_MAX)
-        embedded = data0.get("_embedded", {}) or {}
-        all_events.extend(embedded.get("events", []) or [])
+    for cc in COUNTRIES:
+        print(f"🌎 Fetching {SEGMENT} events for {cc} ...")
+        page0 = tm_get(url, tm_params(base | {"countryCode": cc}, 0))
+        page_info = page0.get("page", {}) or {}
+        total_pages = min(page_info.get("totalPages", 1), PAGES_MAX)
+        all_events.extend(page0.get("_embedded", {}).get("events", []) or [])
 
         for p in range(1, total_pages):
-            data = tm_get(url, tm_params(base | ({"countryCode": cc} if cc else {}), p))
-            embedded = data.get("_embedded", {}) or {}
-            all_events.extend(embedded.get("events", []) or [])
+            data = tm_get(url, tm_params(base | {"countryCode": cc}, p))
+            all_events.extend(data.get("_embedded", {}).get("events", []) or [])
+    print(f"✅ Retrieved {len(all_events)} events total.")
     return all_events
 
 def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -83,21 +71,20 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         v = venues[0]
         loc = v.get("location") or {}
         try:
-            lat = float(loc["latitude"]); lng = float(loc["longitude"])
+            lat = float(loc["latitude"])
+            lng = float(loc["longitude"])
         except Exception:
             continue
 
-        # Metadata
         name = ev.get("name") or "Untitled"
         start = (ev.get("dates", {}) or {}).get("start", {}) or {}
-        when  = " / ".join(filter(None, [start.get("localDate"), start.get("localTime")]))
+        when = " / ".join(filter(None, [start.get("localDate"), start.get("localTime")]))
 
         price_min = price_max = currency = None
         for pr in ev.get("priceRanges", []) or []:
-            # pick the first advertised range
             price_min = pr.get("min", price_min)
             price_max = pr.get("max", price_max)
-            currency  = pr.get("currency", currency)
+            currency = pr.get("currency", currency)
             break
 
         classifs = ev.get("classifications", []) or []
@@ -140,8 +127,48 @@ def write_geojson(points: List[Dict[str, Any]], path: Path) -> Path:
 def write_html_map(points: List[Dict[str, Any]], path: Path):
     if not points:
         raise SystemExit("No geocoded events to plot.")
-    avg_lat = sum(p["lat"] for p in points)/len(points)
-    avg_lng = sum(p["lng"] for p in points)/len(points)
 
+    avg_lat = sum(p["lat"] for p in points) / len(points)
+    avg_lng = sum(p["lng"] for p in points) / len(points)
     m = folium.Map(location=[avg_lat, avg_lng], zoom_start=3, tiles="CartoDB dark_matter")
-    fg = FeatureGroup(name="Upcoming",
+    fg = FeatureGroup(name="Upcoming", show=True)
+
+    def fmt_price(p):
+        if p["price_min"] is None and p["price_max"] is None:
+            return ""
+        if p["price_min"] is not None and p["price_max"] is not None:
+            return f"{p['price_min']}–{p['price_max']} {p['currency'] or ''}"
+        return f"{p['price_min'] or p['price_max']} {p['currency'] or ''}"
+
+    for p in points:
+        html = f"""
+        <b>{p['name']}</b><br/>
+        {p['date']}<br/>
+        {p['venue']} — {p['city']} {p['country']}<br/>
+        <i>{(p['segment'] or '')} {(p['genre'] or '')} {(p['subGenre'] or '')}</i><br/>
+        {fmt_price(p)}<br/>
+        <a href="{p['url']}" target="_blank" rel="noopener">Tickets</a>
+        """
+        CircleMarker(
+            location=[p["lat"], p["lng"]],
+            radius=6,
+            stroke=True,
+            weight=1,
+            fill=True,
+            fill_opacity=0.9,
+        ).add_child(folium.Popup(html, max_width=320)).add_to(fg)
+
+    fg.add_to(m)
+    LayerControl(collapsed=True).add_to(m)
+    m.save(str(path))
+
+def main():
+    events = fetch_events()
+    points = to_points(events)
+    write_geojson(points, OUT_GEOJSON)
+    write_html_map(points, OUT_HTML)
+    print(f"✅ Wrote {OUT_GEOJSON} ({OUT_GEOJSON.stat().st_size} bytes)")
+    print(f"✅ Wrote {OUT_HTML} ({OUT_HTML.stat().st_size} bytes)")
+
+if __name__ == "__main__":
+    main()

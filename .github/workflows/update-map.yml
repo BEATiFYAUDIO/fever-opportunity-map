@@ -33,9 +33,9 @@ jobs:
           pip install -r requirements.txt || true
           pip install requests tenacity folium branca pandas numpy python-dateutil
 
-      - name: Debug: verify paths
+      - name: Debug - verify paths
         run: |
-          echo "WORKSPACE=$GITHUB_WORKSPACE"
+          echo "WORKSPACE=${GITHUB_WORKSPACE}"
           ls -la
           echo "--- scripts ---"
           ls -la scripts || true

@@ -367,8 +367,8 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
     # Dropdown + robust filtering with alias bridge + layer toggling
     options_html = "".join([f"<option value='{g}'>{g}</option>" for g in ["All"] + top_canon + ["Other"]])
     control_html = f"""
-    {{% macro html(this, kwargs) %}}
-    <div id="genre-control" style="
+    #{{% macro html(this, kwargs) %}}
+    #<div id="genre-control" style="
         position: fixed; top: 80px; left: 10px; z-index: 9999;
         background: rgba(0,0,0,0.6); color: white; padding: 8px 10px;
         border-radius: 8px; font-size: 13px;">

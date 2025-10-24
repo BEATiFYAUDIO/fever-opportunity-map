@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 from tenacity import retry, stop_after_attempt, wait_exponential
 import folium
-from folium import FeatureGroup, CircleMarker, LayerControl, Marker
+from folium import FeatureGroup, CircleMarker, LayerControl, Marker, TileLayer
 from folium.plugins import HeatMap
 from branca.element import Template, MacroElement
 from pytrends.request import TrendReq
@@ -87,8 +87,14 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             lat, lng = float(loc["latitude"]), float(loc["longitude"])
         except Exception:
             continue
+        # Range sanity
         if not (-90.0 <= lat <= 90.0 and -180.0 <= lng <= 180.0):
             continue
+
+        # ✅ Western hemisphere correction for North America
+        cc = (v.get("country") or {}).get("countryCode") or ""
+        if cc in {"US", "CA"} and lng > 0:
+            lng = -lng
 
         name = ev.get("name") or "Untitled"
         start = (ev.get("dates", {}) or {}).get("start", {}) or {}
@@ -98,7 +104,7 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         for pr in ev.get("priceRanges", []) or []:
             price_min = pr.get("min", price_min)
             price_max = pr.get("max", price_max)
-            currency = pr.get("currency", currency)
+            currency   = pr.get("currency", currency)
             break
 
         gen = None
@@ -119,7 +125,7 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         })
     return pts
 
-# === Genre canonicalization so UI & markers match ===
+# === Genre canonicalization (for color/labels only) ===
 def canonical_genre(g: str | None) -> str:
     if not g: return "Other"
     s = g.lower()
@@ -160,8 +166,14 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
     for key, plist in groups.items():
         city, country = key.split(",", 1)
 
-        coords = [(p["lat"], p["lng"]) for p in plist]
-        (lat, lng), _ = Counter(coords).most_common(1)[0]
+        # ✅ robust city coordinate: median lat/lng
+        lats = [p["lat"] for p in plist]
+        lngs = [p["lng"] for p in plist]
+        lat = float(np.median(lats))
+        lng = float(np.median(lngs))
+        # ✅ NA geofence guard
+        if country in {"US", "CA"} and lng > -20:
+            lng = -abs(lng)
 
         states = [p.get("state") for p in plist if p.get("state")]
         state = Counter(states).most_common(1)[0][0] if states else ""
@@ -179,7 +191,7 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
             cm = country_median.get(country)
             avg_price = float(cm) if cm == cm else float("nan")
 
-        # canonicalized genres for stability
+        # canonicalized genres for label
         genres = [canonical_genre(p.get("genre")) for p in plist if p.get("genre")]
         top_genres = pd.Series(genres).value_counts().head(3).index.tolist()
         top_genres_str = ", ".join(top_genres) if top_genres else "—"
@@ -268,8 +280,10 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
     if df_city.empty:
         raise SystemExit("No city data to plot.")
 
+    # Create map without adding baselayer to control; add tile with control=False
     m = folium.Map(location=[df_city["lat"].mean(), df_city["lng"].mean()],
-                   zoom_start=3, tiles="CartoDB dark_matter")
+                   zoom_start=3, tiles=None)
+    TileLayer('CartoDB dark_matter', control=False).add_to(m)
 
     vmin = float(np.percentile(df_city["opportunity_score"], COLOR_PCT_LOW))
     vmax = float(np.percentile(df_city["opportunity_score"], COLOR_PCT_HIGH))
@@ -281,8 +295,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
         [[r.lat, r.lng, max(0.0, min(1.0, (r.opportunity_score - vmin) / (vmax - vmin)))]
          for r in df_city.itertuples()],
         name="Opportunity Heatmap", radius=25, blur=20, min_opacity=0.4
-    )
-    heat.add_to(m)
+    ).add_to(m)
 
     # City bubbles
     fg_city = FeatureGroup(name="City Opportunity Scores", show=True)
@@ -333,11 +346,11 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
             .add_child(folium.Popup(html, max_width=300)).add_to(fg_top)
     fg_top.add_to(m)
 
-    # Individual Venues (Filtered) — show=True by default
-    fg_venues = FeatureGroup(name="Individual Venues (Filtered)", show=True)
+    # Individual Venues
+    fg_venues = FeatureGroup(name="Individual Venues", show=True)
     m.add_child(fg_venues)
 
-    # Canonical genre buckets for markers
+    # Canonical genre buckets for marker color/legend consistency
     canon_genres = [canonical_genre(p.get("genre")) for p in points if p.get("genre")]
     top_canon = [g for g, _ in Counter(canon_genres).most_common(TOP_GENRE_COUNT)]
     def bucket(g: str) -> str:
@@ -364,11 +377,28 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
                      radius=4, color=color, fillColor=color, fill=True, fill_opacity=0.85,
                      **{"feverGenre": gtag}).add_child(folium.Popup(html, max_width=300)).add_to(fg_venues)
 
-    # Dropdown + robust filtering with alias bridge + layer toggling
-   
+    # === Legend (restored) ===
+    legend_html = f"""
+    {{% macro html(this, kwargs) %}}
+    <div style="
+        position: fixed; bottom: 50px; right: 30px; width: 220px; height: 120px;
+        z-index:9999; font-size:13px; background: rgba(0,0,0,0.6);
+        color: white; padding: 10px; border-radius: 10px;">
+        <b>Opportunity Score</b><br>
+        <div style="height:10px; background:linear-gradient(to right, blue, lightblue, yellow, orange, red);
+            margin-top:5px; margin-bottom:5px;"></div>
+        <div style="display:flex; justify-content:space-between;">
+          <span>{vmin:.1f}</span><span>→</span><span>{vmax:.1f}</span>
+        </div>
+    </div>
+    {{% endmacro %}}
+    """
+    legend = MacroElement()
+    legend._template = Template(legend_html)
     m.get_root().add_child(legend)
 
-    LayerControl(collapsed=False, base_layers=False).add_to(m)
+    # Overlays only (no basemap entry)
+    LayerControl(collapsed=False).add_to(m)
     m.save(str(path))
 
 # === Main ===

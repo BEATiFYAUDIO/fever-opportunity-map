@@ -368,7 +368,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
    
     m.get_root().add_child(legend)
 
-    LayerControl(collapsed=False).add_to(m)
+    LayerControl(collapsed=False, base_layers=False).add_to(m)
     m.save(str(path))
 
 # === Main ===

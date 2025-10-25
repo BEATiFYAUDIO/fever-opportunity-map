@@ -45,6 +45,11 @@ TRENDS_MODE = os.getenv("TRENDS_MODE", "country").lower()   # 'country' | 'off'
 TRENDS_SLEEP_MS = int(os.getenv("TRENDS_SLEEP_MS", "400"))
 TRENDS_TERMS = [t.strip() for t in os.getenv("TRENDS_TERMS", "live music,concerts").split(",") if t.strip()]
 
+# === Engagement Momentum / Composite Weights (NEW) ===
+# readiness_index ~= your current opportunity_score (scaled to 0–1)
+READINESS_WEIGHT = float(os.getenv("READINESS_WEIGHT", "0.80"))
+MOMENTUM_WEIGHT  = float(os.getenv("MOMENTUM_WEIGHT",  "0.20"))
+
 # === Ticketmaster API ===
 def tm_params(base: Dict[str, Any], page: int) -> Dict[str, Any]:
     p = {"apikey": API_KEY, "size": SIZE, "sort": "date,asc", "page": page}
@@ -262,8 +267,30 @@ def compute_opportunity_scores(df: pd.DataFrame) -> pd.DataFrame:
     df["event_s"] = _robust_scale(df["event_term"])
     df["price_s"] = _robust_scale(df["price_term"])
     df["trend_s"] = _robust_scale(df["trend_term"])
+    # Opportunity score in 0..100 (your existing "readiness" proxy)
     df["opportunity_score"] = (df["event_s"]*0.40 + (1-df["price_s"])*0.25 + df["trend_s"]*0.35) * 100
     df["opportunity_score"] = df["opportunity_score"].round(1)
+    return df
+
+# === Engagement Momentum (placeholder) + Composite (NEW) ===
+def add_momentum_and_composite(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Adds:
+      - engagement_momentum (0..1), default 0.0 if missing
+      - readiness_index (0..1)  from opportunity_score / 100
+      - total_index     (0..1)  = READINESS_WEIGHT*readiness_index + MOMENTUM_WEIGHT*engagement_momentum
+      - momentum_score  (0..100) for coloring convenience
+      - composite_score (0..100) for "Launch Priority" layer
+    """
+    df = df.copy()
+    if "engagement_momentum" not in df.columns:
+        df["engagement_momentum"] = 0.0
+    df["engagement_momentum"] = pd.to_numeric(df["engagement_momentum"], errors="coerce").fillna(0.0).clip(0, 1)
+
+    df["readiness_index"] = (pd.to_numeric(df["opportunity_score"], errors="coerce").fillna(0.0) / 100.0).clip(0, 1)
+    df["total_index"] = READINESS_WEIGHT * df["readiness_index"] + MOMENTUM_WEIGHT * df["engagement_momentum"]
+    df["momentum_score"] = (df["engagement_momentum"] * 100.0).round(1)
+    df["composite_score"] = (df["total_index"] * 100.0).round(1)
     return df
 
 # === Color ===
@@ -285,20 +312,21 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
                    zoom_start=3, tiles=None)
     TileLayer('CartoDB dark_matter', control=False).add_to(m)
 
+    # vmin/vmax for opportunity (readiness) coloring
     vmin = float(np.percentile(df_city["opportunity_score"], COLOR_PCT_LOW))
     vmax = float(np.percentile(df_city["opportunity_score"], COLOR_PCT_HIGH))
     if vmax <= vmin:
         vmin, vmax = df_city["opportunity_score"].min(), df_city["opportunity_score"].max()
 
-    # Heatmap
-    heat = HeatMap(
+    # ===== Heatmap (readiness) =====
+    HeatMap(
         [[r.lat, r.lng, max(0.0, min(1.0, (r.opportunity_score - vmin) / (vmax - vmin)))]
          for r in df_city.itertuples()],
         name="Opportunity Heatmap", radius=25, blur=20, min_opacity=0.4
     ).add_to(m)
 
-    # City bubbles
-    fg_city = FeatureGroup(name="City Opportunity Scores", show=True)
+    # ===== City bubbles (readiness) =====
+    fg_city = FeatureGroup(name="City Opportunity Scores (Readiness)", show=True)
     for r in df_city.itertuples():
         color = hsl_hotcold_scaled(r.opportunity_score, vmin, vmax)
         state_label = f", {r.state}" if isinstance(r.state, str) and r.state else ""
@@ -306,7 +334,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
         html = f"""
         <div style='font-size:13px;'>
           <b>{r.city}{state_label}, {r.country}</b><br/>
-          🔥 <b>Opportunity Score:</b> {r.opportunity_score:.1f}<br/>
+          🔥 <b>Opportunity (Readiness):</b> {r.opportunity_score:.1f}<br/>
           🎟️ Events: {r.event_count}<br/>
           💰 Avg Ticket Price: {price_label}<br/>
           📈 Search Interest: {r.search_interest:.0f}<br/>
@@ -318,9 +346,55 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
             .add_child(folium.Popup(html, max_width=320)).add_to(fg_city)
     fg_city.add_to(m)
 
-    # Top 10 overlay
+    # ===== NEW: Engagement Momentum layer (placeholder) =====
+    # We color by momentum_score (0..100); with placeholder 0, these will appear “cool”
+    fg_momentum = FeatureGroup(name="Engagement Momentum (Fever App Levers)", show=False)
+    # Normalize similarly (use percentile of momentum_score so future non-zero values scale nicely)
+    mvmin = float(np.percentile(df_city["momentum_score"], 5)) if len(df_city) else 0.0
+    mvmax = float(np.percentile(df_city["momentum_score"], 95)) if len(df_city) else 1.0
+    if mvmax <= mvmin:
+        mvmin, mvmax = 0.0, 100.0
+
+    for r in df_city.itertuples():
+        mcolor = hsl_hotcold_scaled(r.momentum_score, mvmin, mvmax)
+        html = f"""
+        <div style='font-size:13px;'>
+          <b>{r.city}, {r.country}</b><br/>
+          ⚙️ <b>Engagement Momentum:</b> {r.momentum_score:.1f} (0–100)<br/>
+          <span style='color:#aaa'>Placeholder until Fever app data (referrals, vouchers, Club, geo) is connected.</span>
+        </div>
+        """
+        CircleMarker([r.lat, r.lng], radius=8, color=mcolor, fillColor=mcolor,
+                     fill=True, fill_opacity=0.85)\
+            .add_child(folium.Popup(html, max_width=320)).add_to(fg_momentum)
+    fg_momentum.add_to(m)
+
+    # ===== NEW: Composite “Launch Priority” layer =====
+    fg_total = FeatureGroup(name="Launch Priority (Composite: Readiness × Momentum)", show=False)
+    tvmin = float(np.percentile(df_city["composite_score"], 5)) if len(df_city) else 0.0
+    tvmax = float(np.percentile(df_city["composite_score"], 95)) if len(df_city) else 1.0
+    if tvmax <= tvmin:
+        tvmin, tvmax = 0.0, 100.0
+
+    for r in df_city.itertuples():
+        tcolor = hsl_hotcold_scaled(r.composite_score, tvmin, tvmax)
+        html = f"""
+        <div style='font-size:13px;'>
+          <b>{r.city}, {r.country}</b><br/>
+          🔥 Readiness: {r.opportunity_score:.1f} / 100<br/>
+          ⚙️ Momentum: {r.momentum_score:.1f} / 100<br/>
+          🚀 <b>Launch Priority:</b> {r.composite_score:.1f} / 100<br/>
+          <span style='color:#aaa'>Composite = {READINESS_WEIGHT:.2f}×Readiness + {MOMENTUM_WEIGHT:.2f}×Momentum</span>
+        </div>
+        """
+        CircleMarker([r.lat, r.lng], radius=9, color=tcolor, fillColor=tcolor,
+                     fill=True, fill_opacity=0.9, weight=1)\
+            .add_child(folium.Popup(html, max_width=340)).add_to(fg_total)
+    fg_total.add_to(m)
+
+    # ===== Top 10 overlay (kept as readiness-driven for continuity) =====
     top10 = df_city.sort_values("opportunity_score", ascending=False).head(10).reset_index(drop=True)
-    fg_top = FeatureGroup(name="Top 10 Hot Markets", show=True)
+    fg_top = FeatureGroup(name="Top 10 Hot Markets (Readiness)", show=True)
     for idx, r in top10.iterrows():
         rank = idx + 1
         color = hsl_hotcold_scaled(r["opportunity_score"], vmin, vmax)
@@ -329,7 +403,7 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
         html = f"""
         <div style='font-size:13px;'>
           <b>#{rank} — {r['city']}{state_label}, {r['country']}</b><br/>
-          Opportunity Score: {r['opportunity_score']:.1f}<br/>
+          Opportunity (Readiness): {r['opportunity_score']:.1f}<br/>
           Events: {r['event_count']} · Avg {price_label}<br/>
           Top Genres: {r['top_genres']}
         </div>
@@ -346,18 +420,16 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
             .add_child(folium.Popup(html, max_width=300)).add_to(fg_top)
     fg_top.add_to(m)
 
-    # Individual Venues
+    # ===== Individual Venues (colored by readiness score) =====
     fg_venues = FeatureGroup(name="Individual Venues", show=True)
     m.add_child(fg_venues)
 
-    # Canonical genre buckets for marker color/legend consistency
     canon_genres = [canonical_genre(p.get("genre")) for p in points if p.get("genre")]
     top_canon = [g for g, _ in Counter(canon_genres).most_common(TOP_GENRE_COUNT)]
     def bucket(g: str) -> str:
         cg = canonical_genre(g)
         return cg if cg in top_canon else "Other"
 
-    # City->score map for venue coloring
     key2score = {(r.city, r.country): float(r.opportunity_score) for r in df_city.itertuples()}
 
     for p in points:
@@ -370,25 +442,28 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
           {p['venue']} — {p['city']}, {p['country']}<br/>
           <i>{canonical_genre(p.get('genre'))}</i><br/>
           <a href='{p['url']}' target='_blank'>Tickets</a><br/>
-          Score: {score:.1f}
+          Readiness Score: {score:.1f}
         </div>
         """
         CircleMarker([p["lat"], p["lng"]],
                      radius=4, color=color, fillColor=color, fill=True, fill_opacity=0.85,
                      **{"feverGenre": gtag}).add_child(folium.Popup(html, max_width=300)).add_to(fg_venues)
 
-    # === Legend (restored) ===
+    # ===== Legend (readiness) =====
     legend_html = f"""
     {{% macro html(this, kwargs) %}}
     <div style="
         position: fixed; bottom: 50px; right: 30px; width: 220px; height: 120px;
         z-index:9999; font-size:13px; background: rgba(0,0,0,0.6);
         color: white; padding: 10px; border-radius: 10px;">
-        <b>Opportunity Score</b><br>
+        <b>Opportunity (Readiness)</b><br>
         <div style="height:10px; background:linear-gradient(to right, blue, lightblue, yellow, orange, red);
             margin-top:5px; margin-bottom:5px;"></div>
         <div style="display:flex; justify-content:space-between;">
           <span>{vmin:.1f}</span><span>→</span><span>{vmax:.1f}</span>
+        </div>
+        <div style="margin-top:6px; color:#ddd;">
+          Toggle layers to see Momentum & Composite.
         </div>
     </div>
     {{% endmacro %}}
@@ -409,7 +484,12 @@ def main():
     df_city = enrich_with_trends(df_city)
     df_city = compute_opportunity_scores(df_city)
 
+    # NEW: add engagement_momentum (placeholder) + composite
+    df_city = add_momentum_and_composite(df_city)
+
+    # Also write geojson with the new fields for debugging/inspection
     OUT_GEOJSON.write_text(df_city.to_json(orient="records"), encoding="utf-8")
+
     write_html_map(points, df_city, OUT_HTML)
     print(f"✅ Wrote {OUT_HTML}")
     print(f"✅ Wrote {OUT_GEOJSON}")
@@ -418,3 +498,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

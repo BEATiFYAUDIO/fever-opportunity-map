@@ -50,6 +50,27 @@ TRENDS_TERMS = [t.strip() for t in os.getenv("TRENDS_TERMS", "live music,concert
 READINESS_WEIGHT = float(os.getenv("READINESS_WEIGHT", "0.80"))
 MOMENTUM_WEIGHT  = float(os.getenv("MOMENTUM_WEIGHT",  "0.20"))
 
+# Guardrails for North America map quality.
+NA_BOUNDS = {
+    "US": {"lat_min": 18.0, "lat_max": 72.0, "lng_min": -170.0, "lng_max": -50.0},
+    "CA": {"lat_min": 40.0, "lat_max": 84.0, "lng_min": -142.0, "lng_max": -52.0},
+}
+
+def is_valid_coord_for_country(lat: float, lng: float, country: str | None) -> bool:
+    if not (-90.0 <= lat <= 90.0 and -180.0 <= lng <= 180.0):
+        return False
+    # Drop null-island-like placeholders.
+    if abs(lat) < 0.000001 and abs(lng) < 0.000001:
+        return False
+    cc = (country or "").strip().upper()
+    bounds = NA_BOUNDS.get(cc)
+    if not bounds:
+        return True
+    return (
+        bounds["lat_min"] <= lat <= bounds["lat_max"]
+        and bounds["lng_min"] <= lng <= bounds["lng_max"]
+    )
+
 # === Ticketmaster API ===
 def tm_params(base: Dict[str, Any], page: int) -> Dict[str, Any]:
     p = {"apikey": API_KEY, "size": SIZE, "sort": "date,asc", "page": page}
@@ -82,6 +103,7 @@ def fetch_events() -> List[Dict[str, Any]]:
 
 def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     pts = []
+    dropped_invalid_na = 0
     for ev in events:
         venues = (ev.get("_embedded", {}) or {}).get("venues", []) or []
         if not venues:
@@ -100,6 +122,9 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         cc = (v.get("country") or {}).get("countryCode") or ""
         if cc in {"US", "CA"} and lng > 0:
             lng = -lng
+        if not is_valid_coord_for_country(lat, lng, cc):
+            dropped_invalid_na += 1
+            continue
 
         name = ev.get("name") or "Untitled"
         start = (ev.get("dates", {}) or {}).get("start", {}) or {}
@@ -128,6 +153,8 @@ def to_points(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             "url": ev.get("url") or "",
             "lat": lat, "lng": lng
         })
+    if dropped_invalid_na:
+        print(f"⚠️ Dropped {dropped_invalid_na} events with invalid US/CA coordinates.")
     return pts
 
 # === Genre canonicalization (for color/labels only) ===
@@ -171,14 +198,22 @@ def aggregate_city_stats(points: List[Dict[str, Any]]) -> pd.DataFrame:
     for key, plist in groups.items():
         city, country = key.split(",", 1)
 
-        # ✅ robust city coordinate: median lat/lng
-        lats = [p["lat"] for p in plist]
-        lngs = [p["lng"] for p in plist]
+        # ✅ robust city coordinate: median lat/lng from valid country-bounded points when possible
+        valid_plist = [
+            p for p in plist
+            if is_valid_coord_for_country(float(p.get("lat", 0.0)), float(p.get("lng", 0.0)), country)
+        ]
+        coord_src = valid_plist if valid_plist else plist
+        lats = [p["lat"] for p in coord_src]
+        lngs = [p["lng"] for p in coord_src]
         lat = float(np.median(lats))
         lng = float(np.median(lngs))
         # ✅ NA geofence guard
         if country in {"US", "CA"} and lng > -20:
             lng = -abs(lng)
+        if not is_valid_coord_for_country(lat, lng, country):
+            # No trustworthy city centroid for this country bucket.
+            continue
 
         states = [p.get("state") for p in plist if p.get("state")]
         state = Counter(states).most_common(1)[0][0] if states else ""
@@ -498,4 +533,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

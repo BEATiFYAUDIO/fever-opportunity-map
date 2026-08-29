@@ -345,7 +345,13 @@ def write_html_map(points: List[Dict[str, Any]], df_city: pd.DataFrame, path: Pa
     # Create map without adding baselayer to control; add tile with control=False
     m = folium.Map(location=[df_city["lat"].mean(), df_city["lng"].mean()],
                    zoom_start=3, tiles=None)
-    TileLayer('CartoDB dark_matter', control=False).add_to(m)
+    TileLayer(
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        attr="Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
+        name="Esri World Dark Gray",
+        control=False,
+        max_zoom=16,
+    ).add_to(m)
 
     # vmin/vmax for opportunity (readiness) coloring
     vmin = float(np.percentile(df_city["opportunity_score"], COLOR_PCT_LOW))
